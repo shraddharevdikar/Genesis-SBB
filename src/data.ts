@@ -4311,5 +4311,780 @@ This directory houses the strongly typed runtime validations built using Zod for
   }
 ];
 
+export const testingFileList: FileNode[] = [
+  {
+    name: 'package.json',
+    path: 'packages/testing/package.json',
+    language: 'json',
+    role: 'Package Manifest',
+    description: 'Defines testing dependencies (@sbb/types, @sbb/validation), version, and builds.',
+    content: `{
+  "name": "@sbb/testing",
+  "version": "1.0.0",
+  "description": "Shared testing infrastructure and mock utilities for the SBB Platform",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "echo \\"Error: no test specified\\" && exit 0"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@sbb/types": "^1.0.0",
+    "@sbb/validation": "^1.0.0",
+    "typescript": "^5.4.5"
+  },
+  "publishConfig": {
+    "access": "restricted"
+  }
+}`
+  },
+  {
+    name: 'tsconfig.json',
+    path: 'packages/testing/tsconfig.json',
+    language: 'json',
+    role: 'TypeScript Config',
+    description: 'Enforces ES2022 output with absolute paths mapped to sibling workspaces.',
+    content: `{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "declaration": true,
+    "outDir": "dist",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "baseUrl": ".",
+    "paths": {
+      "@sbb/types": ["../types/src/index.ts"],
+      "@sbb/validation": ["../validation/src/index.ts"]
+    }
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
+}`
+  },
+  {
+    name: 'README.md',
+    path: 'packages/testing/README.md',
+    language: 'markdown',
+    role: 'Documentation',
+    description: 'Introduction to @sbb/testing, detailed installation guides, and complete integration code listings.',
+    content: `# @sbb/testing
+
+Centralized Testing Infrastructure and Mocking library for the **SBB Platform**.
+
+This package provides generic, reusable, and framework-agnostic test helpers, mock context generators, builders, and custom assertions designed to ensure consistent testing standards across all SBB packages.
+
+---
+
+## 🚀 Key Modules
+
+* **Test Helpers**: Deterministic UUID generation (\`generateTestUuid\`) and a fully functional mock clock (\`TestClock\`) for locking and stepping through time.
+* **Mocks & Contexts**: Pre-configured request context utilities (\`createMockRequestContext\`) and standard Request/Response mocks for route testing.
+* **Fixtures**: Static baseline templates for user profiles, organization limits, and active multi-step workflows.
+* **Builders**: Chainable fluent-interface test-data builders (\`UserBuilder\`, \`TenantBuilder\`, \`OrganizationBuilder\`).
+* **Factories**: Sequential batch mock generators (\`createUserMock\`, \`createTenantMock\`) that safely increment data fields automatically.
+* **Assertions**: Rich assertion methods to validate UUID formats, ISO date-times, and expected validation errors.
+* **Integration**: In-memory mock database managers with active rollback controls and mock webhook listeners.
+
+---
+
+## 💻 Integration Examples
+
+### 1. Mock Clock (Time Freezing)
+Make asynchronous, time-sensitive code completely deterministic:
+\`\`\`typescript
+import { TestClock } from '@sbb/testing';
+
+// Freeze time at static epoch
+TestClock.freeze();
+console.log(TestClock.nowIso()); // "2026-07-02T12:00:00.000Z"
+
+// Progress mock clock forward by 5 seconds
+TestClock.tick(5000);
+console.log(TestClock.nowIso()); // "2026-07-02T12:00:05.000Z"
+
+// Restore dynamic system time
+TestClock.reset();
+\`\`\`
+
+### 2. Fluent Test Builders
+Create tailored entities for custom test scopes:
+\`\`\`typescript
+import { UserBuilder } from '@sbb/testing';
+import { UserRole, UserStatus } from '@sbb/types';
+
+const customAdmin = new UserBuilder()
+  .withId("custom-id-123")
+  .withEmail("custom.admin@sbb.internal")
+  .withRole(UserRole.ADMIN)
+  .withStatus(UserStatus.ACTIVE)
+  .build();
+\`\`\`
+
+### 3. Custom Assertions
+Assert formats and handle validation errors elegantly:
+\`\`\`typescript
+import { assertUuid, assertValidationError } from '@sbb/testing';
+import { validateUser } from './my-validator';
+
+// Standard UUID format verification
+assertUuid(payload.userId);
+
+// Assert validation fails on bad inputs
+assertValidationError(() => {
+  validateUser({ email: "invalid-email" });
+}, "email");
+\`\`\`
+
+### 4. Integration DB Managers
+Replicate commit/rollback transactions during complex business pipelines:
+\`\`\`typescript
+import { MockDatabaseManager } from '@sbb/testing';
+
+const dbManager = new MockDatabaseManager();
+const usersTable = dbManager.getTable('users');
+
+dbManager.beginTransaction();
+usersTable.push({ id: '1', name: 'Rollback Target' });
+
+// Undo inserts and restore table states instantly
+dbManager.rollbackTransaction();
+console.log(usersTable.length); // 0
+\`\`\`
+`
+  },
+  {
+    name: 'CHANGELOG.md',
+    path: 'packages/testing/CHANGELOG.md',
+    language: 'markdown',
+    role: 'Release History',
+    description: 'Changelog of historical additions, builders, fixtures, assertions, and mock contexts.',
+    content: `# Changelog
+
+All notable changes to the \`@sbb/testing\` package will be documented in this file.
+
+## [1.0.0] - 2026-07-02
+
+### Added
+- Created the core shared testing package (\`@sbb/testing\`) featuring generic, reusable testing infrastructure.
+- Introduced deterministic test UUID generation helper (\`generateTestUuid\`) and custom pre-configured test identifiers.
+- Created \`TestClock\` mock helper capable of locking UTC timestamps and simulating elapsed execution steps.
+- Set up standard mock contexts (\`SbbRequestContext\`) and mock HTTP request/response envelopes to support controller logic.
+- Built fluent data builders (\`UserBuilder\`, \`TenantBuilder\`, \`OrganizationBuilder\`) supporting chainable parameters.
+- Built auto-incrementing data sequence mock factories (\`createUserMock\`, \`createTenantMock\`) to speed up list generation.
+- Coded custom, framework-agnostic assertion helpers checking UUID layout standards, timestamp limits, and validation exception contexts.
+- Added simulation utilities (\`MockDatabaseManager\`, \`SimulatedWebhookReceiver\`) tracking integration actions, active state arrays, and transaction rollbacks.`
+  },
+  {
+    name: 'index.ts',
+    path: 'packages/testing/src/index.ts',
+    language: 'typescript',
+    role: 'Public API Entry point',
+    description: 'Centralizes exports of helpers, builders, fixtures, mocks, assertions, and integration tools.',
+    content: `export * from './helpers/index.js';
+export * from './fixtures/index.js';
+export * from './mocks/index.js';
+export * from './builders/index.js';
+export * from './factories/index.js';
+export * from './assertions/index.js';
+export * from './integration/index.js';`
+  },
+  {
+    name: 'helpers/index.ts',
+    path: 'packages/testing/src/helpers/index.ts',
+    language: 'typescript',
+    role: 'Deterministic Generators & Clock',
+    description: 'Deterministic test UUID generators and fully queryable mock TestClock instances.',
+    content: `/**
+ * Deterministic and custom UUID generator specifically for unit and integration testing.
+ */
+export function generateTestUuid(id: number | string): string {
+  const cleanId = String(id).replace(/[^0-9a-fA-F]/g, '');
+  const padded = cleanId.padStart(12, '0').slice(-12);
+  return \`00000000-0000-4000-a000-\${padded}\`;
+}
+
+/**
+ * Predefined static UUIDs for test consistency across suites.
+ */
+export const TestUuids = {
+  user: generateTestUuid('1'),
+  admin: generateTestUuid('2'),
+  guest: generateTestUuid('3'),
+  tenant: generateTestUuid('100'),
+  organization: generateTestUuid('200'),
+  workspace: generateTestUuid('300'),
+  workflow: generateTestUuid('400'),
+  auditTrail: generateTestUuid('500'),
+};
+
+/**
+ * Deterministic dates and mock clock helpers for time-sensitive tests.
+ */
+export class TestClock {
+  private static mockTime: Date | null = null;
+
+  /**
+   * Static epoch date (2026-07-02T12:00:00Z) to use as stable baseline.
+   */
+  public static readonly EPOCH = new Date('2026-07-02T12:00:00.000Z');
+
+  /**
+   * Freezes the global test clock at a specific date.
+   */
+  public static freeze(time: Date = TestClock.EPOCH): void {
+    TestClock.mockTime = new Date(time);
+  }
+
+  /**
+   * Resets the mock clock, returning to default dynamic time.
+   */
+  public static reset(): void {
+    TestClock.mockTime = null;
+  }
+
+  /**
+   * Retrieves the current mock date or a live Date if clock is not frozen.
+   */
+  public static now(): Date {
+    return TestClock.mockTime ? new Date(TestClock.mockTime) : new Date();
+  }
+
+  /**
+   * Retrieves current ISO timestamp from mock or live clock.
+   */
+  public static nowIso(): string {
+    return TestClock.now().toISOString();
+  }
+
+  /**
+   * Shifts the current mock date forward or backward by a specific number of milliseconds.
+   */
+  public static tick(ms: number): void {
+    if (TestClock.mockTime) {
+      TestClock.mockTime = new Date(TestClock.mockTime.getTime() + ms);
+    } else {
+      throw new Error('TestClock must be frozen using TestClock.freeze() before calling tick()');
+    }
+  }
+}`
+  },
+  {
+    name: 'fixtures/index.ts',
+    path: 'packages/testing/src/fixtures/index.ts',
+    language: 'typescript',
+    role: 'Standard Test Fixtures',
+    description: 'Mock user, tenant, organization, and automated workflow state fixtures.',
+    content: `import { UserRole, UserStatus } from '@sbb/types';
+import { TestUuids, TestClock } from '../helpers/index.js';
+
+export const mockUserFixture = {
+  id: TestUuids.user,
+  email: 'test.user@sbb.internal',
+  firstName: 'Test',
+  lastName: 'User',
+  displayName: 'Test User',
+  role: UserRole.MEMBER,
+  status: UserStatus.ACTIVE,
+  emailVerified: true,
+  mfaEnabled: false,
+  createdAt: TestClock.EPOCH.toISOString(),
+  updatedAt: TestClock.EPOCH.toISOString(),
+  deletedAt: null,
+};
+
+export const mockAdminFixture = {
+  id: TestUuids.admin,
+  email: 'admin@sbb.internal',
+  firstName: 'SBB',
+  lastName: 'Administrator',
+  displayName: 'Admin SBB',
+  role: UserRole.ADMIN,
+  status: UserStatus.ACTIVE,
+  emailVerified: true,
+  mfaEnabled: true,
+  createdAt: TestClock.EPOCH.toISOString(),
+  updatedAt: TestClock.EPOCH.toISOString(),
+  deletedAt: null,
+};
+
+export const mockTenantFixture = {
+  id: TestUuids.tenant,
+  name: 'SBB Test Tenant',
+  domain: 'test-tenant.sbb.internal',
+  status: 'active',
+  billingPlan: 'enterprise',
+  settings: {
+    maxUsers: 100,
+    storageLimitGb: 500,
+    allowedRegions: ['us-east-1', 'eu-west-1'],
+    enableSso: true,
+  },
+  createdAt: TestClock.EPOCH.toISOString(),
+  updatedAt: TestClock.EPOCH.toISOString(),
+  deletedAt: null,
+};
+
+export const mockOrganizationFixture = {
+  id: TestUuids.organization,
+  tenantId: TestUuids.tenant,
+  name: 'Core Operations Division',
+  billingTier: 'premium',
+  settings: {
+    restrictDomains: true,
+    allowedDomainList: ['sbb.internal'],
+    idleTimeoutMinutes: 30,
+  },
+  createdAt: TestClock.EPOCH.toISOString(),
+  updatedAt: TestClock.EPOCH.toISOString(),
+  deletedAt: null,
+};
+
+export const mockWorkflowFixture = {
+  id: TestUuids.workflow,
+  name: 'Standard Deploy Automation',
+  status: 'active',
+  steps: [
+    { id: 'step-1', name: 'Lint and Validate', order: 1, type: 'validation' },
+    { id: 'step-2', name: 'Build Artifacts', order: 2, type: 'build' },
+    { id: 'step-3', name: 'Execute Integration Suite', order: 3, type: 'test' },
+  ],
+  createdAt: TestClock.EPOCH.toISOString(),
+  updatedAt: TestClock.EPOCH.toISOString(),
+  deletedAt: null,
+};`
+  },
+  {
+    name: 'mocks/index.ts',
+    path: 'packages/testing/src/mocks/index.ts',
+    language: 'typescript',
+    role: 'Mock Execution Contexts',
+    description: 'Implements request contexts, Express headers, request query objects, and responses.',
+    content: `import { UserRole } from '@sbb/types';
+import { TestUuids } from '../helpers/index.js';
+
+export interface SbbRequestContext {
+  tenantId: string;
+  organizationId: string | null;
+  userId: string | null;
+  userRole: UserRole | null;
+  userEmail: string | null;
+  correlationId: string;
+}
+
+export function createMockRequestContext(overrides?: Partial<SbbRequestContext>): SbbRequestContext {
+  return {
+    tenantId: TestUuids.tenant,
+    organizationId: TestUuids.organization,
+    userId: TestUuids.user,
+    userRole: UserRole.MEMBER,
+    userEmail: 'test.user@sbb.internal',
+    correlationId: \`test-corr-\${Date.now()}\`,
+    ...overrides,
+  };
+}
+
+export function createMockRequest(options?: {
+  headers?: Record<string, string>;
+  query?: Record<string, any>;
+  params?: Record<string, string>;
+  body?: any;
+  context?: Partial<SbbRequestContext>;
+}) {
+  const reqContext = createMockRequestContext(options?.context);
+  return {
+    headers: {
+      'x-tenant-id': reqContext.tenantId,
+      'x-correlation-id': reqContext.correlationId,
+      ...options?.headers,
+    },
+    query: options?.query || {},
+    params: options?.params || {},
+    body: options?.body || {},
+    context: reqContext,
+    get(name: string): string | undefined {
+      const lower = name.toLowerCase();
+      return this.headers[lower] || undefined;
+    },
+  };
+}
+
+export function createMockResponse() {
+  const res: any = {
+    statusCode: 200,
+    headers: {} as Record<string, string>,
+    body: null as any,
+    isSent: false,
+    status(code: number) {
+      this.statusCode = code;
+      return this;
+    },
+    setHeader(name: string, value: string) {
+      this.headers[name.toLowerCase()] = value;
+      return this;
+    },
+    json(data: any) {
+      this.body = data;
+      this.isSent = true;
+      return this;
+    },
+    send(data: any) {
+      this.body = data;
+      this.isSent = true;
+      return this;
+    },
+    end() {
+      this.isSent = true;
+      return this;
+    },
+  };
+  return res;
+}`
+  },
+  {
+    name: 'builders/index.ts',
+    path: 'packages/testing/src/builders/index.ts',
+    language: 'typescript',
+    role: 'Fluent Data Builders',
+    description: 'Provides builders to set up clean, granular states of users, tenants, and entities chainably.',
+    content: `import { UserRole, UserStatus } from '@sbb/types';
+import { TestClock } from '../helpers/index.js';
+import { mockUserFixture, mockTenantFixture, mockOrganizationFixture } from '../fixtures/index.js';
+
+export class UserBuilder {
+  private user = { ...mockUserFixture };
+
+  public withId(id: string): this {
+    this.user.id = id;
+    return this;
+  }
+
+  public withEmail(email: string): this {
+    this.user.email = email;
+    return this;
+  }
+
+  public withName(firstName: string, lastName: string): this {
+    this.user.firstName = firstName;
+    this.user.lastName = lastName;
+    this.user.displayName = \`\${firstName} \${lastName}\`;
+    return this;
+  }
+
+  public withRole(role: UserRole): this {
+    this.user.role = role;
+    return this;
+  }
+
+  public withStatus(status: UserStatus): this {
+    this.user.status = status;
+    return this;
+  }
+
+  public withMfa(enabled: boolean): this {
+    this.user.mfaEnabled = enabled;
+    return this;
+  }
+
+  public deleted(): this {
+    this.user.deletedAt = TestClock.nowIso();
+    return this;
+  }
+
+  public build() {
+    return {
+      ...this.user,
+      updatedAt: TestClock.nowIso(),
+    };
+  }
+}
+
+export class TenantBuilder {
+  private tenant = { ...mockTenantFixture };
+
+  public withId(id: string): this {
+    this.tenant.id = id;
+    return this;
+  }
+
+  public withName(name: string): this {
+    this.tenant.name = name;
+    return this;
+  }
+
+  public withDomain(domain: string): this {
+    this.tenant.domain = domain;
+    return this;
+  }
+
+  public withBillingPlan(plan: 'free' | 'growth' | 'enterprise'): this {
+    this.tenant.billingPlan = plan;
+    return this;
+  }
+
+  public withLimits(maxUsers: number, storageLimitGb: number): this {
+    this.tenant.settings = {
+      ...this.tenant.settings,
+      maxUsers,
+      storageLimitGb,
+    };
+    return this;
+  }
+
+  public build() {
+    return {
+      ...this.tenant,
+      updatedAt: TestClock.nowIso(),
+    };
+  }
+}
+
+export class OrganizationBuilder {
+  private organization = { ...mockOrganizationFixture };
+
+  public withId(id: string): this {
+    this.organization.id = id;
+    return this;
+  }
+
+  public withTenantId(tenantId: string): this {
+    this.organization.tenantId = tenantId;
+    return this;
+  }
+
+  public withName(name: string): this {
+    this.organization.name = name;
+    return this;
+  }
+
+  public withBillingTier(tier: string): this {
+    this.organization.billingTier = tier;
+    return this;
+  }
+
+  public build() {
+    return {
+      ...this.organization,
+      updatedAt: TestClock.nowIso(),
+    };
+  }
+}`
+  },
+  {
+    name: 'factories/index.ts',
+    path: 'packages/testing/src/factories/index.ts',
+    language: 'typescript',
+    role: 'Batch Mock Factories',
+    description: 'Sequenced builders to effortlessly spawn large lists of unique data entities.',
+    content: `import { UserRole, UserStatus } from '@sbb/types';
+import { generateTestUuid } from '../helpers/index.js';
+import { UserBuilder, TenantBuilder } from '../builders/index.js';
+
+let userSequence = 1;
+let tenantSequence = 1;
+
+export function resetSequenceCounters(): void {
+  userSequence = 1;
+  tenantSequence = 1;
+}
+
+export function createUserMock(overrides?: {
+  role?: UserRole;
+  status?: UserStatus;
+  mfaEnabled?: boolean;
+}) {
+  const seq = userSequence++;
+  const builder = new UserBuilder()
+    .withId(generateTestUuid(\`u-\${seq}\`))
+    .withEmail(\`user-\${seq}@sbb.internal\`)
+    .withName(\`First-\${seq}\`, \`Last-\${seq}\`);
+
+  if (overrides?.role) builder.withRole(overrides.role);
+  if (overrides?.status) builder.withStatus(overrides.status);
+  if (overrides?.mfaEnabled !== undefined) builder.withMfa(overrides.mfaEnabled);
+
+  return builder.build();
+}
+
+export function createTenantMock(overrides?: {
+  billingPlan?: 'free' | 'growth' | 'enterprise';
+}) {
+  const seq = tenantSequence++;
+  const builder = new TenantBuilder()
+    .withId(generateTestUuid(\`t-\${seq}\`))
+    .withName(\`Tenant Division \${seq}\`)
+    .withDomain(\`tenant-\${seq}.sbb.internal\`);
+
+  if (overrides?.billingPlan) builder.withBillingPlan(overrides.billingPlan);
+
+  return builder.build();
+}
+
+export function createUserMockList(count: number): ReturnType<typeof createUserMock>[] {
+  const users = [];
+  for (let i = 0; i < count; i++) {
+    users.push(createUserMock());
+  }
+  return users;
+}`
+  },
+  {
+    name: 'assertions/index.ts',
+    path: 'packages/testing/src/assertions/index.ts',
+    language: 'typescript',
+    role: 'Custom Test Assertions',
+    description: 'Framework-agnostic helpers asserting UUID structure, ISO-date structures, and error states.',
+    content: `export function assertUuid(value: any, message?: string): void {
+  if (typeof value !== 'string') {
+    throw new Error(message || \`Expected string for UUID, but got \${typeof value}\`);
+  }
+  const uuidRegex = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$/;
+  const testUuidRegex = /^00000000-0000-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
+  
+  if (!uuidRegex.test(value) && !testUuidRegex.test(value)) {
+    throw new Error(message || \`Expected valid UUID string, but got "\${value}"\`);
+  }
+}
+
+export function assertIsoDateTime(value: any, message?: string): void {
+  if (typeof value !== 'string') {
+    throw new Error(message || \`Expected string for ISO date-time, but got \${typeof value}\`);
+  }
+  const isoRegex = /^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d{3})?Z$/;
+  if (!isoRegex.test(value)) {
+    throw new Error(message || \`Expected valid ISO 8601 UTC date-time string, but got "\${value}"\`);
+  }
+}
+
+export function assertValidationError(fn: () => any, expectedField?: string): void {
+  try {
+    fn();
+  } catch (error: any) {
+    const isZod = error.name === 'ZodError' || Array.isArray(error.issues);
+    if (!isZod && !error.message?.toLowerCase().includes('validation')) {
+      throw new Error(\`Expected validation error, but caught different error: \${error.message}\`);
+    }
+
+    if (expectedField && Array.isArray(error.issues)) {
+      const hasField = error.issues.some((issue: any) => 
+        issue.path?.includes(expectedField) || issue.message?.toLowerCase().includes(expectedField)
+      );
+      if (!hasField) {
+        throw new Error(\`Validation error thrown, but did not reference expected field "\${expectedField}". Issues: \${JSON.stringify(error.issues)}\`);
+      }
+    }
+    return;
+  }
+  throw new Error(\`Expected function to throw validation error, but it succeeded without error.\`);
+}
+
+export function assertContainsMatch<T>(
+  array: T[],
+  predicate: (item: T) => boolean,
+  message?: string
+): void {
+  const match = array.some(predicate);
+  if (!match) {
+    throw new Error(message || 'Expected array to contain matching element, but no match was found.');
+  }
+}`
+  },
+  {
+    name: 'integration/index.ts',
+    path: 'packages/testing/src/integration/index.ts',
+    language: 'typescript',
+    role: 'Transactional Monitors',
+    description: 'Simulates transaction scopes, rollbacks, and webhook responses.',
+    content: `export class MockDatabaseManager {
+  private tables: Map<string, any[]> = new Map();
+  private transactionBackup: Map<string, any[]> | null = null;
+
+  public clearAll(): void {
+    this.tables.clear();
+    this.transactionBackup = null;
+  }
+
+  public getTable<T>(tableName: string): T[] {
+    if (!this.tables.has(tableName)) {
+      this.tables.set(tableName, []);
+    }
+    return this.tables.get(tableName) as T[];
+  }
+
+  public beginTransaction(): void {
+    if (this.transactionBackup !== null) {
+      throw new Error('A mock transaction is already in progress');
+    }
+    this.transactionBackup = new Map();
+    for (const [key, value] of this.tables.entries()) {
+      this.transactionBackup.set(key, JSON.parse(JSON.stringify(value)));
+    }
+  }
+
+  public commitTransaction(): void {
+    if (this.transactionBackup === null) {
+      throw new Error('No active mock transaction to commit');
+    }
+    this.transactionBackup = null;
+  }
+
+  public rollbackTransaction(): void {
+    if (this.transactionBackup === null) {
+      throw new Error('No active mock transaction to roll back');
+    }
+    this.tables = this.transactionBackup;
+    this.transactionBackup = null;
+  }
+}
+
+export class SimulatedWebhookReceiver {
+  private receivedPayloads: any[] = [];
+
+  public receive(payload: any): void {
+    this.receivedPayloads.push(payload);
+  }
+
+  public getPayloads(): any[] {
+    return [...this.receivedPayloads];
+  }
+
+  public clear(): void {
+    this.receivedPayloads = [];
+  }
+}`
+  },
+  {
+    name: 'README.md',
+    path: 'packages/testing/src/README.md',
+    language: 'markdown',
+    role: 'Internal Documentation',
+    description: 'Internal guide laying out packaging, folder targets, and development standards.',
+    content: `# @sbb/testing - Source Architecture
+
+This directory houses the shared testing infrastructure for the **SBB Platform**.
+
+## 🧱 Subdirectories
+
+* **\`helpers/\`**: Primitives like deterministic Test UUID generators and mock \`TestClock\` classes to make async and time-based assertions reproducible.
+* **\`fixtures/\`**: Static baseline entities for users, tenants, and workflows mimicking production data payloads.
+* **\`mocks/\`**: Environment mocks including \`SbbRequestContext\`, standard mock HTTP Request and Response schemas for route execution tests.
+* **\`builders/\`**: Fluent design pattern test data builders supporting chainable setups (e.g. \`UserBuilder\`, \`TenantBuilder\`).
+* **\`factories/\`**: Batch data mock factories utilizing sequences to automatically spawn collections of unique mock items.
+* **\`assertions/\`**: Rich collection of framework-agnostic assert helpers targeting UUID standards, ISO date-times, and expected validation/Zod exception patterns.
+* **\`integration/\`**: Advanced transactional database monitors and mock webhook receivers designed to simplify integration test setups.
+
+## ⚠️ Guidelines
+
+1. **Keep Framework-Agnostic**: Keep builders, assertions, and mocks pure TypeScript and compatible with any test runner (Vitest, Jest, Playwright, etc.).
+2. **Zero-Production Leakage**: These elements should only ever be imported inside \`.test.ts\`, \`.spec.ts\` files, or development sandbox modules.
+3. **No Database Dependencies**: All operations here are computed strictly in-memory.`
+  }
+];
+
+
 
 
