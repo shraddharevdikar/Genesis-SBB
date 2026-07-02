@@ -1416,4 +1416,570 @@ This directory houses the core implementation files for the \`@sbb/logger\` pack
   }
 ];
 
+export const sharedFileList: FileNode[] = [
+  {
+    name: 'README.md',
+    path: 'packages/shared/README.md',
+    language: 'markdown',
+    role: 'Documentation',
+    description: 'Shared platform foundation package documentation, key features, and usage examples.',
+    content: `# @sbb/shared
+
+Shared platform foundation package for the **SBB Platform**.
+
+Centralized, framework-agnostic utilities, error hierarchies, result patterns, pagination structures, base interfaces, and utility types.
+
+---
+
+## 🚀 Key Features
+
+* **Functional Results**: Safe, exception-free execution flows using standard \`Result<T, E>\`, \`Success<T>\`, and \`Failure<E>\` models.
+* **Error Hierarchy**: Class-based custom HTTP exception mapping (\`AppError\`, \`ValidationError\`, \`NotFoundError\`).
+* **Unified Pagination**: Standardized parameters for database listings (\`PaginationRequest\`, \`PageInfo\`, \`PaginationResponse<T>\`).
+* **Standard Enums**: Uniform status, environment, and ordering flags (\`Status\`, \`Environment\`, \`SortDirection\`).
+* **Entity Contracts**: Core metadata contracts for domain records (\`BaseEntity\`, \`Timestamped\`, \`Auditable\`, \`SoftDelete\`).
+* **Generic Helpers**: High-speed types (\`DeepPartial<T>\`, \`Nullable<T>\`) and optimized helper namespaces (\`DateUtils\`, \`StringUtils\`, \`ObjectUtils\`).`
+  },
+  {
+    name: 'package.json',
+    path: 'packages/shared/package.json',
+    language: 'json',
+    role: 'Package Manifest',
+    description: 'Defines package name (@sbb/shared), scripts, and restricted publishing setups.',
+    content: `{
+  "name": "@sbb/shared",
+  "version": "1.0.0",
+  "description": "Shared foundation package for the SBB Platform containing framework-agnostic utilities, error hierarchies, result patterns, pagination structures, base interfaces, and utility types.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "echo \\"Error: no test specified\\" && exit 0"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.5",
+    "@types/node": "^20.12.12"
+  },
+  "publishConfig": {
+    "access": "restricted"
+  }
+}`
+  },
+  {
+    name: 'tsconfig.json',
+    path: 'packages/shared/tsconfig.json',
+    language: 'json',
+    role: 'TypeScript Config',
+    description: 'Defines modular compiler settings for standard NodeNext build outputs.',
+    content: `{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "declaration": true,
+    "outDir": "dist",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
+}`
+  },
+  {
+    name: 'CHANGELOG.md',
+    path: 'packages/shared/CHANGELOG.md',
+    language: 'markdown',
+    role: 'Release History',
+    description: 'Chronological list of all release updates, feature inclusions, and changelog logs.',
+    content: `# Changelog
+
+All notable changes to the \`@sbb/shared\` package will be documented in this file.
+
+## [1.0.0] - 2026-07-02
+
+### Added
+- Core exception classes (\`AppError\`, \`ValidationError\`, \`NotFoundError\`, \`UnauthorizedError\`, \`ForbiddenError\`, \`ConflictError\`, \`InternalServerError\`).
+- Functional \`Result<T, E>\` pattern implementation with \`Success<T>\` and \`Failure<E>\` types.
+- Standard pagination envelopes (\`PaginationRequest\`, \`PaginationResponse<T>\`, \`PageInfo\`) and generator utilities.
+- System-wide generic typescript enums (\`Environment\`, \`LogLevel\`, \`SortDirection\`, \`Order\`, \`Status\`).
+- Database mapping interfaces (\`BaseEntity\`, \`Timestamped\`, \`Auditable\`, \`SoftDelete\`).
+- Common typing utility aliases (\`Nullable<T>\`, \`Optional<T>\`, \`DeepPartial<T>\`, \`ValueOf<T>\`).
+- Framework-free helper suites (\`isValidUuid\`, \`DateUtils\`, \`StringUtils\`, \`ObjectUtils\`).
+- Package entry exports configurations and markdown documentation.`
+  },
+  {
+    name: 'index.ts',
+    path: 'packages/shared/src/index.ts',
+    language: 'typescript',
+    role: 'Public API Entry point',
+    description: 'Exposes all core components, utility suites, and standard structures to the SBB Platform.',
+    content: `export * from './constants/index.js';
+export * from './dto/index.js';
+export * from './enums/index.js';
+export * from './errors/index.js';
+export * from './interfaces/index.js';
+export * from './pagination/index.js';
+export * from './result/index.js';
+export * from './types/index.js';
+export * from './utils/index.js';`
+  },
+  {
+    name: 'errors/index.ts',
+    path: 'packages/shared/src/errors/index.ts',
+    language: 'typescript',
+    role: 'Error Hierarchy',
+    description: 'Standard exception classes extending Error for framework-free system error mapping.',
+    content: `export class AppError extends Error {
+  public readonly statusCode: number;
+  public readonly details?: any;
+
+  constructor(message: string, statusCode: number = 500, details?: any) {
+    super(message);
+    this.name = this.constructor.name;
+    this.statusCode = statusCode;
+    this.details = details;
+    if (Error.captureStackTrace) {
+      Error.captureStackTrace(this, this.constructor);
+    }
+  }
+}
+
+export class ValidationError extends AppError {
+  constructor(message: string, details?: any) {
+    super(message, 400, details);
+  }
+}
+
+export class NotFoundError extends AppError {
+  constructor(message: string, details?: any) {
+    super(message, 404, details);
+  }
+}
+
+export class UnauthorizedError extends AppError {
+  constructor(message: string, details?: any) {
+    super(message, 401, details);
+  }
+}
+
+export class ForbiddenError extends AppError {
+  constructor(message: string, details?: any) {
+    super(message, 403, details);
+  }
+}
+
+export class ConflictError extends AppError {
+  constructor(message: string, details?: any) {
+    super(message, 409, details);
+  }
+}
+
+export class InternalServerError extends AppError {
+  constructor(message: string, details?: any) {
+    super(message, 500, details);
+  }
+}`
+  },
+  {
+    name: 'result/index.ts',
+    path: 'packages/shared/src/result/index.ts',
+    language: 'typescript',
+    role: 'Result Pattern monad',
+    description: 'Safe Result monad mapping success/failure states cleanly for SBB service return contracts.',
+    content: `export class Result<T, E = Error> {
+  private readonly _isSuccess: boolean;
+  private readonly _value?: T;
+  private readonly _error?: E;
+
+  private constructor(isSuccess: boolean, value?: T, error?: E) {
+    this._isSuccess = isSuccess;
+    this._value = value;
+    this._error = error;
+  }
+
+  public get isSuccess(): boolean {
+    return this._isSuccess;
+  }
+
+  public get isFailure(): boolean {
+    return !this._isSuccess;
+  }
+
+  public get value(): T {
+    if (this.isFailure) {
+      throw new Error('Cannot retrieve value of a failed Result. Use getError() or check isSuccess first.');
+    }
+    return this._value as T;
+  }
+
+  public get error(): E {
+    if (this.isSuccess) {
+      throw new Error('Cannot retrieve error of a successful Result. Check isFailure first.');
+    }
+    return this._error as E;
+  }
+
+  public static success<T, E = Error>(value: T): Result<T, E> {
+    return new Result<T, E>(true, value, undefined);
+  }
+
+  public static failure<T, E = Error>(error: E): Result<T, E> {
+    return new Result<T, E>(false, undefined, error);
+  }
+
+  public map<U>(f: (val: T) => U): Result<U, E> {
+    if (this.isSuccess) {
+      return Result.success<U, E>(f(this.value));
+    }
+    return Result.failure<U, E>(this.error);
+  }
+
+  public flatMap<U>(f: (val: T) => Result<U, E>): Result<U, E> {
+    if (this.isSuccess) {
+      return f(this.value);
+    }
+    return Result.failure<U, E>(this.error);
+  }
+}
+
+export type Success<T> = Result<T, never>;
+export type Failure<E> = Result<never, E>;`
+  },
+  {
+    name: 'pagination/index.ts',
+    path: 'packages/shared/src/pagination/index.ts',
+    language: 'typescript',
+    role: 'Pagination Metadata',
+    description: 'Types and factory generators for database listings and metadata responses.',
+    content: `export interface PaginationRequest {
+  page?: number;
+  limit?: number;
+  sortBy?: string;
+  sortDirection?: 'asc' | 'desc';
+}
+
+export interface PageInfo {
+  totalItems: number;
+  itemCount: number;
+  itemsPerPage: number;
+  totalPages: number;
+  currentPage: number;
+  hasNextPage: boolean;
+  hasPreviousPage: boolean;
+}
+
+export interface PaginationResponse<T> {
+  data: T[];
+  meta: PageInfo;
+}
+
+export function createPageInfo(
+  totalItems: number,
+  currentPage: number,
+  limit: number,
+  itemCount: number
+): PageInfo {
+  const totalPages = Math.ceil(totalItems / limit) || 1;
+  return {
+    totalItems,
+    itemCount,
+    itemsPerPage: limit,
+    totalPages,
+    currentPage,
+    hasNextPage: currentPage < totalPages,
+    hasPreviousPage: currentPage > 1,
+  };
+}`
+  },
+  {
+    name: 'enums/index.ts',
+    path: 'packages/shared/src/enums/index.ts',
+    language: 'typescript',
+    role: 'Core Enums',
+    description: 'Exposes Environment, LogLevel, SortDirection, Order, and Status flags.',
+    content: `export enum Environment {
+  DEVELOPMENT = 'development',
+  TEST = 'test',
+  PRODUCTION = 'production',
+}
+
+export enum LogLevel {
+  TRACE = 'trace',
+  DEBUG = 'debug',
+  INFO = 'info',
+  WARN = 'warn',
+  ERROR = 'error',
+  FATAL = 'fatal',
+}
+
+export enum SortDirection {
+  ASC = 'asc',
+  DESC = 'desc',
+}
+
+export enum Order {
+  ASC = 'asc',
+  DESC = 'desc',
+}
+
+export enum Status {
+  ACTIVE = 'active',
+  INACTIVE = 'inactive',
+  PENDING = 'pending',
+  SUSPENDED = 'suspended',
+  ARCHIVED = 'archived',
+}`
+  },
+  {
+    name: 'interfaces/index.ts',
+    path: 'packages/shared/src/interfaces/index.ts',
+    language: 'typescript',
+    role: 'Standard Interfaces',
+    description: 'Unified signatures for entity auditing, soft deletion, and timestamp definitions.',
+    content: `export interface BaseEntity {
+  id: string;
+}
+
+export interface Timestamped {
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface Auditable {
+  createdBy?: string;
+  updatedBy?: string;
+}
+
+export interface SoftDelete {
+  deletedAt?: Date | null;
+  deletedBy?: string | null;
+  isDeleted: boolean;
+}`
+  },
+  {
+    name: 'types/index.ts',
+    path: 'packages/shared/src/types/index.ts',
+    language: 'typescript',
+    role: 'Utility Types',
+    description: 'Generic utilities like Nullable, Optional, DeepPartial, and ValueOf.',
+    content: `export type Nullable<T> = T | null;
+
+export type Optional<T> = T | undefined;
+
+export type DeepPartial<T> = {
+  [P in keyof T]?: T[P] extends (infer U)[]
+    ? DeepPartial<U>[]
+    : T[P] extends object
+    ? DeepPartial<T[P]>
+    : T[P];
+};
+
+export type ValueOf<T> = T[keyof T];`
+  },
+  {
+    name: 'utils/index.ts',
+    path: 'packages/shared/src/utils/index.ts',
+    language: 'typescript',
+    role: 'System Utilities',
+    description: 'Speedy helpers for UUID checks, string capitalize/slugify, date diffs, and safe object pick/omit.',
+    content: `/**
+ * Checks if a string is a valid UUID (v4 format by default, supports general format).
+ */
+export function isValidUuid(id: string): boolean {
+  const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+  return uuidRegex.test(id);
+}
+
+/**
+ * Standard date formatting and comparison helpers.
+ */
+export const DateUtils = {
+  isValid(date: any): boolean {
+    if (date instanceof Date) {
+      return !isNaN(date.getTime());
+    }
+    if (typeof date === 'string' || typeof date === 'number') {
+      const d = new Date(date);
+      return !isNaN(d.getTime());
+    }
+    return false;
+  },
+
+  toIsoString(date: Date | string | number): string {
+    const d = new Date(date);
+    if (!DateUtils.isValid(d)) {
+      throw new Error('Invalid date provided');
+    }
+    return d.toISOString();
+  },
+
+  addDays(date: Date, days: number): Date {
+    const result = new Date(date);
+    result.setDate(result.getDate() + days);
+    return result;
+  },
+
+  diffInMs(date1: Date, date2: Date): number {
+    return Math.abs(date1.getTime() - date2.getTime());
+  },
+};
+
+/**
+ * Common string transformation and sanitization helpers.
+ */
+export const StringUtils = {
+  capitalize(str: string): string {
+    if (!str) return '';
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  },
+
+  slugify(str: string): string {
+    if (!str) return '';
+    return str
+      .toLowerCase()
+      .trim()
+      .replace(/[^\\w\\s-]/g, '')
+      .replace(/[\\s_-]+/g, '-')
+      .replace(/^-+|-+$/g, '');
+  },
+
+  truncate(str: string, length: number, suffix: string = '...'): string {
+    if (!str || str.length <= length) return str;
+    return str.slice(0, length) + suffix;
+  },
+
+  isEmail(str: string): boolean {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(str);
+  },
+};
+
+/**
+ * Safe deep-cloning and object manipulation helpers.
+ */
+export const ObjectUtils = {
+  deepClone<T>(obj: T): T {
+    if (obj === null || typeof obj !== 'object') {
+      return obj;
+    }
+    return JSON.parse(JSON.stringify(obj));
+  },
+
+  isObject(item: any): boolean {
+    return item && typeof item === 'object' && !Array.isArray(item);
+  },
+
+  omit<T extends object, K extends keyof T>(obj: T, keys: K[]): Omit<T, K> {
+    const result = { ...obj };
+    keys.forEach((key) => {
+      delete result[key];
+    });
+    return result;
+  },
+
+  pick<T extends object, K extends keyof T>(obj: T, keys: K[]): Pick<T, K> {
+    const result = {} as Pick<T, K>;
+    keys.forEach((key) => {
+      if (key in obj) {
+        result[key] = obj[key];
+      }
+    });
+    return result;
+  },
+};`
+  },
+  {
+    name: 'constants/index.ts',
+    path: 'packages/shared/src/constants/index.ts',
+    language: 'typescript',
+    role: 'Unified Constants',
+    description: 'System-wide variables including HTTP header identifiers and date keys.',
+    content: `export const PLATFORM_NAME = 'SBB Platform';
+
+export const DEFAULT_PAGE = 1;
+export const DEFAULT_LIMIT = 10;
+export const MAX_LIMIT = 100;
+
+export const DATE_FORMATS = {
+  ISO: 'yyyy-MM-dd\\\'T\\\'HH:mm:ss.SSSxxx',
+  DATE_ONLY: 'yyyy-MM-dd',
+  DISPLAY_TIME: 'SYS:yyyy-mm-dd HH:MM:ss.l',
+};
+
+export const HTTP_HEADERS = {
+  CORRELATION_ID: 'x-correlation-id',
+  REQUEST_ID: 'x-request-id',
+  TENANT_ID: 'x-tenant-id',
+  USER_ID: 'x-user-id',
+};`
+  },
+  {
+    name: 'dto/index.ts',
+    path: 'packages/shared/src/dto/index.ts',
+    language: 'typescript',
+    role: 'DTO wrappers',
+    description: 'Generic formats mapping ApiResponse wrappers cleanly.',
+    content: `import { PageInfo } from '../pagination/index.js';
+
+export interface ApiResponse<T> {
+  success: boolean;
+  message?: string;
+  data?: T;
+  meta?: PageInfo;
+  errors?: Array<{
+    field?: string;
+    message: string;
+    code?: string;
+  }>;
+}
+
+export function createSuccessResponse<T>(data: T, message?: string, meta?: PageInfo): ApiResponse<T> {
+  return {
+    success: true,
+    message,
+    data,
+    meta,
+  };
+}
+
+export function createErrorResponse(message: string, errors?: Array<{ field?: string; message: string; code?: string }>): ApiResponse<never> {
+  return {
+    success: false,
+    message,
+    errors,
+  };
+}`
+  },
+  {
+    name: 'README.md',
+    path: 'packages/shared/src/README.md',
+    language: 'markdown',
+    role: 'Internal Documentation',
+    description: 'Technical document detailing the subdirectory layouts and coding mandates.',
+    content: `# @sbb/shared - Source Architecture
+
+This directory houses the core implementation files for the \`@sbb/shared\` package.
+
+## 🧱 Architectural Components
+
+* **\`constants/\`**: Generic platform constants, date formats, and tracing headers.
+* **\`dto/\`**: Safe incoming/outgoing envelopes like \`ApiResponse<T>\`.
+* **\`enums/\`**: Core system enums including standard SortDirections, Statuses, and Environments.
+* **\`errors/\`**: Framework-free custom error classes extending standard \`Error\`.
+* **\`interfaces/\`**: Structural signatures for persistent models (\`Timestamped\`, \`Auditable\`, \`SoftDelete\`).
+* **\`pagination/\`**: Central models mapping page criteria and result payloads (\`PaginationResponse<T>\`).
+* **\`result/\`**: Functional result container mapping explicit success/failure loops (\`Result<T, E>\`).
+* **\`types/\`**: System utility generics (\`DeepPartial<T>\`, \`Nullable<T>\`).
+* **\`utils/\`**: Safe helpers implementing high-speed string, object, date, and ID processes.
+
+## ⚠️ Important Implementation Guidelines
+
+1. **Keep Framework Agnostic**: Do not load React, NestJS, NextJS, or database engine drivers.
+2. **Standard Enums Only**: Enums must be regular declarations (no \`const enum\`).
+3. **No Circular Imports**: Keep directory boundaries strictly resolved.`
+  }
+];
+
 

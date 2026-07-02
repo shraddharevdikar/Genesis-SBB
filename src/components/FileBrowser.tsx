@@ -6,27 +6,32 @@ interface FileBrowserProps {
   files: FileNode[];
   configFiles: FileNode[];
   loggerFiles: FileNode[];
+  sharedFiles: FileNode[];
 }
 
-export function FileBrowser({ files, configFiles, loggerFiles }: FileBrowserProps) {
-  const [activePackage, setActivePackage] = useState<'identity' | 'config' | 'logger'>('identity');
+export function FileBrowser({ files, configFiles, loggerFiles, sharedFiles }: FileBrowserProps) {
+  const [activePackage, setActivePackage] = useState<'identity' | 'config' | 'logger' | 'shared'>('identity');
   const activeFiles = 
     activePackage === 'identity' 
       ? files 
       : activePackage === 'config' 
         ? configFiles 
-        : loggerFiles;
+        : activePackage === 'logger'
+          ? loggerFiles
+          : sharedFiles;
   const [selectedFile, setSelectedFile] = useState<FileNode>(files[0]);
   const [copied, setCopied] = useState(false);
 
-  const handlePackageSwitch = (pkg: 'identity' | 'config' | 'logger') => {
+  const handlePackageSwitch = (pkg: 'identity' | 'config' | 'logger' | 'shared') => {
     setActivePackage(pkg);
     const targetFiles = 
       pkg === 'identity' 
         ? files 
         : pkg === 'config' 
           ? configFiles 
-          : loggerFiles;
+          : pkg === 'logger'
+            ? loggerFiles
+            : sharedFiles;
     setSelectedFile(targetFiles[0]);
   };
 
@@ -85,7 +90,7 @@ export function FileBrowser({ files, configFiles, loggerFiles }: FileBrowserProp
         </div>
 
         {/* Package Selector */}
-        <div className="grid grid-cols-3 gap-1 p-2 bg-[#0A0A0B] border-b border-[#262626]">
+        <div className="grid grid-cols-4 gap-1 p-2 bg-[#0A0A0B] border-b border-[#262626]">
           <button
             onClick={() => handlePackageSwitch('identity')}
             id="pkg-btn-identity"
@@ -119,6 +124,17 @@ export function FileBrowser({ files, configFiles, loggerFiles }: FileBrowserProp
           >
             @sbb/logger
           </button>
+          <button
+            onClick={() => handlePackageSwitch('shared')}
+            id="pkg-btn-shared"
+            className={`py-1.5 text-[9px] font-mono uppercase font-bold tracking-wider rounded transition-all cursor-pointer ${
+              activePackage === 'shared'
+                ? 'bg-[#1C1917] text-white border border-[#44403C] shadow'
+                : 'text-[#737373] hover:text-[#A3A3A3] hover:bg-[#0D0D0E]'
+            }`}
+          >
+            @sbb/shared
+          </button>
         </div>
 
         {/* Directory Listing */}
@@ -131,7 +147,9 @@ export function FileBrowser({ files, configFiles, loggerFiles }: FileBrowserProp
                 ? 'backend/api/src/modules/identity/' 
                 : activePackage === 'config' 
                   ? 'packages/config/' 
-                  : 'packages/logger/'}
+                  : activePackage === 'logger'
+                    ? 'packages/logger/'
+                    : 'packages/shared/'}
             </span>
           </div>
 
