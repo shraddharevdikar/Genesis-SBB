@@ -1,6 +1,6 @@
 {
   "name": "SBB Identity Module Explorer",
-  "description": "Architectural workspace and interactive playground for SBB Platform Core Modules (Identity, Config, Logger, and Shared Packages).",
+  "description": "Architectural workspace and interactive playground for SBB Platform Core Modules (Identity, Config, Logger, Shared Packages, and `@sbb/ui` Design System).",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }
