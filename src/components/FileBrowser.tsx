@@ -5,17 +5,28 @@ import { FileCode, Folder, Copy, Check, Terminal, Info, ChevronRight } from 'luc
 interface FileBrowserProps {
   files: FileNode[];
   configFiles: FileNode[];
+  loggerFiles: FileNode[];
 }
 
-export function FileBrowser({ files, configFiles }: FileBrowserProps) {
-  const [activePackage, setActivePackage] = useState<'identity' | 'config'>('identity');
-  const activeFiles = activePackage === 'identity' ? files : configFiles;
+export function FileBrowser({ files, configFiles, loggerFiles }: FileBrowserProps) {
+  const [activePackage, setActivePackage] = useState<'identity' | 'config' | 'logger'>('identity');
+  const activeFiles = 
+    activePackage === 'identity' 
+      ? files 
+      : activePackage === 'config' 
+        ? configFiles 
+        : loggerFiles;
   const [selectedFile, setSelectedFile] = useState<FileNode>(files[0]);
   const [copied, setCopied] = useState(false);
 
-  const handlePackageSwitch = (pkg: 'identity' | 'config') => {
+  const handlePackageSwitch = (pkg: 'identity' | 'config' | 'logger') => {
     setActivePackage(pkg);
-    const targetFiles = pkg === 'identity' ? files : configFiles;
+    const targetFiles = 
+      pkg === 'identity' 
+        ? files 
+        : pkg === 'config' 
+          ? configFiles 
+          : loggerFiles;
     setSelectedFile(targetFiles[0]);
   };
 
@@ -74,7 +85,7 @@ export function FileBrowser({ files, configFiles }: FileBrowserProps) {
         </div>
 
         {/* Package Selector */}
-        <div className="grid grid-cols-2 gap-1 p-2 bg-[#0A0A0B] border-b border-[#262626]">
+        <div className="grid grid-cols-3 gap-1 p-2 bg-[#0A0A0B] border-b border-[#262626]">
           <button
             onClick={() => handlePackageSwitch('identity')}
             id="pkg-btn-identity"
@@ -97,6 +108,17 @@ export function FileBrowser({ files, configFiles }: FileBrowserProps) {
           >
             @sbb/config
           </button>
+          <button
+            onClick={() => handlePackageSwitch('logger')}
+            id="pkg-btn-logger"
+            className={`py-1.5 text-[9px] font-mono uppercase font-bold tracking-wider rounded transition-all cursor-pointer ${
+              activePackage === 'logger'
+                ? 'bg-[#1C1917] text-white border border-[#44403C] shadow'
+                : 'text-[#737373] hover:text-[#A3A3A3] hover:bg-[#0D0D0E]'
+            }`}
+          >
+            @sbb/logger
+          </button>
         </div>
 
         {/* Directory Listing */}
@@ -104,7 +126,13 @@ export function FileBrowser({ files, configFiles }: FileBrowserProps) {
           {/* Virtual Root Folder */}
           <div className="flex items-center gap-1.5 px-2 py-1 text-xs text-[#737373] font-mono">
             <Folder className="w-3.5 h-3.5 fill-[#1C1917] stroke-[#44403C]" />
-            <span>{activePackage === 'identity' ? 'backend/api/src/modules/identity/' : 'packages/config/'}</span>
+            <span>
+              {activePackage === 'identity' 
+                ? 'backend/api/src/modules/identity/' 
+                : activePackage === 'config' 
+                  ? 'packages/config/' 
+                  : 'packages/logger/'}
+            </span>
           </div>
 
           <div className="pl-4 space-y-1">

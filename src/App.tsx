@@ -3,7 +3,7 @@ import { TicketDetail } from './components/TicketDetail';
 import { FileBrowser } from './components/FileBrowser';
 import { ArchitectureGraph } from './components/ArchitectureGraph';
 import { RoadmapTimeline } from './components/RoadmapTimeline';
-import { ticketDetails, fileList, futureTickets, configFileList } from './data';
+import { ticketDetails, fileList, futureTickets, configFileList, loggerFileList } from './data';
 import { 
   FolderCheck, 
   Terminal, 
@@ -52,7 +52,7 @@ export default function App() {
           </div>
           <div className="flex items-center gap-2 bg-[#0D0D0E] px-3 py-1.5 rounded border border-[#262626]">
             <FolderCheck className="w-3.5 h-3.5 text-[#A3A3A3]" />
-            <span className="text-[10px] font-mono text-[#A3A3A3]">Files: 24 Active Files</span>
+            <span className="text-[10px] font-mono text-[#A3A3A3]">Files: 36 Active Files</span>
           </div>
           <a 
             href="https://github.com" 
@@ -75,11 +75,11 @@ export default function App() {
           <div className="bg-[#0F0F11] p-4 rounded border border-[#262626]">
             <div className="flex items-center justify-between">
               <span className="text-[#737373] font-mono text-[10px] uppercase tracking-wider">Active Tickets</span>
-              <span className="text-[10px] font-mono text-[#D4D4D8] bg-[#1C1917] border border-[#44403C] px-1.5 py-0.5 rounded">GEN-000.6</span>
+              <span className="text-[10px] font-mono text-[#D4D4D8] bg-[#1C1917] border border-[#44403C] px-1.5 py-0.5 rounded">GEN-000.4.2</span>
             </div>
-            <p className="text-xl font-light text-white mt-2 font-mono">2 Active</p>
+            <p className="text-xl font-light text-white mt-2 font-mono">3 Packages</p>
             <p className="text-[11px] text-[#A3A3A3] mt-1 flex items-center gap-1">
-              <span>Identity & Config Done</span>
+              <span>Identity, Config & Logger Done</span>
             </p>
           </div>
 
@@ -88,8 +88,8 @@ export default function App() {
               <span className="text-[#737373] font-mono text-[10px] uppercase tracking-wider">Files Written</span>
               <Code2 className="w-4 h-4 text-[#737373]" />
             </div>
-            <p className="text-xl font-light text-white mt-2 font-mono">24 Files</p>
-            <p className="text-[11px] text-[#737373] mt-1">Identity (15) + Config (9)</p>
+            <p className="text-xl font-light text-white mt-2 font-mono">36 Files</p>
+            <p className="text-[11px] text-[#737373] mt-1">Identity (15) + Config (9) + Logger (12)</p>
           </div>
 
           <div className="bg-[#0F0F11] p-4 rounded border border-[#262626]">
@@ -103,11 +103,11 @@ export default function App() {
 
           <div className="bg-[#0F0F11] p-4 rounded border border-[#262626]">
             <div className="flex items-center justify-between">
-              <span className="text-[#737373] font-mono text-[10px] uppercase tracking-wider">Validation Schemas</span>
+              <span className="text-[#737373] font-mono text-[10px] uppercase tracking-wider">Validation & Loggers</span>
               <Workflow className="w-4 h-4 text-[#737373]" />
             </div>
-            <p className="text-xl font-light text-white mt-2 font-mono">Zod & DTOs</p>
-            <p className="text-[11px] text-[#737373] mt-1">Type-Safe Env validation</p>
+            <p className="text-xl font-light text-white mt-2 font-mono">Pino & Zod</p>
+            <p className="text-[11px] text-[#737373] mt-1">Safe Env & Serialized Errors</p>
           </div>
         </section>
 
@@ -179,7 +179,7 @@ export default function App() {
           )}
 
           {activeTab === 'code' && (
-            <FileBrowser files={fileList} configFiles={configFileList} />
+            <FileBrowser files={fileList} configFiles={configFileList} loggerFiles={loggerFileList} />
           )}
 
           {activeTab === 'pipeline' && (

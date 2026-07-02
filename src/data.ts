@@ -970,3 +970,450 @@ export * from './config.js';`
   }
 ];
 
+export const loggerFileList: FileNode[] = [
+  {
+    name: 'README.md',
+    path: 'packages/logger/README.md',
+    language: 'markdown',
+    role: 'Documentation',
+    description: 'Comprehensive logging package documentation, architectural guidelines, and extensive code examples.',
+    content: `# @sbb/logger
+
+Enterprise logging package for the **SBB Platform**.
+
+Centralized, type-safe, high-performance wrapper around **Pino** featuring selective redaction, detailed error serialization, multi-tenant tracing, and real-time execution timing.
+
+---
+
+## 🚀 Key Features
+
+* **High Performance**: Built on Pino to minimize CPU usage and prevent logging from blocking event loops.
+* **Smart Environment Toggles**: Outputs clean \`pino-pretty\` console messages in development/test states, and fast JSON logs in production environments.
+* **Trace-Aware Contextualizing**: Dedicated helpers to spawn child loggers featuring unified \`correlationId\`, \`requestId\`, \`tenantId\`, and \`userId\` fields.
+* **Sensitive Data Redaction**: Automatically filters standard keys (e.g. \`password\`, \`secret\`, \`accessToken\`) to prevent security leaks in log files.
+* **Custom Error Serialization**: Formats system exceptions cleanly, capturing error messages, stack traces, nested states, and custom response codes.
+* **Performance Timer Tracing**: Easy performance benchmarks using nanosecond-accurate \`process.hrtime()\` hooks.`
+  },
+  {
+    name: 'package.json',
+    path: 'packages/logger/package.json',
+    language: 'json',
+    role: 'Package Manifest',
+    description: 'Defines package dependencies (Pino, pino-pretty), scripts, and restricted publishing setup.',
+    content: `{
+  "name": "@sbb/logger",
+  "version": "1.0.0",
+  "description": "Centralized, high-performance logging package for the SBB Platform",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "echo \\"Error: no test specified\\" && exit 0"
+  },
+  "dependencies": {
+    "pino": "^9.2.0",
+    "pino-pretty": "^11.2.1"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.5",
+    "@types/node": "^20.12.12"
+  },
+  "publishConfig": {
+    "access": "restricted"
+  }
+}`
+  },
+  {
+    name: 'tsconfig.json',
+    path: 'packages/logger/tsconfig.json',
+    language: 'json',
+    role: 'TypeScript Config',
+    description: 'Defines compiler options, NodeNext module resolution, and output directory for the build.',
+    content: `{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "declaration": true,
+    "outDir": "dist",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
+}`
+  },
+  {
+    name: 'types.ts',
+    path: 'packages/logger/src/types.ts',
+    language: 'typescript',
+    role: 'Types & Interfaces',
+    description: 'Defines LogLevel union, LogContext payload, custom LoggerOptions, and the SBBLogger interface contracts.',
+    content: `export type LogLevel = 'trace' | 'debug' | 'info' | 'warn' | 'error' | 'fatal';
+
+export interface LogContext {
+  correlationId?: string;
+  requestId?: string;
+  tenantId?: string;
+  userId?: string;
+  [key: string]: any;
+}
+
+export interface LoggerOptions {
+  name: string;
+  level?: LogLevel;
+  redactPaths?: string[];
+  pretty?: boolean; // If true, force pino-pretty. If false, force json. If undefined, determine based on NODE_ENV.
+}
+
+export interface SBBLogger {
+  trace(msg: string, ...args: any[]): void;
+  trace(obj: object, msg?: string, ...args: any[]): void;
+  
+  debug(msg: string, ...args: any[]): void;
+  debug(obj: object, msg?: string, ...args: any[]): void;
+  
+  info(msg: string, ...args: any[]): void;
+  info(obj: object, msg?: string, ...args: any[]): void;
+  
+  warn(msg: string, ...args: any[]): void;
+  warn(obj: object, msg?: string, ...args: any[]): void;
+  
+  error(msg: string, ...args: any[]): void;
+  error(obj: object, msg?: string, ...args: any[]): void;
+  error(err: Error, msg?: string, ...args: any[]): void;
+  
+  fatal(msg: string, ...args: any[]): void;
+  fatal(obj: object, msg?: string, ...args: any[]): void;
+  fatal(err: Error, msg?: string, ...args: any[]): void;
+
+  child(context: LogContext): SBBLogger;
+  
+  /**
+   * Performance timing helper. Returns an object with an end() method that prints the duration.
+   */
+  time(label: string): { end(): void };
+}`
+  },
+  {
+    name: 'constants.ts',
+    path: 'packages/logger/src/constants.ts',
+    language: 'typescript',
+    role: 'Configuration Defaults',
+    description: 'Defines package defaults including default log level, logger name, and PII keys to censor.',
+    content: `import { LogLevel } from './types.js';
+
+export const DEFAULT_LOG_LEVEL: LogLevel = 'info';
+
+export const DEFAULT_LOGGER_NAME = 'sbb-platform';
+
+export const DEFAULT_REDACT_PATHS = [
+  'password',
+  '*.password',
+  'passwordConfirm',
+  'token',
+  '*.token',
+  'accessToken',
+  '*.accessToken',
+  'refreshToken',
+  '*.refreshToken',
+  'secret',
+  '*.secret',
+  'authorization',
+  '*.authorization',
+  'cookie',
+  '*.cookie',
+  'creditCard',
+  '*.creditCard',
+  'ssn',
+  '*.ssn',
+];`
+  },
+  {
+    name: 'redaction.ts',
+    path: 'packages/logger/src/redaction.ts',
+    language: 'typescript',
+    role: 'Security & Redaction',
+    description: 'Merges custom logging keys with default PII patterns to sanitize data before writing to streams.',
+    content: `import { DEFAULT_REDACT_PATHS } from './constants.js';
+
+/**
+ * Returns a Pino-compatible redaction configuration block.
+ * Merges standard platform security fields with any custom fields provided by sub-modules.
+ */
+export function getRedactionConfig(customPaths?: string[]) {
+  const paths = customPaths 
+    ? [...new Set([...DEFAULT_REDACT_PATHS, ...customPaths])] 
+    : DEFAULT_REDACT_PATHS;
+    
+  return {
+    paths,
+    censor: '[REDACTED]',
+  };
+}`
+  },
+  {
+    name: 'serializers.ts',
+    path: 'packages/logger/src/serializers.ts',
+    language: 'typescript',
+    role: 'Object Serialization',
+    description: 'Custom serializer for detailed exception metadata, codes, stacks, and standard req/res formats.',
+    content: `import pino from 'pino';
+
+/**
+ * Standard error serializer that formats error details, messages, nested structures,
+ * stacks, and potential status codes consistently across the platform.
+ */
+export const errSerializer = (err: any) => {
+  if (!err) return err;
+  if (!(err instanceof Error)) {
+    return err;
+  }
+  
+  return {
+    type: err.name || err.constructor?.name || 'Error',
+    message: err.message,
+    stack: err.stack,
+    code: (err as any).code || (err as any).statusCode || undefined,
+    details: (err as any).details || undefined,
+  };
+};
+
+/**
+ * Combined serializers block containing custom error formatting and standard
+ * HTTP req/res formats for full-stack compatibility.
+ */
+export const serializers = {
+  err: errSerializer,
+  req: pino.stdSerializers.req,
+  res: pino.stdSerializers.res,
+};`
+  },
+  {
+    name: 'factory.ts',
+    path: 'packages/logger/src/factory.ts',
+    language: 'typescript',
+    role: 'Pino Factory',
+    description: 'Handles underlying pino initialization, including multi-transport selections and pretty overrides.',
+    content: `import pino from 'pino';
+import { LoggerOptions } from './types.js';
+import { getRedactionConfig } from './redaction.js';
+import { serializers } from './serializers.js';
+import { DEFAULT_LOG_LEVEL, DEFAULT_LOGGER_NAME } from './constants.js';
+
+/**
+ * Instantiates the core underlying Pino logger.
+ * Auto-configures output format: JSON structure in production, and pino-pretty CLI-friendly stream in development.
+ */
+export function createPinoInstance(options: LoggerOptions) {
+  const isProd = process.env.NODE_ENV === 'production';
+  const usePretty = options.pretty !== undefined ? options.pretty : !isProd;
+  
+  const pinoOptions: pino.LoggerOptions = {
+    name: options.name || DEFAULT_LOGGER_NAME,
+    level: options.level || DEFAULT_LOG_LEVEL,
+    redact: getRedactionConfig(options.redactPaths),
+    serializers,
+  };
+
+  if (usePretty) {
+    pinoOptions.transport = {
+      target: 'pino-pretty',
+      options: {
+        colorize: true,
+        translateTime: 'SYS:yyyy-mm-dd HH:MM:ss.l',
+        ignore: 'pid,hostname',
+      },
+    };
+  }
+
+  return pino(pinoOptions);
+}`
+  },
+  {
+    name: 'child-logger.ts',
+    path: 'packages/logger/src/child-logger.ts',
+    language: 'typescript',
+    role: 'Child Logger Context',
+    description: 'Defines helper utilities for spawning request loggers with correlation/trace IDs.',
+    content: `import { SBBLogger, LogContext } from './types.js';
+
+/**
+ * Creates a generic child logger from a parent logger.
+ */
+export function createChildLogger(parent: SBBLogger, context: LogContext): SBBLogger {
+  return parent.child(context);
+}
+
+/**
+ * Creates a highly standardized request context child logger.
+ * Preserves tracing IDs (correlation ID, request ID) and identity parameters across API modules.
+ */
+export function createRequestLogger(
+  parent: SBBLogger,
+  correlationId: string,
+  requestId: string,
+  tenantId?: string,
+  userId?: string
+): SBBLogger {
+  return parent.child({
+    correlationId,
+    requestId,
+    tenantId,
+    userId,
+  });
+}`
+  },
+  {
+    name: 'logger.ts',
+    path: 'packages/logger/src/logger.ts',
+    language: 'typescript',
+    role: 'Logger Wrapper Class',
+    description: 'Implements the SBBLogger interface with high-resolution performance timers and exact types.',
+    content: `import { Logger as PinoInstance } from 'pino';
+import { SBBLogger, LogContext } from './types.js';
+
+/**
+ * Enterprise wrapper around Pino.
+ * Guarantees proper method overloading, typesafe logging,
+ * structured child instantiation, and performance metric tracing.
+ */
+export class SBBLoggerImpl implements SBBLogger {
+  constructor(public readonly pino: PinoInstance) {}
+
+  trace(msg: string, ...args: any[]): void;
+  trace(obj: object, msg?: string, ...args: any[]): void;
+  trace(objOrMsg: any, msgOrArg?: any, ...args: any[]): void {
+    this.pino.trace(objOrMsg, msgOrArg, ...args);
+  }
+
+  debug(msg: string, ...args: any[]): void;
+  debug(obj: object, msg?: string, ...args: any[]): void;
+  debug(objOrMsg: any, msgOrArg?: any, ...args: any[]): void {
+    this.pino.debug(objOrMsg, msgOrArg, ...args);
+  }
+
+  info(msg: string, ...args: any[]): void;
+  info(obj: object, msg?: string, ...args: any[]): void;
+  info(objOrMsg: any, msgOrArg?: any, ...args: any[]): void {
+    this.pino.info(objOrMsg, msgOrArg, ...args);
+  }
+
+  warn(msg: string, ...args: any[]): void;
+  warn(obj: object, msg?: string, ...args: any[]): void;
+  warn(objOrMsg: any, msgOrArg?: any, ...args: any[]): void {
+    this.pino.warn(objOrMsg, msgOrArg, ...args);
+  }
+
+  error(msg: string, ...args: any[]): void;
+  error(obj: object, msg?: string, ...args: any[]): void;
+  error(err: Error, msg?: string, ...args: any[]): void;
+  error(objOrMsg: any, msgOrArg?: any, ...args: any[]): void {
+    this.pino.error(objOrMsg, msgOrArg, ...args);
+  }
+
+  fatal(msg: string, ...args: any[]): void;
+  fatal(obj: object, msg?: string, ...args: any[]): void;
+  fatal(err: Error, msg?: string, ...args: any[]): void;
+  fatal(objOrMsg: any, msgOrArg?: any, ...args: any[]): void {
+    this.pino.fatal(objOrMsg, msgOrArg, ...args);
+  }
+
+  child(context: LogContext): SBBLogger {
+    const childPino = this.pino.child(context);
+    return new SBBLoggerImpl(childPino);
+  }
+
+  /**
+   * Tracks and outputs high-resolution performance benchmarks.
+   */
+  time(label: string): { end(): void } {
+    const start = process.hrtime();
+    return {
+      end: () => {
+        const diff = process.hrtime(start);
+        // calculate duration in milliseconds
+        const durationMs = (diff[0] * 1000 + diff[1] / 1e6).toFixed(3);
+        this.info(
+          { performance: { label, durationMs: parseFloat(durationMs) } },
+          \`Performance [\${label}]: completed in \${durationMs}ms\`
+        );
+      },
+    };
+  }
+}`
+  },
+  {
+    name: 'index.ts',
+    path: 'packages/logger/src/index.ts',
+    language: 'typescript',
+    role: 'Package Exports',
+    description: 'Consolidates exports of constants, serializers, custom implementations, and convenient global lazy-getters.',
+    content: `import { LoggerOptions, SBBLogger } from './types.js';
+import { createPinoInstance } from './factory.js';
+import { SBBLoggerImpl } from './logger.js';
+import { DEFAULT_LOGGER_NAME } from './constants.js';
+
+export * from './types.js';
+export * from './constants.js';
+export * from './serializers.js';
+export * from './redaction.js';
+export * from './factory.js';
+export * from './child-logger.js';
+export * from './logger.js';
+
+let defaultLogger: SBBLogger | null = null;
+
+/**
+ * Main factory function to construct a custom typesafe SBBLogger.
+ */
+export function getLogger(options?: Partial<LoggerOptions>): SBBLogger {
+  const mergedOptions: LoggerOptions = {
+    name: DEFAULT_LOGGER_NAME,
+    ...options,
+  };
+  const pinoInstance = createPinoInstance(mergedOptions);
+  return new SBBLoggerImpl(pinoInstance);
+}
+
+/**
+ * Lazy-initializes and retrieves the default global platform logger instance.
+ */
+export function getDefaultLogger(): SBBLogger {
+  if (!defaultLogger) {
+    defaultLogger = getLogger();
+  }
+  return defaultLogger;
+}`
+  },
+  {
+    name: 'README.md',
+    path: 'packages/logger/src/README.md',
+    language: 'markdown',
+    role: 'Internal Documentation',
+    description: 'Technical document describing source code details and developer guidelines.',
+    content: `# @sbb/logger - Source Architecture
+
+This directory houses the core implementation files for the \`@sbb/logger\` package.
+
+## 🧱 Architectural Components
+
+* **\`logger.ts\`**: Standard wrapper implementing the unified \`SBBLogger\` interface. This shields consumers from raw \`pino\` API drift.
+* **\`factory.ts\`**: The instantiation pipeline, checking standard Node environment triggers to configure correct output channels.
+* **\`child-logger.ts\`**: Formats and enforces core transaction properties (Request IDs, Correlation/Trace headers).
+* **\`serializers.ts\`**: Safely structures Error attributes so they translate cleanly to unified log storage targets (Elastic, Datadog).
+* **\`redaction.ts\`**: Enforces zero-leak compliance by checking runtime objects against deep security filters.
+* **\`constants.ts\`**: Holds defaults like standard log names and default log level targets.
+* **\`types.ts\`**: Strongly structures configuration variables and output structures.
+
+## ⚠️ Important Implementation Guidelines
+
+1. **Zero Global Mutations**: Avoid writing directly to global process streams. All stream bindings must flow through Pino.
+2. **Type Imports**: Standard named imports are preferred across files.
+3. **Pino Compatibility**: If upgrading \`pino\`, ensure \`pino-pretty\` remains compatible and performance tests compile.`
+  }
+];
+
+
