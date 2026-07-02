@@ -2637,4 +2637,554 @@ This directory contains the implementation of our database infrastructure wrappi
   }
 ];
 
+export const authFileList: FileNode[] = [
+  {
+    name: 'README.md',
+    path: 'packages/auth/README.md',
+    language: 'markdown',
+    role: 'Documentation',
+    description: 'Central platform authentication infrastructure package, key features, architecture, and code snippets.',
+    content: `# @sbb/auth
+
+Shared authentication infrastructure package for the **SBB Platform**.
+
+Centralized, zero-dependency cryptographically secure helper primitives, password hashing, JWT operations, API key builders, and configurable password policy evaluators.
+
+---
+
+## 🚀 Key Features
+
+* **Scrypt Password Hashing**: Thread-safe asynchronous password hashing leveraging Node's native scrypt engine with automatic salt generation and timing-safe verification.
+* **Lightweight HS256 JWT Utility**: Full signature verification and claims checking (expiration, audience, issuer, subject) without external libraries.
+* **Secure API Keys**: Unique tokens and formatted, safe API keys using secure byte generation.
+* **Strength Policies**: Robust, standard-compliant validator verifying min/max length, case sensitivity, numbers, and symbols.
+* **Structured Exceptions**: Clear mapping to standard platform error domains (e.g., \`InvalidCredentialsError\`, \`TokenExpiredError\`).`
+  },
+  {
+    name: 'package.json',
+    path: 'packages/auth/package.json',
+    language: 'json',
+    role: 'Package Manifest',
+    description: 'Defines package name (@sbb/auth), scripts, external dependencies, and devDependencies.',
+    content: `{
+  "name": "@sbb/auth",
+  "version": "1.0.0",
+  "description": "Shared authentication infrastructure package for the SBB Platform",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "echo \\"Error: no test specified\\" && exit 0"
+  },
+  "dependencies": {
+    "@sbb/shared": "^1.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.5",
+    "@types/node": "^20.12.12"
+  },
+  "publishConfig": {
+    "access": "restricted"
+  }
+}`
+  },
+  {
+    name: 'tsconfig.json',
+    path: 'packages/auth/tsconfig.json',
+    language: 'json',
+    role: 'TypeScript Config',
+    description: 'Defines typescript build rules for ESM and NodeNext output configurations.',
+    content: `{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "declaration": true,
+    "outDir": "dist",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "paths": {
+      "@sbb/shared": ["../shared/src/index.ts"]
+    }
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
+}`
+  },
+  {
+    name: 'CHANGELOG.md',
+    path: 'packages/auth/CHANGELOG.md',
+    language: 'markdown',
+    role: 'Release History',
+    description: 'Chronological roadmap record of authentication module features, bugfixes, and code updates.',
+    content: `# Changelog
+
+All notable changes to the \`@sbb/auth\` package will be documented in this file.
+
+## [1.0.0] - 2026-07-02
+
+### Added
+- Created the core shared authentication infrastructure package (\`@sbb/auth\`).
+- Implemented \`ScryptPasswordHasher\` providing secure, asynchronous password hashing and verification using Node's native \`scrypt\` and constant-time comparisons.
+- Programmed standard \`JwtService\` implementing HMAC SHA256 (HS256) signature, claim verification (expiration, audience, issuer, subject, notBefore), and decoded payload parsing without third-party dependencies.
+- Designed \`TokenGenerator\` for secure session token generation and standard API keys (\`sbb_live_...\`).
+- Coded robust \`PasswordPolicy\` evaluator testing password lengths, upper/lower casing, numbers, and custom special characters.
+- Exported strict domain errors (\`AuthenticationError\`, \`InvalidCredentialsError\`, \`TokenExpiredError\`, \`InvalidTokenError\`, \`PasswordPolicyViolationError\`) inheriting from \`@sbb/shared\`.
+- Defined standard TypeScript contracts (\`IPasswordHasher\`, \`IJwtService\`, \`ITokenGenerator\`, \`IPasswordPolicy\`) in the public interface.
+- Established clean internal layout with full ESM/NodeNext compiler alignments, complete source guides, and unit READMEs.`
+  },
+  {
+    name: 'index.ts',
+    path: 'packages/auth/src/index.ts',
+    language: 'typescript',
+    role: 'Public API Entry point',
+    description: 'Exposes all core modules, hashing mechanisms, JWT managers, and policies to the SBB platform.',
+    content: `export * from './errors/index.js';
+export * from './constants/index.js';
+export * from './types/index.js';
+export * from './interfaces/index.js';
+export * from './hashing/index.js';
+export * from './jwt/index.js';
+export * from './tokens/index.js';
+export * from './password-policy/index.js';`
+  },
+  {
+    name: 'errors/index.ts',
+    path: 'packages/auth/src/errors/index.ts',
+    language: 'typescript',
+    role: 'Authentication Error Domains',
+    description: 'Declares custom authentication error types extending standard SBB errors.',
+    content: `import { AppError, UnauthorizedError, ValidationError } from '@sbb/shared';
+
+export class AuthenticationError extends UnauthorizedError {
+  constructor(message: string = 'Authentication failed', details?: any) {
+    super(message, details);
+  }
+}
+
+export class InvalidCredentialsError extends AuthenticationError {
+  constructor(message: string = 'Invalid username or password', details?: any) {
+    super(message, details);
+  }
+}
+
+export class TokenExpiredError extends AuthenticationError {
+  constructor(message: string = 'Authentication token has expired', details?: any) {
+    super(message, details);
+  }
+}
+
+export class InvalidTokenError extends AuthenticationError {
+  constructor(message: string = 'Authentication token is invalid', details?: any) {
+    super(message, details);
+  }
+}
+
+export class PasswordPolicyViolationError extends ValidationError {
+  constructor(message: string = 'Password does not meet policy requirements', details?: any) {
+    super(message, details);
+  }
+}`
+  },
+  {
+    name: 'constants/index.ts',
+    path: 'packages/auth/src/constants/index.ts',
+    language: 'typescript',
+    role: 'Auth Static Constants',
+    description: 'Exposes static parameters and standard system defaults.',
+    content: `export const AUTH_CONSTANTS = {
+  DEFAULT_JWT_EXPIRATION: '3600s', // 1 hour
+  DEFAULT_JWT_ALGORITHM: 'HS256',
+  PASSWORD_MIN_LENGTH: 8,
+  PASSWORD_MAX_LENGTH: 128,
+  TOKEN_BYTES: 32,
+} as const;`
+  },
+  {
+    name: 'types/index.ts',
+    path: 'packages/auth/src/types/index.ts',
+    language: 'typescript',
+    role: 'Auth Core Payload Types',
+    description: 'Declares strongly typed token metadata blocks and verification configs.',
+    content: `export interface JwtPayload extends Record<string, any> {
+  sub?: string; // Subject
+  iss?: string; // Issuer
+  aud?: string | string[]; // Audience
+  exp?: number; // Expiration time
+  nbf?: number; // Not before time
+  iat?: number; // Issued at time
+  jti?: string; // JWT ID
+}
+
+export interface SignOptions {
+  expiresIn?: string | number; // e.g., '1h', '30m', '7d', or duration in seconds
+  notBefore?: string | number;
+  audience?: string | string[];
+  issuer?: string;
+  jwtId?: string;
+  subject?: string;
+}
+
+export interface VerifyOptions {
+  audience?: string | string[];
+  issuer?: string;
+  subject?: string;
+  ignoreExpiration?: boolean;
+}
+
+export interface PasswordPolicyOptions {
+  minLength?: number;
+  maxLength?: number;
+  requireUppercase?: boolean;
+  requireLowercase?: boolean;
+  requireNumbers?: boolean;
+  requireSpecialCharacters?: boolean;
+}
+
+export interface PasswordPolicyResult {
+  isValid: boolean;
+  errors: string[];
+}`
+  },
+  {
+    name: 'interfaces/index.ts',
+    path: 'packages/auth/src/interfaces/index.ts',
+    language: 'typescript',
+    role: 'Platform Auth Interfaces',
+    description: 'Formal contract specifications for signing, hashing, and validating security states.',
+    content: `import { JwtPayload, SignOptions, VerifyOptions, PasswordPolicyOptions, PasswordPolicyResult } from '../types/index.js';
+
+export interface IPasswordHasher {
+  hash(password: string): Promise<string>;
+  verify(password: string, hash: string): Promise<boolean>;
+}
+
+export interface IJwtService {
+  sign(payload: Record<string, any>, secret: string, options?: SignOptions): string;
+  verify<T extends JwtPayload = JwtPayload>(token: string, secret: string, options?: VerifyOptions): T;
+  decode<T extends JwtPayload = JwtPayload>(token: string): T;
+}
+
+export interface ITokenGenerator {
+  generateRandomToken(bytes?: number): string;
+  generateApiKey(prefix?: string): string;
+}
+
+export interface IPasswordPolicy {
+  validate(password: string, options?: PasswordPolicyOptions): PasswordPolicyResult;
+}`
+  },
+  {
+    name: 'hashing/index.ts',
+    path: 'packages/auth/src/hashing/index.ts',
+    language: 'typescript',
+    role: 'Asynchronous Scrypt Hashing',
+    description: 'Implements native asynchronous Scrypt hashing with high-entropy salt generation.',
+    content: `import { scrypt, randomBytes, timingSafeEqual } from 'crypto';
+import { promisify } from 'util';
+import { IPasswordHasher } from '../interfaces/index.js';
+
+const scryptAsync = promisify(scrypt);
+
+export class ScryptPasswordHasher implements IPasswordHasher {
+  private static readonly KEY_LEN = 64;
+  private static readonly SALT_LEN = 16;
+  private static readonly SCRYPT_OPTIONS = { N: 16384, r: 8, p: 1 };
+
+  public async hash(password: string): Promise<string> {
+    if (!password) {
+      throw new Error('Password cannot be empty');
+    }
+    const salt = randomBytes(ScryptPasswordHasher.SALT_LEN).toString('hex');
+    const derivedKey = (await scryptAsync(
+      password,
+      salt,
+      ScryptPasswordHasher.KEY_LEN,
+      ScryptPasswordHasher.SCRYPT_OPTIONS
+    )) as Buffer;
+    
+    return \`\${salt}:\${derivedKey.toString('hex')}\`;
+  }
+
+  public async verify(password: string, hash: string): Promise<boolean> {
+    if (!password || !hash) {
+      return false;
+    }
+    
+    const parts = hash.split(':');
+    if (parts.length !== 2) {
+      return false;
+    }
+
+    const [salt, storedHex] = parts;
+    const storedBuffer = Buffer.from(storedHex, 'hex');
+
+    try {
+      const derivedKey = (await scryptAsync(
+        password,
+        salt,
+        ScryptPasswordHasher.KEY_LEN,
+        ScryptPasswordHasher.SCRYPT_OPTIONS
+      )) as Buffer;
+
+      if (derivedKey.length !== storedBuffer.length) {
+        return false;
+      }
+
+      return timingSafeEqual(derivedKey, storedBuffer);
+    } catch {
+      return false;
+    }
+  }
+}`
+  },
+  {
+    name: 'jwt/index.ts',
+    path: 'packages/auth/src/jwt/index.ts',
+    language: 'typescript',
+    role: 'Native HMAC-SHA256 JWT Utility',
+    description: 'Lightweight HS256 signature generation, validation, and claim-checking.',
+    content: `import { createHmac, timingSafeEqual } from 'crypto';
+import { IJwtService } from '../interfaces/index.js';
+import { JwtPayload, SignOptions, VerifyOptions } from '../types/index.js';
+import { InvalidTokenError, TokenExpiredError } from '../errors/index.js';
+
+export class JwtService implements IJwtService {
+  private base64UrlEncode(str: string | Buffer): string {
+    const buf = typeof str === 'string' ? Buffer.from(str) : str;
+    return buf.toString('base64')
+      .replace(/=/g, '')
+      .replace(/\\+/g, '-')
+      .replace(/\\//g, '_');
+  }
+
+  private base64UrlDecode(str: string): string {
+    let base64 = str.replace(/-/g, '+').replace(/_/g, '/');
+    while (base64.length % 4) {
+      base64 += '=';
+    }
+    return Buffer.from(base64, 'base64').toString('utf8');
+  }
+
+  private parseTime(time: string | number): number {
+    if (typeof time === 'number') {
+      return time;
+    }
+    
+    const regex = /^(\\d+)([smhd])$/;
+    const match = time.match(regex);
+    if (!match) {
+      throw new Error(\`Invalid time format constraint: "\${time}"\`);
+    }
+    
+    const value = parseInt(match[1], 10);
+    const unit = match[2];
+    switch (unit) {
+      case 's': return value;
+      case 'm': return value * 60;
+      case 'h': return value * 3600;
+      case 'd': return value * 86400;
+      default: return value;
+    }
+  }
+
+  public sign(payload: Record<string, any>, secret: string, options: SignOptions = {}): string {
+    if (!secret) {
+      throw new Error('JWT secret is required for signature generation');
+    }
+
+    const header = { alg: 'HS256', typ: 'JWT' };
+    const iat = Math.floor(Date.now() / 1000);
+    const jwtPayload: JwtPayload = { ...payload, iat };
+
+    if (options.expiresIn) {
+      const seconds = this.parseTime(options.expiresIn);
+      jwtPayload.exp = iat + seconds;
+    }
+
+    if (options.notBefore) {
+      const seconds = this.parseTime(options.notBefore);
+      jwtPayload.nbf = iat + seconds;
+    }
+
+    if (options.audience) { jwtPayload.aud = options.audience; }
+    if (options.issuer) { jwtPayload.iss = options.issuer; }
+    if (options.jwtId) { jwtPayload.jti = options.jwtId; }
+    if (options.subject) { jwtPayload.sub = options.subject; }
+
+    const encodedHeader = this.base64UrlEncode(JSON.stringify(header));
+    const encodedPayload = this.base64UrlEncode(JSON.stringify(jwtPayload));
+
+    const signatureInput = \`\${encodedHeader}.\${encodedPayload}\`;
+    const signature = createHmac('sha256', secret).update(signatureInput).digest();
+    const encodedSignature = this.base64UrlEncode(signature);
+
+    return \`\${signatureInput}.\${encodedSignature}\`;
+  }
+
+  public verify<T extends JwtPayload = JwtPayload>(token: string, secret: string, options: VerifyOptions = {}): T {
+    if (!token) { throw new InvalidTokenError('JWT token is empty'); }
+    if (!secret) { throw new Error('JWT secret is required for verification'); }
+
+    const parts = token.split('.');
+    if (parts.length !== 3) { throw new InvalidTokenError('JWT token structure is malformed'); }
+
+    const [encodedHeader, encodedPayload, encodedSignature] = parts;
+    const signatureInput = \`\${encodedHeader}.\${encodedPayload}\`;
+    const expectedSignature = createHmac('sha256', secret).update(signatureInput).digest();
+    const expectedEncodedSignature = this.base64UrlEncode(expectedSignature);
+
+    const actualBuffer = Buffer.from(encodedSignature);
+    const expectedBuffer = Buffer.from(expectedEncodedSignature);
+
+    if (actualBuffer.length !== expectedBuffer.length || !timingSafeEqual(actualBuffer, expectedBuffer)) {
+      throw new InvalidTokenError('JWT signature verification failed');
+    }
+
+    let payload: T;
+    try {
+      payload = JSON.parse(this.base64UrlDecode(encodedPayload)) as T;
+    } catch {
+      throw new InvalidTokenError('JWT payload is not valid JSON');
+    }
+
+    const now = Math.floor(Date.now() / 1000);
+
+    if (!options.ignoreExpiration && payload.exp !== undefined) {
+      if (now >= payload.exp) { throw new TokenExpiredError('JWT token has expired'); }
+    }
+
+    if (payload.nbf !== undefined && now < payload.nbf) {
+      throw new InvalidTokenError('JWT token is not active yet');
+    }
+
+    if (options.audience) {
+      if (!payload.aud) { throw new InvalidTokenError('JWT audience verification failed'); }
+      const audList = Array.isArray(payload.aud) ? payload.aud : [payload.aud];
+      const checkAudList = Array.isArray(options.audience) ? options.audience : [options.audience];
+      if (!checkAudList.some(aud => audList.includes(aud))) {
+        throw new InvalidTokenError('JWT audience verification failed');
+      }
+    }
+
+    if (options.issuer && payload.iss !== options.issuer) {
+      throw new InvalidTokenError('JWT issuer verification failed');
+    }
+
+    if (options.subject && payload.sub !== options.subject) {
+      throw new InvalidTokenError('JWT subject verification failed');
+    }
+
+    return payload;
+  }
+
+  public decode<T extends JwtPayload = JwtPayload>(token: string): T {
+    if (!token) { throw new InvalidTokenError('JWT token is empty'); }
+    const parts = token.split('.');
+    if (parts.length < 2) { throw new InvalidTokenError('JWT token structure is malformed'); }
+    try {
+      return JSON.parse(this.base64UrlDecode(parts[1])) as T;
+    } catch {
+      throw new InvalidTokenError('Failed to decode JWT payload');
+    }
+  }
+}`
+  },
+  {
+    name: 'tokens/index.ts',
+    path: 'packages/auth/src/tokens/index.ts',
+    language: 'typescript',
+    role: 'Secure Token Generation',
+    description: 'Builds API keys and secure random hex strings.',
+    content: `import { randomBytes } from 'crypto';
+import { ITokenGenerator } from '../interfaces/index.js';
+import { AUTH_CONSTANTS } from '../constants/index.js';
+
+export class TokenGenerator implements ITokenGenerator {
+  public generateRandomToken(bytes: number = AUTH_CONSTANTS.TOKEN_BYTES): string {
+    return randomBytes(bytes).toString('hex');
+  }
+
+  public generateApiKey(prefix: string = 'sbb_live'): string {
+    const randomPart = randomBytes(24).toString('base64url');
+    return \`\${prefix}_\${randomPart}\`;
+  }
+}`
+  },
+  {
+    name: 'password-policy/index.ts',
+    path: 'packages/auth/src/password-policy/index.ts',
+    language: 'typescript',
+    role: 'Password Strength Validator',
+    description: 'Validates complex requirements (characters, lengths, casing).',
+    content: `import { IPasswordPolicy } from '../interfaces/index.js';
+import { PasswordPolicyOptions, PasswordPolicyResult } from '../types/index.js';
+import { AUTH_CONSTANTS } from '../constants/index.js';
+
+export class PasswordPolicy implements IPasswordPolicy {
+  public validate(password: string, options: PasswordPolicyOptions = {}): PasswordPolicyResult {
+    const errors: string[] = [];
+    
+    if (!password) {
+      return { isValid: false, errors: ['Password cannot be empty'] };
+    }
+
+    const minLength = options.minLength ?? AUTH_CONSTANTS.PASSWORD_MIN_LENGTH;
+    const maxLength = options.maxLength ?? AUTH_CONSTANTS.PASSWORD_MAX_LENGTH;
+
+    if (password.length < minLength) {
+      errors.push(\`Password must be at least \${minLength} characters long\`);
+    }
+    if (password.length > maxLength) {
+      errors.push(\`Password must be no more than \${maxLength} characters long\`);
+    }
+
+    if (options.requireUppercase !== false && !/[A-Z]/.test(password)) {
+      errors.push('Password must contain at least one uppercase letter');
+    }
+    if (options.requireLowercase !== false && !/[a-z]/.test(password)) {
+      errors.push('Password must contain at least one lowercase letter');
+    }
+    if (options.requireNumbers !== false && !/\\d/.test(password)) {
+      errors.push('Password must contain at least one number');
+    }
+    if (options.requireSpecialCharacters !== false && !/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+      errors.push('Password must contain at least one special character (!@#$%^&*(),.?":{}|<>)');
+    }
+
+    return { isValid: errors.length === 0, errors };
+  }
+}`
+  },
+  {
+    name: 'README.md',
+    path: 'packages/auth/src/README.md',
+    language: 'markdown',
+    role: 'Internal Documentation',
+    description: 'Technical document detailing internal patterns and lazy-initialization rules.',
+    content: `# @sbb/auth - Source Architecture
+
+This directory contains the core implementation files of the shared authentication infrastructure package.
+
+## 🧱 Key Subdirectories
+
+* **\`hashing/\`**: Cryptographically secure asynchronous password hashing using Scrypt.
+* **\`jwt/\`**: Zero-dependency pure HMAC-SHA256 (HS256) JSON Web Token (JWT) signature and verification.
+* **\`tokens/\`**: Cryptographically secure token and structured API key generators.
+* **\`password-policy/\`**: Policy engine validating requirements for length, casing, numbers, and symbols.
+* **\`interfaces/\`**: Contracts for pluggable hashing, JWT signing, token generation, and password policies.
+* **\`types/\`**: Strongly typed data models, payloads, options, and validation results.
+* **\`constants/\`**: Secure, central fallback values and defaults (e.g., token size, password length limits).
+* **\`errors/\`**: Clean, structured domain exceptions extending standard SBB Platform errors.
+
+## ⚠️ Standards
+
+1. **Zero External Dependencies**: All algorithms are implemented using standard Node.js APIs (\`crypto\`, \`util\`) for optimal security and reliability.
+2. **ESM Compliance**: All relative import and export statements use explicit \`.js\` specifiers to align with strict NodeNext/ESM configurations.`
+  }
+];
+
+
 

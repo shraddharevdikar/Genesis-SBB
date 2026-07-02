@@ -30,6 +30,9 @@
       ],
       "@sbb/database": [
         "./packages/database/src/index.ts"
+      ],
+      "@sbb/auth": [
+        "./packages/auth/src/index.ts"
       ]
     },
     "allowImportingTsExtensions": true,

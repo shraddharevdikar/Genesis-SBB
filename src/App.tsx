@@ -3,7 +3,7 @@ import { TicketDetail } from './components/TicketDetail';
 import { FileBrowser } from './components/FileBrowser';
 import { ArchitectureGraph } from './components/ArchitectureGraph';
 import { RoadmapTimeline } from './components/RoadmapTimeline';
-import { ticketDetails, fileList, futureTickets, configFileList, loggerFileList, sharedFileList, databaseFileList } from './data';
+import { ticketDetails, fileList, futureTickets, configFileList, loggerFileList, sharedFileList, databaseFileList, authFileList } from './data';
 import { 
   FolderCheck, 
   Terminal, 
@@ -179,7 +179,7 @@ export default function App() {
           )}
 
           {activeTab === 'code' && (
-            <FileBrowser files={fileList} configFiles={configFileList} loggerFiles={loggerFileList} sharedFiles={sharedFileList} databaseFiles={databaseFileList} />
+            <FileBrowser files={fileList} configFiles={configFileList} loggerFiles={loggerFileList} sharedFiles={sharedFileList} databaseFiles={databaseFileList} authFiles={authFileList} />
           )}
 
           {activeTab === 'pipeline' && (
