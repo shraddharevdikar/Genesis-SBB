@@ -592,3 +592,381 @@ declare const it: any;
 declare const expect: any;`
   }
 ];
+
+export const configFileList: FileNode[] = [
+  {
+    name: 'README.md',
+    path: 'packages/config/README.md',
+    language: 'markdown',
+    role: 'Documentation',
+    description: 'Centralized, type-safe configuration package documentation, layout descriptions, and code examples.',
+    content: `# @sbb/config
+
+Centralized, type-safe configuration management for every application, backend module, and shared package on the **SBB Platform**.
+
+Powered by **TypeScript**, **Zod** schema validation, and **dotenv**.
+
+---
+
+## 🚀 Key Features
+
+* **Strict Type Safety**: Full autocompletion and structural integrity across nested configurations.
+* **Environment Validation**: Validates process environment variables at startup against a strict schema using Zod.
+* **Feature Flag Service**: Provides out-of-the-box support for querying and overriding feature flags.
+* **Sensible Fallbacks**: Built-in default values ensure safe local development out-of-the-box.
+* **Lazy Initialization**: Config is loaded and cached on first call to prevent redundant file I/O or multiple parses.
+
+---
+
+## 📂 Package Structure
+
+\`\`\`text
+packages/config/
+├── src/
+│   ├── config.ts          # Config factory, cache controls, global getter
+│   ├── env.ts             # Dotenv environment loading & validation
+│   ├── schema.ts          # Zod schema definitions with type preprocessors
+│   ├── feature-flags.ts   # Feature Flag Service & override managers
+│   ├── index.ts           # Public API entry point exports
+│   └── types.ts           # Structural platform interface contracts
+├── package.json
+├── tsconfig.json
+└── README.md
+\`\`\``
+  },
+  {
+    name: 'package.json',
+    path: 'packages/config/package.json',
+    language: 'json',
+    role: 'Package Manifest',
+    description: 'Defines package dependencies (Zod, Dotenv), compilation scripts, and exports structure.',
+    content: `{
+  "name": "@sbb/config",
+  "version": "1.0.0",
+  "description": "Centralized, type-safe configuration package for the SBB Platform",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "echo \\"Error: no test specified\\" && exit 0"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.5",
+    "@types/node": "^20.12.12"
+  },
+  "publishConfig": {
+    "access": "restricted"
+  }
+}`
+  },
+  {
+    name: 'tsconfig.json',
+    path: 'packages/config/tsconfig.json',
+    language: 'json',
+    role: 'TypeScript Config',
+    description: 'Declares target ES version, module system, and output path for compilation.',
+    content: `{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "declaration": true,
+    "outDir": "dist",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
+}`
+  },
+  {
+    name: 'schema.ts',
+    path: 'packages/config/src/schema.ts',
+    language: 'typescript',
+    role: 'Validation Schema',
+    description: 'Enforces environmental typing rules using strict Zod structures for each config segment.',
+    content: `import { z } from 'zod';
+
+// Helper to preprocess boolean environment variables from strings
+const stringToBoolean = z.preprocess((val) => {
+  if (typeof val === 'string') {
+    if (val.toLowerCase() === 'true' || val === '1') return true;
+    if (val.toLowerCase() === 'false' || val === '0') return false;
+  }
+  return val;
+}, z.boolean().default(false));
+
+export const envSchema = z.object({
+  // Environment Mode
+  NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
+  PORT: z.preprocess((val) => (val ? Number(val) : 3000), z.number().default(3000)),
+
+  // Database Configurations
+  DATABASE_URL: z.string().optional().default('postgresql://localhost:5432/sbb_db'),
+  DATABASE_MAX_CONNECTIONS: z.preprocess((val) => (val ? Number(val) : 10), z.number().default(10)),
+
+  // Redis configurations
+  REDIS_URL: z.string().optional().default('redis://localhost:6379'),
+
+  // JWT Security Configurations
+  JWT_SECRET: z.string().default('sbb-platform-default-super-secret-key-2026'),
+  JWT_ACCESS_EXPIRATION: z.string().default('15m'),
+  JWT_REFRESH_EXPIRATION: z.string().default('7d'),
+
+  // Email Configuration Placeholders
+  EMAIL_SMTP_HOST: z.string().optional().default('smtp.sbb-platform.com'),
+  EMAIL_SMTP_PORT: z.preprocess((val) => (val ? Number(val) : 587), z.number().default(587)),
+  EMAIL_FROM: z.string().optional().default('noreply@sbb-platform.com'),
+
+  // Storage Configuration Placeholders
+  STORAGE_PROVIDER: z.enum(['local', 's3', 'gcs']).default('local'),
+  STORAGE_BUCKET_NAME: z.string().optional().default('sbb-core-assets'),
+
+  // AI Provider Configurations (Placeholders)
+  GEMINI_API_KEY: z.string().optional(),
+  OPENAI_API_KEY: z.string().optional(),
+
+  // Feature Flags
+  ENABLE_MFA: stringToBoolean,
+  ENABLE_OAUTH: stringToBoolean,
+  ENABLE_PASSKEYS: stringToBoolean,
+  ENABLE_ALPHA_FEATURES: stringToBoolean,
+});
+
+export type Env = z.infer<typeof envSchema>;`
+  },
+  {
+    name: 'types.ts',
+    path: 'packages/config/src/types.ts',
+    language: 'typescript',
+    role: 'Config Interface Types',
+    description: 'Modular interfaces representing the deep nested platform configuration tree.',
+    content: `export interface DatabaseConfig {
+  url: string;
+  maxConnections: number;
+}
+
+export interface RedisConfig {
+  url: string;
+}
+
+export interface SecurityConfig {
+  jwtSecret: string;
+  jwtAccessExpiration: string;
+  jwtRefreshExpiration: string;
+}
+
+export interface EmailConfig {
+  smtpHost?: string;
+  smtpPort: number;
+  from?: string;
+}
+
+export interface StorageConfig {
+  provider: 'local' | 's3' | 'gcs';
+  bucketName?: string;
+}
+
+export interface AIConfig {
+  geminiApiKey?: string;
+  openaiApiKey?: string;
+}
+
+export interface FeatureFlags {
+  enableMfa: boolean;
+  enableOauth: boolean;
+  enablePasskeys: boolean;
+  enableAlphaFeatures: boolean;
+}
+
+export interface SBBConfig {
+  env: 'development' | 'test' | 'production';
+  port: number;
+  db: DatabaseConfig;
+  redis: RedisConfig;
+  security: SecurityConfig;
+  email: EmailConfig;
+  storage: StorageConfig;
+  ai: AIConfig;
+  features: FeatureFlags;
+}`
+  },
+  {
+    name: 'env.ts',
+    path: 'packages/config/src/env.ts',
+    language: 'typescript',
+    role: 'Environment Loader',
+    description: 'Utility that searches, injects, and validates process environment variables using Dotenv and Zod.',
+    content: `import dotenv from 'dotenv';
+import path from 'path';
+import { envSchema, Env } from './schema.js';
+
+/**
+ * Loads and validates environment variables.
+ * Automatically searches for .env files in the current directory and parent directories.
+ */
+export function loadEnv(customPath?: string): Env {
+  // Load using default path or custom path
+  const targetPath = customPath || path.resolve(process.cwd(), '.env');
+  dotenv.config({ path: targetPath });
+
+  // Fallback lookups in monorepo contexts
+  if (!customPath) {
+    dotenv.config({ path: path.resolve(process.cwd(), '../../.env') });
+    dotenv.config({ path: path.resolve(process.cwd(), '../.env') });
+  }
+
+  // Parse against schema
+  const parsed = envSchema.safeParse(process.env);
+
+  if (!parsed.success) {
+    console.error('❌ [@sbb/config] Environment validation failed:');
+    parsed.error.issues.forEach((err) => {
+      console.error(\`  - Env variable "\${err.path.join('.')}" : \${err.message}\`);
+    });
+    throw new Error('SBB Platform: Invalid environment configuration variables');
+  }
+
+  return parsed.data;
+}`
+  },
+  {
+    name: 'feature-flags.ts',
+    path: 'packages/config/src/feature-flags.ts',
+    language: 'typescript',
+    role: 'Feature Flag Manager',
+    description: 'Implements service class for querying feature states with dynamic programmatic override support.',
+    content: `import { FeatureFlags } from './types.js';
+
+/**
+ * Service to manage and query feature flags.
+ * Supports standard environment values and programmatic runtime overrides (e.g. for testing).
+ */
+export class FeatureFlagService {
+  private flags: FeatureFlags;
+
+  constructor(flags: FeatureFlags) {
+    this.flags = { ...flags };
+  }
+
+  /**
+   * Returns true if the specific feature flag is active.
+   */
+  isEnabled(flag: keyof FeatureFlags): boolean {
+    return this.flags[flag] === true;
+  }
+
+  /**
+   * Dynamically toggles a flag value at runtime. Useful for testing pipelines or A/B hooks.
+   */
+  setOverride(flag: keyof FeatureFlags, value: boolean): void {
+    this.flags[flag] = value;
+  }
+
+  /**
+   * Resets all flags back to their initial state.
+   */
+  reset(initialFlags: FeatureFlags): void {
+    this.flags = { ...initialFlags };
+  }
+
+  /**
+   * Exposes a snapshot copy of all active flags.
+   */
+  getAllFlags(): FeatureFlags {
+    return { ...this.flags };
+  }
+}`
+  },
+  {
+    name: 'config.ts',
+    path: 'packages/config/src/config.ts',
+    language: 'typescript',
+    role: 'Configuration Factory',
+    description: 'Provides lazy initialization caching, config tree assembly, and global getConfig() getter.',
+    content: `import { Env } from './schema.js';
+import { SBBConfig } from './types.js';
+import { loadEnv } from './env.js';
+
+/**
+ * Transforms flat validated environment variables into a structured, typed configuration tree.
+ */
+export function createConfig(env: Env): SBBConfig {
+  return {
+    env: env.NODE_ENV,
+    port: env.PORT,
+    db: {
+      url: env.DATABASE_URL,
+      maxConnections: env.DATABASE_MAX_CONNECTIONS,
+    },
+    redis: {
+      url: env.REDIS_URL,
+    },
+    security: {
+      jwtSecret: env.JWT_SECRET,
+      jwtAccessExpiration: env.JWT_ACCESS_EXPIRATION,
+      jwtRefreshExpiration: env.JWT_REFRESH_EXPIRATION,
+    },
+    email: {
+      smtpHost: env.EMAIL_SMTP_HOST,
+      smtpPort: env.EMAIL_SMTP_PORT,
+      from: env.EMAIL_FROM,
+    },
+    storage: {
+      provider: env.STORAGE_PROVIDER,
+      bucketName: env.STORAGE_BUCKET_NAME,
+    },
+    ai: {
+      geminiApiKey: env.GEMINI_API_KEY,
+      openaiApiKey: env.OPENAI_API_KEY,
+    },
+    features: {
+      enableMfa: env.ENABLE_MFA,
+      enableOauth: env.ENABLE_OAUTH,
+      enablePasskeys: env.ENABLE_PASSKEYS,
+      enableAlphaFeatures: env.ENABLE_ALPHA_FEATURES,
+    },
+  };
+}
+
+let cachedConfig: SBBConfig | null = null;
+
+/**
+ * Retrieves the global configuration object. 
+ * Lazy initializes it by loading and validating the environment if cached version doesn't exist.
+ */
+export function getConfig(customPath?: string): SBBConfig {
+  if (!cachedConfig) {
+    const env = loadEnv(customPath);
+    cachedConfig = createConfig(env);
+  }
+  return cachedConfig;
+}
+
+/**
+ * Invalidates the configuration cache. Highly useful to reload settings dynamically during tests.
+ */
+export function resetConfig(): void {
+  cachedConfig = null;
+}`
+  },
+  {
+    name: 'index.ts',
+    path: 'packages/config/src/index.ts',
+    language: 'typescript',
+    role: 'Public API Entry point',
+    description: 'Exposes and consolidates all schema, env, config, types, and flags components to consumers.',
+    content: `export * from './types.js';
+export * from './schema.js';
+export * from './env.js';
+export * from './feature-flags.js';
+export * from './config.js';`
+  }
+];
+

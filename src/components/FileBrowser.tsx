@@ -4,11 +4,20 @@ import { FileCode, Folder, Copy, Check, Terminal, Info, ChevronRight } from 'luc
 
 interface FileBrowserProps {
   files: FileNode[];
+  configFiles: FileNode[];
 }
 
-export function FileBrowser({ files }: FileBrowserProps) {
+export function FileBrowser({ files, configFiles }: FileBrowserProps) {
+  const [activePackage, setActivePackage] = useState<'identity' | 'config'>('identity');
+  const activeFiles = activePackage === 'identity' ? files : configFiles;
   const [selectedFile, setSelectedFile] = useState<FileNode>(files[0]);
   const [copied, setCopied] = useState(false);
+
+  const handlePackageSwitch = (pkg: 'identity' | 'config') => {
+    setActivePackage(pkg);
+    const targetFiles = pkg === 'identity' ? files : configFiles;
+    setSelectedFile(targetFiles[0]);
+  };
 
   const handleCopy = async (text: string) => {
     try {
@@ -64,16 +73,42 @@ export function FileBrowser({ files }: FileBrowserProps) {
           </p>
         </div>
 
+        {/* Package Selector */}
+        <div className="grid grid-cols-2 gap-1 p-2 bg-[#0A0A0B] border-b border-[#262626]">
+          <button
+            onClick={() => handlePackageSwitch('identity')}
+            id="pkg-btn-identity"
+            className={`py-1.5 text-[9px] font-mono uppercase font-bold tracking-wider rounded transition-all cursor-pointer ${
+              activePackage === 'identity'
+                ? 'bg-[#1C1917] text-white border border-[#44403C] shadow'
+                : 'text-[#737373] hover:text-[#A3A3A3] hover:bg-[#0D0D0E]'
+            }`}
+          >
+            @sbb/identity
+          </button>
+          <button
+            onClick={() => handlePackageSwitch('config')}
+            id="pkg-btn-config"
+            className={`py-1.5 text-[9px] font-mono uppercase font-bold tracking-wider rounded transition-all cursor-pointer ${
+              activePackage === 'config'
+                ? 'bg-[#1C1917] text-white border border-[#44403C] shadow'
+                : 'text-[#737373] hover:text-[#A3A3A3] hover:bg-[#0D0D0E]'
+            }`}
+          >
+            @sbb/config
+          </button>
+        </div>
+
         {/* Directory Listing */}
         <div className="p-3 overflow-y-auto flex-1 space-y-1 bg-[#0D0D0E]">
           {/* Virtual Root Folder */}
           <div className="flex items-center gap-1.5 px-2 py-1 text-xs text-[#737373] font-mono">
             <Folder className="w-3.5 h-3.5 fill-[#1C1917] stroke-[#44403C]" />
-            <span>backend/api/src/modules/identity/</span>
+            <span>{activePackage === 'identity' ? 'backend/api/src/modules/identity/' : 'packages/config/'}</span>
           </div>
 
           <div className="pl-4 space-y-1">
-            {files.map((file) => {
+            {activeFiles.map((file) => {
               const isSelected = selectedFile.path === file.path;
               return (
                 <button
