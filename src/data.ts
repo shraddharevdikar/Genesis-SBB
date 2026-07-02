@@ -3882,5 +3882,434 @@ This directory houses the strongly typed interfaces, types, and standard enums r
   }
 ];
 
+export const validationFileList: FileNode[] = [
+  {
+    name: 'package.json',
+    path: 'packages/validation/package.json',
+    language: 'json',
+    role: 'Package Manifest',
+    description: 'Defines package name (@sbb/validation), dependencies (zod), and scripts.',
+    content: `{
+  "name": "@sbb/validation",
+  "version": "1.0.0",
+  "description": "Shared validation schemas and helpers for the SBB Platform using Zod",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "echo \\"Error: no test specified\\" && exit 0"
+  },
+  "dependencies": {
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@sbb/types": "^1.0.0",
+    "typescript": "^5.4.5"
+  },
+  "publishConfig": {
+    "access": "restricted"
+  }
+}`
+  },
+  {
+    name: 'tsconfig.json',
+    path: 'packages/validation/tsconfig.json',
+    language: 'json',
+    role: 'TypeScript Config',
+    description: 'Defines compiler options and aliases pointing to @sbb/types.',
+    content: `{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "declaration": true,
+    "outDir": "dist",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "baseUrl": ".",
+    "paths": {
+      "@sbb/types": ["../types/src/index.ts"]
+    }
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
+}`
+  },
+  {
+    name: 'README.md',
+    path: 'packages/validation/README.md',
+    language: 'markdown',
+    role: 'Documentation',
+    description: 'Provides details on usage examples (validateOrThrow, safeValidate) and core packages.',
+    content: `# @sbb/validation
+
+Centralized Zod Runtime Validation library for the **SBB Platform**.
+
+This package provides strict, zero-dependency, runtime validation schemas and parsing utilities designed to complement \`@sbb/types\`.
+
+---
+
+## 🚀 Key Architectural Modules
+
+* **Common**: Shared rules for primitives (\`UUID\`, \`Email\`, \`URL\`, \`DateTime\`), custom recursive metadata structures (\`customMetadataSchema\`), and standard identifiers (\`userIdSchema\`, \`tenantIdSchema\`, \`organizationIdSchema\`).
+* **API Envelopes**: Normalization validation rules for API pagination filters, metadata limits, success wrappers, and error details.
+* **Identity**: Data schema validation for user accounts, lifecycle status trackers, and fine-grained role permissions.
+* **Organization**: Validation rules protecting team workspaces, billing domains, and user-org subscription limits.
+* **Tenant**: Multi-tenant domain maps, resource limits, and service region caps.
+* **Audit Traces**: Validating compliance reports, actor origins, and precise data property update differences.
+* **Workflow**: Automated process templates, steps, active run instances, and transition tracks.
+* **AI Engine**: Message roles, chat formats, model parameters, and token telemetry limits.
+* **Integration**: Profiles, third-party connectors, and outgoing webhooks with HMAC validation constraints.
+
+---
+
+## 💻 Integration Examples
+
+### Simple Safety Validation
+\`\`\`typescript
+import { validateOrThrow, emailSchema } from '@sbb/validation';
+
+// Throws detailed ZodError if invalid, returns string if valid
+const validEmail = validateOrThrow(emailSchema, "developer@sbb.internal");
+\`\`\`
+
+### Safe Parsing
+\`\`\`typescript
+import { safeValidate, userProfileSchema } from '@sbb/validation';
+
+const result = safeValidate(userProfileSchema, inputPayload);
+
+if (!result.success) {
+  console.error("Validation failed:", result.error.format());
+} else {
+  const profile = result.data; // Fully typed
+}
+\`\`\`
+
+### Namespace Access
+\`\`\`typescript
+import { Schemas } from '@sbb/validation';
+
+// Use the grouped namespace
+const validationResult = Schemas.api.paginationParams.safeParse(query);
+\`\`\``
+  },
+  {
+    name: 'CHANGELOG.md',
+    path: 'packages/validation/CHANGELOG.md',
+    language: 'markdown',
+    role: 'Release History',
+    description: 'Release logging tracking package features, primitives, and schemas.',
+    content: `# Changelog
+
+All notable changes to the \`@sbb/validation\` package will be documented in this file.
+
+## [1.0.0] - 2026-07-02
+
+### Added
+- Created the core shared validation package (\`@sbb/validation\`) featuring robust Zod runtime validation.
+- Implemented primitive checks for UUIDs, email patterns, URL formats, and ISO 8601 Date/DateTime formats in \`common\`.
+- Formulated validation logic for standard structural identifiers (\`userIdSchema\`, \`tenantIdSchema\`, \`organizationIdSchema\`) and recursive custom metadata logs.
+- Added standard validation and safe parsing helper handlers (\`validateOrThrow\`, \`safeValidate\`).
+- Programmed API response envelopes modeling single-resource bodies, paginated list parameters, and error context detail structures.
+- Structured user account validation schemas protecting profile metadata, device sessions, and role permissions.
+- Developed workspace schemas validating subscription scopes, sso configurations, and organizational membership maps.
+- Configured tenant validation boundaries safeguarding domain routing, active states, and storage/seat constraints.
+- Formulated security audit validators tracking event severities, origin actors, and system property update logs.
+- Created workflow validation criteria for automated templates, steps, active execution loops, and transition records.
+- Built AI pipeline validators verifying message roles, message contents, model parameters, and token cost telemetry.
+- Provided connector validations protecting connection state indicators, outgoing webhooks, and sync diagnostic reports.
+- Aggregated all domain-specific validation rules inside a centralized namespace helper (\`Schemas\`) in \`/src/schemas/index.ts\`.`
+  },
+  {
+    name: 'index.ts',
+    path: 'packages/validation/src/index.ts',
+    language: 'typescript',
+    role: 'Public API Entry point',
+    description: 'Exports all core validation modules, namespaces, and parsing utilities.',
+    content: `export * from './common/index.js';
+export * from './api/index.js';
+export * from './identity/index.js';
+export * from './organization/index.js';
+export * from './tenant/index.js';
+export * from './audit/index.js';
+export * from './workflow/index.js';
+export * from './ai/index.js';
+export * from './integration/index.js';
+export * from './schemas/index.js';`
+  },
+  {
+    name: 'common/index.ts',
+    path: 'packages/validation/src/common/index.ts',
+    language: 'typescript',
+    role: 'Common Rules & Helpers',
+    description: 'Defines primitives (UUID, Email, URL) and parsing helpers.',
+    content: `import { z } from 'zod';
+
+export const uuidSchema = z.string().uuid({ message: 'Invalid UUID format' });
+export const emailSchema = z.string().email({ message: 'Invalid email address format' });
+export const urlSchema = z.string().url({ message: 'Invalid URL format' });
+export const dateTimeSchema = z.string().datetime({ message: 'Invalid ISO 8601 DateTime format' });
+export const nullableDateTimeSchema = dateTimeSchema.nullable().optional();
+export const idSchema = z.string().min(1, { message: 'Identifier cannot be empty' });
+export const userIdSchema = idSchema;
+export const tenantIdSchema = idSchema;
+export const organizationIdSchema = idSchema;
+
+const literalSchema = z.union([z.string(), z.number(), z.boolean(), z.null()]);
+type Literal = z.infer<typeof literalSchema>;
+type Json = Literal | { [key: string]: Json } | Json[];
+
+export const jsonSchema: z.ZodType<Json> = z.lazy(() =>
+  z.union([literalSchema, z.record(jsonSchema), z.array(jsonSchema)])
+);
+
+export const customMetadataSchema = z.record(jsonSchema);
+export const timestampedSchema = z.object({
+  createdAt: dateTimeSchema,
+  updatedAt: dateTimeSchema,
+  deletedAt: nullableDateTimeSchema,
+});
+export const baseEntitySchema = timestampedSchema.extend({
+  id: idSchema,
+});
+
+export function validateOrThrow<T>(schema: z.Schema<T>, data: unknown): T {
+  return schema.parse(data);
+}
+
+export function safeValidate<T>(schema: z.Schema<T>, data: unknown): z.SafeParseReturnType<unknown, T> {
+  return schema.safeParse(data);
+}`
+  },
+  {
+    name: 'api/index.ts',
+    path: 'packages/validation/src/api/index.ts',
+    language: 'typescript',
+    role: 'API Pagination & Response Envelopes',
+    description: 'Enforces standard shapes for API success and error envelopes.',
+    content: `import { z } from 'zod';
+import { SortDirection } from '@sbb/types';
+import { dateTimeSchema } from '../common/index.js';
+
+export const paginationParamsSchema = z.object({
+  page: z.number().int().positive().default(1),
+  limit: z.number().int().positive().max(100).default(20),
+  sortBy: z.string().optional(),
+  sortDirection: z.nativeEnum(SortDirection).optional().default(SortDirection.ASC),
+});
+
+export const paginationMetadataSchema = z.object({
+  page: z.number().int().positive(),
+  limit: z.number().int().positive(),
+  totalCount: z.number().int().nonnegative(),
+  totalPages: z.number().int().nonnegative(),
+  hasNextPage: z.boolean(),
+  hasPreviousPage: z.boolean(),
+});
+
+export function createApiPaginatedResponseSchema<T extends z.ZodTypeAny>(itemSchema: T) {
+  return z.object({
+    success: z.literal(true),
+    data: z.array(itemSchema),
+    pagination: paginationMetadataSchema,
+    timestamp: dateTimeSchema,
+  });
+}
+
+export function createApiResponseSchema<T extends z.ZodTypeAny>(dataSchema: T) {
+  return z.object({
+    success: z.literal(true),
+    data: dataSchema,
+    timestamp: dateTimeSchema,
+  });
+}
+
+export const apiErrorDetailsSchema = z.object({
+  code: z.string().min(1),
+  message: z.string().min(1),
+  field: z.string().optional(),
+  helpUrl: z.string().url().optional(),
+});
+
+export const apiErrorResponseSchema = z.object({
+  success: z.literal(false),
+  error: z.object({
+    code: z.string().min(1),
+    message: z.string().min(1),
+    details: z.array(apiErrorDetailsSchema).optional(),
+  }),
+  timestamp: dateTimeSchema,
+});`
+  },
+  {
+    name: 'identity/index.ts',
+    path: 'packages/validation/src/identity/index.ts',
+    language: 'typescript',
+    role: 'Identity Validations',
+    description: 'Enforces proper structures for user permissions, roles, status, profiles, and sessions.',
+    content: `import { z } from 'zod';
+import { UserRole, UserStatus } from '@sbb/types';
+import { 
+  baseEntitySchema, 
+  emailSchema, 
+  urlSchema, 
+  customMetadataSchema, 
+  userIdSchema, 
+  dateTimeSchema 
+} from '../common/index.js';
+
+export const userRoleSchema = z.nativeEnum(UserRole);
+export const userStatusSchema = z.nativeEnum(UserStatus);
+export const userProfileSchema = baseEntitySchema.extend({
+  email: emailSchema,
+  firstName: z.string().min(1, { message: 'First name is required' }).max(50),
+  lastName: z.string().min(1, { message: 'Last name is required' }).max(50),
+  displayName: z.string().max(100).optional(),
+  avatarUrl: urlSchema.nullable().optional(),
+  phoneNumber: z.string().max(20).nullable().optional(),
+  role: userRoleSchema,
+  status: userStatusSchema,
+  emailVerified: z.boolean(),
+  mfaEnabled: z.boolean(),
+  metadata: customMetadataSchema.optional(),
+});
+
+export const userSessionSchema = baseEntitySchema.extend({
+  userId: userIdSchema,
+  tokenHash: z.string().min(1, { message: 'Token hash is required' }),
+  userAgent: z.string().max(500).nullable().optional(),
+  ipAddress: z.string().ip().nullable().optional(),
+  expiresAt: dateTimeSchema,
+  lastActiveAt: dateTimeSchema,
+  isRevoked: z.boolean(),
+});
+
+export const userPermissionSchema = z.object({
+  action: z.string().min(1, { message: 'Permission action is required' }),
+  resource: z.string().min(1, { message: 'Permission resource is required' }),
+  effect: z.enum(['allow', 'deny']),
+  conditions: customMetadataSchema.optional(),
+});`
+  },
+  {
+    name: 'schemas/index.ts',
+    path: 'packages/validation/src/schemas/index.ts',
+    language: 'typescript',
+    role: 'Grouped Schema Namespaces',
+    description: 'Aggregates all schema definitions into neat namespace namespaces for clean code.',
+    content: `import * as common from '../common/index.js';
+import * as api from '../api/index.js';
+import * as identity from '../identity/index.js';
+import * as organization from '../organization/index.js';
+import * as tenant from '../tenant/index.js';
+import * as audit from '../audit/index.js';
+import * as workflow from '../workflow/index.js';
+import * as ai from '../ai/index.js';
+import * as integration from '../integration/index.js';
+
+export const Schemas = {
+  common: {
+    uuid: common.uuidSchema,
+    email: common.emailSchema,
+    url: common.urlSchema,
+    dateTime: common.dateTimeSchema,
+    id: common.idSchema,
+    userId: common.userIdSchema,
+    tenantId: common.tenantIdSchema,
+    organizationId: common.organizationIdSchema,
+    customMetadata: common.customMetadataSchema,
+    timestamped: common.timestampedSchema,
+    baseEntity: common.baseEntitySchema,
+  },
+  api: {
+    paginationParams: api.paginationParamsSchema,
+    paginationMetadata: api.paginationMetadataSchema,
+    errorDetails: api.apiErrorDetailsSchema,
+    errorResponse: api.apiErrorResponseSchema,
+    createPaginatedResponse: api.createApiPaginatedResponseSchema,
+    createResponse: api.createApiResponseSchema,
+  },
+  identity: {
+    role: identity.userRoleSchema,
+    status: identity.userStatusSchema,
+    profile: identity.userProfileSchema,
+    session: identity.userSessionSchema,
+    permission: identity.userPermissionSchema,
+  },
+  organization: {
+    subscriptionTier: organization.subscriptionTierSchema,
+    settings: organization.organizationSettingsSchema,
+    organization: organization.organizationSchema,
+    member: organization.organizationMemberSchema,
+  },
+  tenant: {
+    status: tenant.tenantStatusSchema,
+    billingPlan: tenant.tenantBillingPlanSchema,
+    settings: tenant.tenantSettingsSchema,
+    tenant: tenant.tenantSchema,
+  },
+  audit: {
+    severity: audit.auditSeveritySchema,
+    actor: audit.actorMetadataSchema,
+    change: audit.fieldChangeSchema,
+    entry: audit.auditTrailEntrySchema,
+  },
+  workflow: {
+    status: workflow.workflowStatusSchema,
+    step: workflow.workflowStepDefinitionSchema,
+    definition: workflow.workflowDefinitionSchema,
+    instance: workflow.workflowInstanceSchema,
+    transition: workflow.workflowTransitionSchema,
+  },
+  ai: {
+    role: ai.aiMessageRoleSchema,
+    message: ai.aiMessageSchema,
+    modelConfig: ai.aiModelConfigSchema,
+    tokenUsage: ai.aiTokenUsageSchema,
+    session: ai.aiSessionSchema,
+  },
+  integration: {
+    type: integration.integrationTypeSchema,
+    state: integration.integrationStateSchema,
+    config: integration.integrationConfigSchema,
+    webhook: integration.webhookConfigSchema,
+    syncStatus: integration.integrationSyncStatusSchema,
+  },
+};`
+  },
+  {
+    name: 'README.md',
+    path: 'packages/validation/src/README.md',
+    language: 'markdown',
+    role: 'Internal Documentation',
+    description: 'Internal guide laying out packaging, folder targets, and development standards.',
+    content: `# @sbb/validation - Source Architecture
+
+This directory houses the strongly typed runtime validations built using Zod for the SBB Platform.
+
+## 🧱 Subdirectories
+
+* **\`common/\`**: Primitives like UUID, Email, URL, ISO-8601 Date/DateTime, custom recursive metadata, standard entities, and safety helpers.
+* **\`api/\`**: Validation structures for API pagination, response metadata wrappers, success response envelopes, and error response envelopes.
+* **\`identity/\`**: Validations for user status, roles, profiles, active sessions, and permissions.
+* **\`organization/\`**: Rules modeling workspaces, settings, subscription levels, and member mappings.
+* **\`tenant/\`**: Standard schemas validating tenant configurations, billing plans, and resource setting boundaries.
+* **\`audit/\`**: Secure Zod structures verifying severity, event actors, modified field diff structures, and event entries.
+* **\`workflow/\`**: Models validating automated templates, run parameters, instance records, and transition logs.
+* **\`ai/\`**: Verification for message roles, structured chat arrays, engine telemetry, and user AI sessions.
+* **\`integration/\`**: Verification schemas for platform links, active states, webhooks, and syncing diagnostics logs.
+* **\`schemas/\`**: A central namespace aggregator grouping all Zod validation schemas for simple usage.
+
+## ⚠️ Standards
+
+1. **Strictly Runtime Validation**: Only define pure Zod schemas and validation/safe parsing helpers. No business logic, authorization mechanisms, database integrations, or framework modules.
+2. **ESM Compliance**: Use explicit \`.js\` extensions for local file imports.
+3. **No Circular Dependencies**: Ensure modular design prevents importing subdirectories from each other.`
+  }
+];
+
 
 

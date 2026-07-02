@@ -36,6 +36,9 @@
       ],
       "@sbb/types": [
         "./packages/types/src/index.ts"
+      ],
+      "@sbb/validation": [
+        "./packages/validation/src/index.ts"
       ]
     },
     "allowImportingTsExtensions": true,

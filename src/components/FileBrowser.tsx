@@ -10,10 +10,11 @@ interface FileBrowserProps {
   databaseFiles: FileNode[];
   authFiles: FileNode[];
   typesFiles: FileNode[];
+  validationFiles?: FileNode[];
 }
 
-export function FileBrowser({ files, configFiles, loggerFiles, sharedFiles, databaseFiles, authFiles, typesFiles }: FileBrowserProps) {
-  const [activePackage, setActivePackage] = useState<'identity' | 'config' | 'logger' | 'shared' | 'database' | 'auth' | 'types'>('identity');
+export function FileBrowser({ files, configFiles, loggerFiles, sharedFiles, databaseFiles, authFiles, typesFiles, validationFiles = [] }: FileBrowserProps) {
+  const [activePackage, setActivePackage] = useState<'identity' | 'config' | 'logger' | 'shared' | 'database' | 'auth' | 'types' | 'validation'>('identity');
   const activeFiles = 
     activePackage === 'identity' 
       ? files 
@@ -27,11 +28,13 @@ export function FileBrowser({ files, configFiles, loggerFiles, sharedFiles, data
               ? databaseFiles
               : activePackage === 'auth'
                 ? authFiles
-                : typesFiles;
+                : activePackage === 'types'
+                  ? typesFiles
+                  : validationFiles;
   const [selectedFile, setSelectedFile] = useState<FileNode>(files[0]);
   const [copied, setCopied] = useState(false);
 
-  const handlePackageSwitch = (pkg: 'identity' | 'config' | 'logger' | 'shared' | 'database' | 'auth' | 'types') => {
+  const handlePackageSwitch = (pkg: 'identity' | 'config' | 'logger' | 'shared' | 'database' | 'auth' | 'types' | 'validation') => {
     setActivePackage(pkg);
     const targetFiles = 
       pkg === 'identity' 
@@ -46,7 +49,9 @@ export function FileBrowser({ files, configFiles, loggerFiles, sharedFiles, data
                 ? databaseFiles
                 : pkg === 'auth'
                   ? authFiles
-                  : typesFiles;
+                  : pkg === 'types'
+                    ? typesFiles
+                    : validationFiles;
     setSelectedFile(targetFiles[0]);
   };
 
@@ -105,7 +110,7 @@ export function FileBrowser({ files, configFiles, loggerFiles, sharedFiles, data
         </div>
 
         {/* Package Selector */}
-        <div className="grid grid-cols-7 gap-1 p-2 bg-[#0A0A0B] border-b border-[#262626]">
+        <div className="grid grid-cols-4 lg:grid-cols-8 gap-1 p-2 bg-[#0A0A0B] border-b border-[#262626]">
           <button
             onClick={() => handlePackageSwitch('identity')}
             id="pkg-btn-identity"
@@ -183,6 +188,17 @@ export function FileBrowser({ files, configFiles, loggerFiles, sharedFiles, data
           >
             @sbb/types
           </button>
+          <button
+            onClick={() => handlePackageSwitch('validation')}
+            id="pkg-btn-validation"
+            className={`py-1.5 text-[8px] font-mono uppercase font-bold tracking-wider rounded transition-all cursor-pointer text-center ${
+              activePackage === 'validation'
+                ? 'bg-[#1C1917] text-white border border-[#44403C] shadow'
+                : 'text-[#737373] hover:text-[#A3A3A3] hover:bg-[#0D0D0E]'
+            }`}
+          >
+            @sbb/validation
+          </button>
         </div>
 
         {/* Directory Listing */}
@@ -203,7 +219,9 @@ export function FileBrowser({ files, configFiles, loggerFiles, sharedFiles, data
                         ? 'packages/database/'
                         : activePackage === 'auth'
                           ? 'packages/auth/'
-                          : 'packages/types/'}
+                          : activePackage === 'types'
+                            ? 'packages/types/'
+                            : 'packages/validation/'}
             </span>
           </div>
 

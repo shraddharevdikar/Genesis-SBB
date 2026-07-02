@@ -3,7 +3,7 @@ import { TicketDetail } from './components/TicketDetail';
 import { FileBrowser } from './components/FileBrowser';
 import { ArchitectureGraph } from './components/ArchitectureGraph';
 import { RoadmapTimeline } from './components/RoadmapTimeline';
-import { ticketDetails, fileList, futureTickets, configFileList, loggerFileList, sharedFileList, databaseFileList, authFileList, typesFileList } from './data';
+import { ticketDetails, fileList, futureTickets, configFileList, loggerFileList, sharedFileList, databaseFileList, authFileList, typesFileList, validationFileList } from './data';
 import { 
   FolderCheck, 
   Terminal, 
@@ -75,11 +75,11 @@ export default function App() {
           <div className="bg-[#0F0F11] p-4 rounded border border-[#262626]">
             <div className="flex items-center justify-between">
               <span className="text-[#737373] font-mono text-[10px] uppercase tracking-wider">Active Tickets</span>
-              <span className="text-[10px] font-mono text-[#D4D4D8] bg-[#1C1917] border border-[#44403C] px-1.5 py-0.5 rounded">GEN-000.4.6</span>
+              <span className="text-[10px] font-mono text-[#D4D4D8] bg-[#1C1917] border border-[#44403C] px-1.5 py-0.5 rounded">GEN-000.4.7</span>
             </div>
-            <p className="text-xl font-light text-white mt-2 font-mono">7 Packages</p>
+            <p className="text-xl font-light text-white mt-2 font-mono">8 Packages</p>
             <p className="text-[11px] text-[#A3A3A3] mt-1 flex items-center gap-1">
-              <span>All 7 Platform Packages Complete</span>
+              <span>All 8 Core Foundation Packages Complete</span>
             </p>
           </div>
 
@@ -88,8 +88,8 @@ export default function App() {
               <span className="text-[#737373] font-mono text-[10px] uppercase tracking-wider">Files Written</span>
               <Code2 className="w-4 h-4 text-[#737373]" />
             </div>
-            <p className="text-xl font-light text-white mt-2 font-mono">90 Files</p>
-            <p className="text-[11px] text-[#737373] mt-1">Identity (15) + Config (9) + Logger (12) + Shared (14) + DB (17) + Auth (8) + Types (15)</p>
+            <p className="text-xl font-light text-white mt-2 font-mono">105 Files</p>
+            <p className="text-[11px] text-[#737373] mt-1">Identity (15) + Config (9) + Logger (12) + Shared (14) + DB (17) + Auth (8) + Types (15) + Validation (15)</p>
           </div>
 
           <div className="bg-[#0F0F11] p-4 rounded border border-[#262626]">
@@ -179,7 +179,7 @@ export default function App() {
           )}
 
           {activeTab === 'code' && (
-            <FileBrowser files={fileList} configFiles={configFileList} loggerFiles={loggerFileList} sharedFiles={sharedFileList} databaseFiles={databaseFileList} authFiles={authFileList} typesFiles={typesFileList} />
+            <FileBrowser files={fileList} configFiles={configFileList} loggerFiles={loggerFileList} sharedFiles={sharedFileList} databaseFiles={databaseFileList} authFiles={authFileList} typesFiles={typesFileList} validationFiles={validationFileList} />
           )}
 
           {activeTab === 'pipeline' && (
