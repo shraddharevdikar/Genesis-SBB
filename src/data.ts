@@ -3186,5 +3186,701 @@ This directory contains the core implementation files of the shared authenticati
   }
 ];
 
+export const typesFileList: FileNode[] = [
+  {
+    name: 'README.md',
+    path: 'packages/types/README.md',
+    language: 'markdown',
+    role: 'Documentation',
+    description: 'Central Type System and Domain Contracts library, key features, architecture, and code snippets.',
+    content: `# @sbb/types
+
+Central Type System and Domain Contracts library for the **SBB Platform**.
+
+This package contains strict, zero-dependency, runtime-free TypeScript type declarations, interfaces, and enums representing the platform domain.
+
+---
+
+## 🚀 Key Architectural Modules
+
+* **Common**: Core identifiers, timestamp bounds (\`Timestamped\`, \`BaseEntity\`), sorting maps, and extensible dictionary payloads.
+* **API Wrappers**: Normalized envelopes for single resources, cursor/page paginated collections, and error code catalogs.
+* **Identity**: Strongly typed user records, standard roles (\`Admin\`, \`Member\`), live tracking sessions, and resource permissions.
+* **Organization**: Enterprise multi-tenant workspace nodes, team profiles, and access settings.
+* **Tenant Routing**: Domain hosting configurations, system status codes, and billing level features.
+* **Audit Tracing**: Compliance logs recording field modification history, severity scales, and initiator details.
+* **Workflow Automation**: Task steps, definitions, transition lines, and instance counters.
+* **AI Engine**: Message arrays, token counts, cost approximations, and LLM configuration profiles.
+* **Integration**: Configurations, synchronizers, state toggles, and secure HMAC webhook contracts.`
+  },
+  {
+    name: 'package.json',
+    path: 'packages/types/package.json',
+    language: 'json',
+    role: 'Package Manifest',
+    description: 'Defines package name (@sbb/types), build scripts, and devDependencies.',
+    content: `{
+  "name": "@sbb/types",
+  "version": "1.0.0",
+  "description": "Shared platform type definitions and interfaces for the SBB Platform",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "echo \\"Error: no test specified\\" && exit 0"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.5"
+  },
+  "publishConfig": {
+    "access": "restricted"
+  }
+}`
+  },
+  {
+    name: 'tsconfig.json',
+    path: 'packages/types/tsconfig.json',
+    language: 'json',
+    role: 'TypeScript Config',
+    description: 'Defines typescript build rules for type-only output configurations.',
+    content: `{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "declaration": true,
+    "outDir": "dist",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
+}`
+  },
+  {
+    name: 'CHANGELOG.md',
+    path: 'packages/types/CHANGELOG.md',
+    language: 'markdown',
+    role: 'Release History',
+    description: 'Chronological roadmap record of type module features, additions, and updates.',
+    content: `# Changelog
+
+All notable changes to the \`@sbb/types\` package will be documented in this file.
+
+## [1.0.0] - 2026-07-02
+
+### Added
+- Created the core shared types package (\`@sbb/types\`) defining the central domain models of the SBB Platform.
+- Declared foundational interfaces (\`Timestamped\`, \`BaseEntity\`) and utility type primitives (\`Nullable\`, \`Dictionary\`, \`CustomMetadata\`) in \`common\`.
+- Structured API communication standards containing single/paginated responses, parameter structures, page boundary metrics, and error payload definitions.
+- Created robust \`identity\` schemas modeling user profiles, lifecycle states (\`active\`, \`suspended\`, \`pending_invitation\`), active device sessions, and authorization permission controls.
+- Defined workspace structures inside \`organization\` documenting organizational contexts, subscription plans, settings, and member mappings.
+- Implemented \`tenant\` configurations tracking subdomain routing, active hosting status, resource caps, and geographic region permissions.
+- Outlined compliance logs inside \`audit\` containing severities, initiator descriptors, custom change diff fields, and security tracks.
+- Modeled approval templates in \`workflow\` defining step sequences, run monitors, outcomes, and step transition lines.
+- Programmed generative schemas inside \`ai\` detailing participant roles, message trails, model parameter configurations, and token calculation limits.
+- Described service linkers inside \`integration\` modeling active platform profiles, outgoing Webhook scopes, and system syncing run logs.`
+  },
+  {
+    name: 'index.ts',
+    path: 'packages/types/src/index.ts',
+    language: 'typescript',
+    role: 'Public API Entry point',
+    description: 'Exposes all core types and interfaces of the platform.',
+    content: `export * from './common/index.js';
+export * from './api/index.js';
+export * from './identity/index.js';
+export * from './organization/index.js';
+export * from './tenant/index.js';
+export * from './audit/index.js';
+export * from './workflow/index.js';
+export * from './ai/index.js';
+export * from './integration/index.js';`
+  },
+  {
+    name: 'common/index.ts',
+    path: 'packages/types/src/common/index.ts',
+    language: 'typescript',
+    role: 'Common Types & Primitives',
+    description: 'Defines central entities and helper definitions.',
+    content: `/**
+ * Standard sorting directions.
+ */
+export enum SortDirection {
+  ASC = 'asc',
+  DESC = 'desc'
+}
+
+/**
+ * Base tracking fields for entities stored within the system.
+ */
+export interface Timestamped {
+  createdAt: string;
+  updatedAt: string;
+  deletedAt?: string | null;
+}
+
+/**
+ * Standard identifier block for system entities.
+ */
+export interface BaseEntity extends Timestamped {
+  id: string;
+}
+
+/**
+ * Free-form dictionary structure for extensible metadata tags.
+ */
+export interface CustomMetadata {
+  [key: string]: string | number | boolean | null | CustomMetadata | Array<string | number | boolean | null>;
+}
+
+/**
+ * Generic type for allowing nullable values.
+ */
+export type Nullable<T> = T | null;
+
+/**
+ * Generic dictionary structure.
+ */
+export type Dictionary<T> = Record<string, T>;`
+  },
+  {
+    name: 'api/index.ts',
+    path: 'packages/types/src/api/index.ts',
+    language: 'typescript',
+    role: 'API Envelopes & Pagination',
+    description: 'Defines paginated list queries and responses.',
+    content: `import { SortDirection } from '../common/index.js';
+
+/**
+ * Standard parameters for querying lists with pagination.
+ */
+export interface PaginationParams {
+  page: number;
+  limit: number;
+  sortBy?: string;
+  sortDirection?: SortDirection;
+}
+
+/**
+ * Metadata returning information about the current page and pagination boundaries.
+ */
+export interface PaginationMetadata {
+  page: number;
+  limit: number;
+  totalCount: number;
+  totalPages: number;
+  hasNextPage: boolean;
+  hasPreviousPage: boolean;
+}
+
+/**
+ * Standard API envelope for list responses containing pagination details.
+ */
+export interface ApiPaginatedResponse<T> {
+  success: boolean;
+  data: T[];
+  pagination: PaginationMetadata;
+  timestamp: string;
+}
+
+/**
+ * Standard API envelope for single resource responses.
+ */
+export interface ApiResponse<T> {
+  success: boolean;
+  data: T;
+  timestamp: string;
+}
+
+/**
+ * Detailed error context payload structure.
+ */
+export interface ApiErrorDetails {
+  code: string;
+  message: string;
+  field?: string;
+  helpUrl?: string;
+}
+
+/**
+ * Standard API error response envelope.
+ */
+export interface ApiErrorResponse {
+  success: false;
+  error: {
+    code: string;
+    message: string;
+    details?: ApiErrorDetails[];
+  };
+  timestamp: string;
+}`
+  },
+  {
+    name: 'identity/index.ts',
+    path: 'packages/types/src/identity/index.ts',
+    language: 'typescript',
+    role: 'User Profile & Identity',
+    description: 'Defines user, session, role, and permission details.',
+    content: `import { BaseEntity, CustomMetadata } from '../common/index.js';
+
+/**
+ * Standard platform user roles.
+ */
+export enum UserRole {
+  OWNER = 'owner',
+  ADMIN = 'admin',
+  MEMBER = 'member',
+  VIEWER = 'viewer',
+  GUEST = 'guest'
+}
+
+/**
+ * Statuses representing a user's lifecycle state in the platform.
+ */
+export enum UserStatus {
+  ACTIVE = 'active',
+  SUSPENDED = 'suspended',
+  PENDING_INVITATION = 'pending_invitation',
+  DEACTIVATED = 'deactivated'
+}
+
+/**
+ * Enterprise user profile details.
+ */
+export interface UserProfile extends BaseEntity {
+  email: string;
+  firstName: string;
+  lastName: string;
+  displayName?: string;
+  avatarUrl?: string | null;
+  phoneNumber?: string | null;
+  role: UserRole;
+  status: UserStatus;
+  emailVerified: boolean;
+  mfaEnabled: boolean;
+  metadata?: CustomMetadata;
+}
+
+/**
+ * Metadata for tracking a logged-in user's device and session.
+ */
+export interface UserSession extends BaseEntity {
+  userId: string;
+  tokenHash: string;
+  userAgent?: string | null;
+  ipAddress?: string | null;
+  expiresAt: string;
+  lastActiveAt: string;
+  isRevoked: boolean;
+}
+
+/**
+ * Authorization permission structure for fine-grained access controls.
+ */
+export interface UserPermission {
+  action: string;      // e.g., 'read', 'write', 'delete'
+  resource: string;    // e.g., 'documents', 'billing', 'settings'
+  effect: 'allow' | 'deny';
+  conditions?: CustomMetadata;
+}`
+  },
+  {
+    name: 'organization/index.ts',
+    path: 'packages/types/src/organization/index.ts',
+    language: 'typescript',
+    role: 'Organization & Subscription',
+    description: 'Defines billing plans, setting boundaries, and membership maps.',
+    content: `import { BaseEntity, CustomMetadata } from '../common/index.js';
+import { UserRole } from '../identity/index.js';
+
+/**
+ * Organization level subscription tiers.
+ */
+export enum SubscriptionTier {
+  FREE = 'free',
+  GROWTH = 'growth',
+  ENTERPRISE = 'enterprise'
+}
+
+/**
+ * Representation of an Organization (or workspace) inside SBB.
+ */
+export interface Organization extends BaseEntity {
+  name: string;
+  slug: string;
+  subscriptionTier: SubscriptionTier;
+  billingEmail: string;
+  logoUrl?: string | null;
+  settings: OrganizationSettings;
+  metadata?: CustomMetadata;
+}
+
+/**
+ * Global configuration properties specific to the Organization context.
+ */
+export interface OrganizationSettings {
+  allowedDomains?: string[];
+  mfaRequired: boolean;
+  ssoEnabled: boolean;
+  ssoProvider?: string;
+  sessionTimeoutMinutes: number;
+}
+
+/**
+ * Represents a user's association with a specific Organization.
+ */
+export interface OrganizationMember extends BaseEntity {
+  organizationId: string;
+  userId: string;
+  role: UserRole;
+  joinedAt: string;
+  invitedBy?: string;
+}`
+  },
+  {
+    name: 'tenant/index.ts',
+    path: 'packages/types/src/tenant/index.ts',
+    language: 'typescript',
+    role: 'Tenant & Routing',
+    description: 'Defines multi-tenant domain mapping and features.',
+    content: `import { BaseEntity, CustomMetadata } from '../common/index.js';
+
+/**
+ * Operations and hosting states for a Tenant.
+ */
+export enum TenantStatus {
+  PROVISIONING = 'provisioning',
+  ACTIVE = 'active',
+  SUSPENDED = 'suspended',
+  MAINTENANCE = 'maintenance',
+  ARCHIVED = 'archived'
+}
+
+/**
+ * Representation of a Tenant in a multi-tenant enterprise system.
+ */
+export interface Tenant extends BaseEntity {
+  name: string;
+  domain: string;
+  subdomain: string;
+  status: TenantStatus;
+  billingPlan: TenantBillingPlan;
+  settings: TenantSettings;
+  metadata?: CustomMetadata;
+}
+
+/**
+ * Billing features and utilization constraints for a tenant.
+ */
+export interface TenantBillingPlan {
+  code: string;       // e.g., 'growth-monthly'
+  name: string;       // e.g., 'Growth Monthly Plan'
+  price: number;
+  currency: string;
+  interval: 'monthly' | 'yearly';
+  trialEndsAt?: string | null;
+}
+
+/**
+ * Technical boundaries, configurations, and feature flags for a specific tenant scope.
+ */
+export interface TenantSettings {
+  maxUsers: number;
+  storageLimitGb: number;
+  enableBetaFeatures: boolean;
+  allowedRegions: string[];
+  corsOrigins: string[];
+}`
+  },
+  {
+    name: 'audit/index.ts',
+    path: 'packages/types/src/audit/index.ts',
+    language: 'typescript',
+    role: 'Audit Logs & Traces',
+    description: 'Defines event logging and compliance tracking entries.',
+    content: `import { BaseEntity, CustomMetadata } from '../common/index.js';
+
+/**
+ * Standard security and modification classifications.
+ */
+export enum AuditSeverity {
+  INFO = 'info',
+  WARNING = 'warning',
+  CRITICAL = 'critical'
+}
+
+/**
+ * Audit tracking entity mapping user and system behavior.
+ */
+export interface AuditTrailEntry extends BaseEntity {
+  actor: ActorMetadata;
+  action: string;             // e.g., 'user.login', 'tenant.deleted'
+  category: string;           // e.g., 'authentication', 'administration'
+  severity: AuditSeverity;
+  resourceId?: string;        // e.g., user ID, tenant ID
+  resourceType?: string;      // e.g., 'UserProfile', 'Tenant'
+  ipAddress?: string | null;
+  userAgent?: string | null;
+  status: 'success' | 'failure';
+  errorMessage?: string | null;
+  changes?: FieldChange[];
+  metadata?: CustomMetadata;
+}
+
+/**
+ * Describes the initiator of an auditable action.
+ */
+export interface ActorMetadata {
+  id: string;
+  type: 'user' | 'system' | 'api_key' | 'support';
+  email?: string;
+  displayName?: string;
+}
+
+/**
+ * Records exact structural properties changed during a database update or action.
+ */
+export interface FieldChange {
+  field: string;
+  oldValue: string | number | boolean | null;
+  newValue: string | number | boolean | null;
+}`
+  },
+  {
+    name: 'workflow/index.ts',
+    path: 'packages/types/src/workflow/index.ts',
+    language: 'typescript',
+    role: 'Workflow Automations',
+    description: 'Defines approval loops, steps, definitions, and states.',
+    content: `import { BaseEntity, CustomMetadata } from '../common/index.js';
+
+/**
+ * Standard processing states for a workflow execution.
+ */
+export enum WorkflowStatus {
+  PENDING = 'pending',
+  RUNNING = 'running',
+  COMPLETED = 'completed',
+  FAILED = 'failed',
+  CANCELLED = 'cancelled',
+  SUSPENDED = 'suspended'
+}
+
+/**
+ * Declares the architectural template for automated workflows.
+ */
+export interface WorkflowDefinition extends BaseEntity {
+  name: string;
+  code: string;               // e.g., 'document_approval_flow'
+  description?: string;
+  isActive: boolean;
+  steps: WorkflowStepDefinition[];
+  metadata?: CustomMetadata;
+}
+
+/**
+ * Standard configuration rules for a step within a workflow template.
+ */
+export interface WorkflowStepDefinition {
+  id: string;                 // unique key in definition
+  name: string;
+  type: 'action' | 'condition' | 'approval' | 'delay';
+  config: CustomMetadata;
+  nextStepId?: string | null;
+}
+
+/**
+ * Tracks an active or historic execution of a workflow.
+ */
+export interface WorkflowInstance extends BaseEntity {
+  definitionId: string;
+  status: WorkflowStatus;
+  currentStepId?: string | null;
+  startedBy?: string;
+  endedAt?: string | null;
+  input: CustomMetadata;
+  output?: CustomMetadata | null;
+  errors?: string[];
+}
+
+/**
+ * State transitions and transition logs recorded during workflow execution.
+ */
+export interface WorkflowTransition extends BaseEntity {
+  instanceId: string;
+  fromStepId?: string | null;
+  toStepId: string;
+  status: WorkflowStatus;
+  timestamp: string;
+  executionSummary?: string | null;
+}`
+  },
+  {
+    name: 'ai/index.ts',
+    path: 'packages/types/src/ai/index.ts',
+    language: 'typescript',
+    role: 'AI Prompts & Telemetry',
+    description: 'Defines message history, provider configurations, and token telemetry.',
+    content: `import { BaseEntity, CustomMetadata } from '../common/index.js';
+
+/**
+ * Structural participant identities in an AI chat conversation.
+ */
+export enum AiMessageRole {
+  SYSTEM = 'system',
+  USER = 'user',
+  ASSISTANT = 'assistant',
+  TOOL = 'tool'
+}
+
+/**
+ * Standard structured chat messages for LLM integrations.
+ */
+export interface AiMessage {
+  id: string;
+  role: AiMessageRole;
+  content: string;
+  timestamp: string;
+  name?: string;               // Optional descriptor for agents or specific tools
+  toolCallId?: string;         // References the associated Tool Call
+}
+
+/**
+ * Tracks AI active sessions or user chat thread boundaries.
+ */
+export interface AiSession extends BaseEntity {
+  userId: string;
+  title: string;
+  modelConfig: AiModelConfig;
+  tokenUsageSummary: AiTokenUsage;
+  metadata?: CustomMetadata;
+}
+
+/**
+ * Model selection, temperature, and formatting instructions.
+ */
+export interface AiModelConfig {
+  provider: 'google' | 'openai' | 'anthropic';
+  model: string;              // e.g., 'gemini-2.5-flash', 'gpt-4o'
+  temperature?: number;
+  maxTokens?: number;
+  topP?: number;
+  systemInstruction?: string;
+}
+
+/**
+ * Exact token billing and rate-limiting metrics.
+ */
+export interface AiTokenUsage {
+  promptTokens: number;
+  completionTokens: number;
+  totalTokens: number;
+  estimatedCostUSD?: number;
+}`
+  },
+  {
+    name: 'integration/index.ts',
+    path: 'packages/types/src/integration/index.ts',
+    language: 'typescript',
+    role: 'Integration Connectors',
+    description: 'Defines webhook endpoints, integration properties, and sync records.',
+    content: `import { BaseEntity, CustomMetadata } from '../common/index.js';
+
+/**
+ * Supported external platforms.
+ */
+export enum IntegrationType {
+  SLACK = 'slack',
+  GMAIL = 'gmail',
+  GOOGLE_CALENDAR = 'google_calendar',
+  GITHUB = 'github',
+  STRIPE = 'stripe',
+  SALESFORCE = 'salesforce',
+  CUSTOM_WEBHOOK = 'custom_webhook'
+}
+
+/**
+ * Connection states for an integration.
+ */
+export enum IntegrationState {
+  DISCONNECTED = 'disconnected',
+  CONNECTED = 'connected',
+  ERROR = 'error',
+  PAUSED = 'paused'
+}
+
+/**
+ * Tracks third-party platform credentials, scopes, and connection configurations.
+ */
+export interface IntegrationConfig extends BaseEntity {
+  tenantId: string;
+  type: IntegrationType;
+  state: IntegrationState;
+  authMethod: 'oauth2' | 'api_key' | 'basic' | 'none';
+  scopes?: string[];
+  settings: CustomMetadata;
+  lastSyncedAt?: string | null;
+}
+
+/**
+ * Custom incoming or outgoing HTTP webhook endpoint rules.
+ */
+export interface WebhookConfig extends BaseEntity {
+  integrationId?: string;
+  url: string;
+  events: string[];           // e.g., ['document.created', 'user.signed_up']
+  secretToken: string;        // Used to compute HMAC signature for safety
+  isActive: boolean;
+  retryAttempts: number;
+}
+
+/**
+ * Operational diagnostics record tracking data synchronization success rates.
+ */
+export interface IntegrationSyncStatus {
+  id: string;
+  integrationId: string;
+  status: 'completed' | 'failed' | 'partial';
+  recordsProcessed: number;
+  recordsFailed: number;
+  durationMs: number;
+  errorMessage?: string | null;
+  startedAt: string;
+  completedAt: string;
+}`
+  },
+  {
+    name: 'README.md',
+    path: 'packages/types/src/README.md',
+    language: 'markdown',
+    role: 'Internal Documentation',
+    description: 'Technical document detailing internal patterns and standards.',
+    content: `# @sbb/types - Source Architecture
+
+This directory houses the strongly typed interfaces, types, and standard enums representing the core domain models of the SBB Platform.
+
+## 🧱 Subdirectories
+
+* **\`common/\`**: Base entities, standard timestamp definitions, custom metadata slots, and dictionary helpers.
+* **\`api/\`**: Uniform wrapper structures for standard single/paginated responses, pagination limits, and error payloads.
+* **\`identity/\`**: Structural maps for user profiles, roles, security sessions, and access permissions.
+* **\`organization/\`**: Team workspaces, tenant subscription tiers, membership logs, and organizational controls.
+* **\`tenant/\`**: Standard schemas tracking multi-tenant deployment constraints, region filters, and billing tiers.
+* **\`audit/\`**: Robust trace models recording modifications, compliance events, field differences, and system actions.
+* **\`workflow/\`**: Automated execution loops, process templates, active execution states, and audit trails.
+* **\`ai/\`**: Models, token cost telemetry, message histories, and system instructions for AI pipeline steps.
+* **\`integration/\`**: External connectors, custom outgoing/incoming webhooks, and synchronization run summaries.
+
+## ⚠️ Standards
+
+1. **Pure TypeScript**: No classes, functions, controllers, runtime implementations, validation schemes, or framework modules.
+2. **ESM Compliance**: Explicit \`.js\` imports for submodules when referencing local types.
+3. **Enum Declaration**: Standard TypeScript enums (\`enum\`) only. Never use \`const enum\`.`
+  }
+];
+
 
 

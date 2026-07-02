@@ -33,6 +33,9 @@
       ],
       "@sbb/auth": [
         "./packages/auth/src/index.ts"
+      ],
+      "@sbb/types": [
+        "./packages/types/src/index.ts"
       ]
     },
     "allowImportingTsExtensions": true,

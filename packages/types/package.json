@@ -1,0 +1,17 @@
+{
+  "name": "@sbb/types",
+  "version": "1.0.0",
+  "description": "Shared platform type definitions and interfaces for the SBB Platform",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 0"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.5"
+  },
+  "publishConfig": {
+    "access": "restricted"
+  }
+}
