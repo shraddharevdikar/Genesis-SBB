@@ -1,0 +1,6 @@
+{
+  "name": "SBB Identity Module Explorer",
+  "description": "Architectural playground and explorer for SBB Platform Identity Module Foundation (GEN-ID-001).",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
