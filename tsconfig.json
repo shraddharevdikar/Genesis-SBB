@@ -18,6 +18,18 @@
     "paths": {
       "@/*": [
         "./*"
+      ],
+      "@sbb/shared": [
+        "./packages/shared/src/index.ts"
+      ],
+      "@sbb/config": [
+        "./packages/config/src/env.ts"
+      ],
+      "@sbb/logger": [
+        "./packages/logger/src/index.ts"
+      ],
+      "@sbb/database": [
+        "./packages/database/src/index.ts"
       ]
     },
     "allowImportingTsExtensions": true,

@@ -1,0 +1,23 @@
+{
+  "name": "@sbb/database",
+  "version": "1.0.0",
+  "description": "Shared database infrastructure package for the SBB Platform providing a reusable repository abstraction layer, Prisma client singleton, and transaction utilities.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 0"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.14.0",
+    "@sbb/shared": "^1.0.0"
+  },
+  "devDependencies": {
+    "prisma": "^5.14.0",
+    "typescript": "^5.4.5",
+    "@types/node": "^20.12.12"
+  },
+  "publishConfig": {
+    "access": "restricted"
+  }
+}

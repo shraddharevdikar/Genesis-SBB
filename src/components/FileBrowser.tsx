@@ -7,10 +7,11 @@ interface FileBrowserProps {
   configFiles: FileNode[];
   loggerFiles: FileNode[];
   sharedFiles: FileNode[];
+  databaseFiles: FileNode[];
 }
 
-export function FileBrowser({ files, configFiles, loggerFiles, sharedFiles }: FileBrowserProps) {
-  const [activePackage, setActivePackage] = useState<'identity' | 'config' | 'logger' | 'shared'>('identity');
+export function FileBrowser({ files, configFiles, loggerFiles, sharedFiles, databaseFiles }: FileBrowserProps) {
+  const [activePackage, setActivePackage] = useState<'identity' | 'config' | 'logger' | 'shared' | 'database'>('identity');
   const activeFiles = 
     activePackage === 'identity' 
       ? files 
@@ -18,11 +19,13 @@ export function FileBrowser({ files, configFiles, loggerFiles, sharedFiles }: Fi
         ? configFiles 
         : activePackage === 'logger'
           ? loggerFiles
-          : sharedFiles;
+          : activePackage === 'shared'
+            ? sharedFiles
+            : databaseFiles;
   const [selectedFile, setSelectedFile] = useState<FileNode>(files[0]);
   const [copied, setCopied] = useState(false);
 
-  const handlePackageSwitch = (pkg: 'identity' | 'config' | 'logger' | 'shared') => {
+  const handlePackageSwitch = (pkg: 'identity' | 'config' | 'logger' | 'shared' | 'database') => {
     setActivePackage(pkg);
     const targetFiles = 
       pkg === 'identity' 
@@ -31,7 +34,9 @@ export function FileBrowser({ files, configFiles, loggerFiles, sharedFiles }: Fi
           ? configFiles 
           : pkg === 'logger'
             ? loggerFiles
-            : sharedFiles;
+            : pkg === 'shared'
+              ? sharedFiles
+              : databaseFiles;
     setSelectedFile(targetFiles[0]);
   };
 
@@ -90,11 +95,11 @@ export function FileBrowser({ files, configFiles, loggerFiles, sharedFiles }: Fi
         </div>
 
         {/* Package Selector */}
-        <div className="grid grid-cols-4 gap-1 p-2 bg-[#0A0A0B] border-b border-[#262626]">
+        <div className="grid grid-cols-5 gap-1 p-2 bg-[#0A0A0B] border-b border-[#262626]">
           <button
             onClick={() => handlePackageSwitch('identity')}
             id="pkg-btn-identity"
-            className={`py-1.5 text-[9px] font-mono uppercase font-bold tracking-wider rounded transition-all cursor-pointer ${
+            className={`py-1.5 text-[8px] font-mono uppercase font-bold tracking-wider rounded transition-all cursor-pointer text-center ${
               activePackage === 'identity'
                 ? 'bg-[#1C1917] text-white border border-[#44403C] shadow'
                 : 'text-[#737373] hover:text-[#A3A3A3] hover:bg-[#0D0D0E]'
@@ -105,7 +110,7 @@ export function FileBrowser({ files, configFiles, loggerFiles, sharedFiles }: Fi
           <button
             onClick={() => handlePackageSwitch('config')}
             id="pkg-btn-config"
-            className={`py-1.5 text-[9px] font-mono uppercase font-bold tracking-wider rounded transition-all cursor-pointer ${
+            className={`py-1.5 text-[8px] font-mono uppercase font-bold tracking-wider rounded transition-all cursor-pointer text-center ${
               activePackage === 'config'
                 ? 'bg-[#1C1917] text-white border border-[#44403C] shadow'
                 : 'text-[#737373] hover:text-[#A3A3A3] hover:bg-[#0D0D0E]'
@@ -116,7 +121,7 @@ export function FileBrowser({ files, configFiles, loggerFiles, sharedFiles }: Fi
           <button
             onClick={() => handlePackageSwitch('logger')}
             id="pkg-btn-logger"
-            className={`py-1.5 text-[9px] font-mono uppercase font-bold tracking-wider rounded transition-all cursor-pointer ${
+            className={`py-1.5 text-[8px] font-mono uppercase font-bold tracking-wider rounded transition-all cursor-pointer text-center ${
               activePackage === 'logger'
                 ? 'bg-[#1C1917] text-white border border-[#44403C] shadow'
                 : 'text-[#737373] hover:text-[#A3A3A3] hover:bg-[#0D0D0E]'
@@ -127,13 +132,24 @@ export function FileBrowser({ files, configFiles, loggerFiles, sharedFiles }: Fi
           <button
             onClick={() => handlePackageSwitch('shared')}
             id="pkg-btn-shared"
-            className={`py-1.5 text-[9px] font-mono uppercase font-bold tracking-wider rounded transition-all cursor-pointer ${
+            className={`py-1.5 text-[8px] font-mono uppercase font-bold tracking-wider rounded transition-all cursor-pointer text-center ${
               activePackage === 'shared'
                 ? 'bg-[#1C1917] text-white border border-[#44403C] shadow'
                 : 'text-[#737373] hover:text-[#A3A3A3] hover:bg-[#0D0D0E]'
             }`}
           >
             @sbb/shared
+          </button>
+          <button
+            onClick={() => handlePackageSwitch('database')}
+            id="pkg-btn-database"
+            className={`py-1.5 text-[8px] font-mono uppercase font-bold tracking-wider rounded transition-all cursor-pointer text-center ${
+              activePackage === 'database'
+                ? 'bg-[#1C1917] text-white border border-[#44403C] shadow'
+                : 'text-[#737373] hover:text-[#A3A3A3] hover:bg-[#0D0D0E]'
+            }`}
+          >
+            @sbb/database
           </button>
         </div>
 
@@ -149,7 +165,9 @@ export function FileBrowser({ files, configFiles, loggerFiles, sharedFiles }: Fi
                   ? 'packages/config/' 
                   : activePackage === 'logger'
                     ? 'packages/logger/'
-                    : 'packages/shared/'}
+                    : activePackage === 'shared'
+                      ? 'packages/shared/'
+                      : 'packages/database/'}
             </span>
           </div>
 

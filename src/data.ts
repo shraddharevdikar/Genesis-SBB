@@ -1982,4 +1982,659 @@ This directory houses the core implementation files for the \`@sbb/shared\` pack
   }
 ];
 
+export const databaseFileList: FileNode[] = [
+  {
+    name: 'README.md',
+    path: 'packages/database/README.md',
+    language: 'markdown',
+    role: 'Documentation',
+    description: 'Central platform database configuration package, key features, architecture, and code snippets.',
+    content: `# @sbb/database
+
+Database infrastructure package for the **SBB Platform**.
+
+Centralized database connectivity, transaction managers, multi-tenant abstractions, typesafe error translation, and a robust CRUD base repository wrapping the **Prisma ORM** for PostgreSQL.
+
+---
+
+## 🚀 Key Features
+
+* **Singleton Client Wrapper**: Thread-safe \`PrismaClient\` singleton with lazy-initialization and proper connection teardown.
+* **Abstract Base Repository**: Fully generic \`BaseRepository\` that automates basic CRUD, pagination, and sorting for any Prisma model delegate.
+* **Unified Transactions**: High-level \`TransactionManager\` helper to execute multi-record operations inside secure transactions.
+* **Asynchronous Multi-Tenancy**: Extension points for tenant containment using standard \`AsyncLocalStorage\` flow propagation.
+* **Platform Error Mapping**: Translates raw database/ORM constraints into standard platform-friendly domain errors (\`DatabaseConflictError\`, etc.).
+* **Shared Pagination**: Deeply integrated with \`@sbb/shared\` pagination models.`
+  },
+  {
+    name: 'package.json',
+    path: 'packages/database/package.json',
+    language: 'json',
+    role: 'Package Manifest',
+    description: 'Defines package name (@sbb/database), scripts, external dependencies, and devDependencies.',
+    content: `{
+  "name": "@sbb/database",
+  "version": "1.0.0",
+  "description": "Shared database infrastructure package for the SBB Platform providing a reusable repository abstraction layer, Prisma client singleton, and transaction utilities.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "echo \\"Error: no test specified\\" && exit 0"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.14.0",
+    "@sbb/shared": "^1.0.0"
+  },
+  "devDependencies": {
+    "prisma": "^5.14.0",
+    "typescript": "^5.4.5",
+    "@types/node": "^20.12.12"
+  },
+  "publishConfig": {
+    "access": "restricted"
+  }
+}`
+  },
+  {
+    name: 'tsconfig.json',
+    path: 'packages/database/tsconfig.json',
+    language: 'json',
+    role: 'TypeScript Config',
+    description: 'Defines typescript build rules for ESM and NodeNext output configurations.',
+    content: `{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "declaration": true,
+    "outDir": "dist",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
+}`
+  },
+  {
+    name: 'CHANGELOG.md',
+    path: 'packages/database/CHANGELOG.md',
+    language: 'markdown',
+    role: 'Release History',
+    description: 'Chronological roadmap record of database module features, bugfixes, and code updates.',
+    content: `# Changelog
+
+All notable changes to the \`@sbb/database\` package will be documented in this file.
+
+## [1.0.0] - 2026-07-02
+
+### Added
+- Created the core Prisma workspace directory with custom configured \`schema.prisma\` mapping to PostgreSQL.
+- Implemented \`getPrismaClient\` lazy-singleton loader with support for connection lifecycle control.
+- Designed generic interface \`IRepository\` and abstract \`BaseRepository\` mapping base CRUD, count, and paginated criteria.
+- Programmed a standard \`TransactionManager\` utilizing Prisma's \`$transaction\` model with advanced timeout support.
+- Configured typesafe platform exception mapper \`handleDatabaseError\` converting constraint violation codes into standard domain errors.
+- Added standard \`TenantContext\` supporting safe async identity isolation.
+- Created complete documentation guides, configuration targets, and TypeScript manifests.`
+  },
+  {
+    name: 'schema.prisma',
+    path: 'packages/database/prisma/schema.prisma',
+    language: 'prisma',
+    role: 'Prisma Schema Config',
+    description: 'Prisma model mappings and database drivers for PostgreSQL.',
+    content: `datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// Minimal base platform model for schema validity (non-business, purely system metadata)
+model SystemMetadata {
+  id        String   @id @default(uuid())
+  key       String   @unique
+  value     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("system_metadata")
+}`
+  },
+  {
+    name: 'seed.ts',
+    path: 'packages/database/prisma/seed.ts',
+    language: 'typescript',
+    role: 'Prisma Seed script',
+    description: 'Executable Node/Prisma script populating baseline system configurations.',
+    content: `import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
+
+async function main() {
+  console.log('Seeding database...');
+  
+  // Seed initial system metadata
+  await prisma.systemMetadata.upsert({
+    where: { key: 'platform_initialized' },
+    update: {},
+    create: {
+      key: 'platform_initialized',
+      value: 'true',
+    },
+  });
+
+  console.log('Database seeding completed successfully.');
+}
+
+main()
+  .then(async () => {
+    await prisma.$disconnect();
+  })
+  .catch(async (e) => {
+    console.error(e);
+    await prisma.$disconnect();
+    process.exit(1);
+  });`
+  },
+  {
+    name: 'index.ts',
+    path: 'packages/database/src/index.ts',
+    language: 'typescript',
+    role: 'Public API Entry point',
+    description: 'Exposes all core modules, singletons, context scopes, and base repositories to the SBB platform.',
+    content: `export * from './client/prisma-client.js';
+export * from './repositories/repository.interface.js';
+export * from './repositories/base-repository.js';
+export * from './transactions/transaction-manager.js';
+export * from './tenant/tenant-context.js';
+export * from './pagination/pagination.js';
+export * from './filters/query-filter.js';
+export * from './errors/database-errors.js';
+export * from './types/database-types.js';`
+  },
+  {
+    name: 'prisma-client.ts',
+    path: 'packages/database/src/client/prisma-client.ts',
+    language: 'typescript',
+    role: 'Database Client Singleton',
+    description: 'Safely limits active connection threads with thread-safe singleton patterns.',
+    content: `import { PrismaClient } from '@prisma/client';
+
+let prismaInstance: PrismaClient | null = null;
+
+export function getPrismaClient(): PrismaClient {
+  if (!prismaInstance) {
+    const isProd = process.env.NODE_ENV === 'production';
+    
+    prismaInstance = new PrismaClient({
+      log: isProd 
+        ? ['error'] 
+        : ['query', 'info', 'warn', 'error'],
+    });
+  }
+  
+  return prismaInstance;
+}
+
+/**
+ * Safely disconnects the global Prisma client instance.
+ */
+export async function disconnectPrisma(): Promise<void> {
+  if (prismaInstance) {
+    await prismaInstance.$disconnect();
+    prismaInstance = null;
+  }
+}`
+  },
+  {
+    name: 'repository.interface.ts',
+    path: 'packages/database/src/repositories/repository.interface.ts',
+    language: 'typescript',
+    role: 'Repository Contract',
+    description: 'Unified CRUD and pagination interface patterns ensuring consistent database structures.',
+    content: `import { PaginationRequest, PaginationResponse } from '@sbb/shared';
+
+export interface IRepository<T, ID = string, CreateInput = any, UpdateInput = any> {
+  findById(id: ID): Promise<T | null>;
+  findFirst(filters: any): Promise<T | null>;
+  findMany(filters?: any): Promise<T[]>;
+  findPaginated(
+    filters: any,
+    pagination: PaginationRequest
+  ): Promise<PaginationResponse<T>>;
+  create(data: CreateInput): Promise<T>;
+  update(id: ID, data: UpdateInput): Promise<T>;
+  delete(id: ID): Promise<T>;
+  count(filters?: any): Promise<number>;
+}`
+  },
+  {
+    name: 'base-repository.ts',
+    path: 'packages/database/src/repositories/base-repository.ts',
+    language: 'typescript',
+    role: 'Base Repository Pattern',
+    description: 'Automates basic model CRUD, sorting, filtering, and pagination mappings on top of Prisma.',
+    content: `import { Prisma, PrismaClient } from '@prisma/client';
+import { IRepository } from './repository.interface.js';
+import { PaginationRequest, PaginationResponse, createPageInfo } from '@sbb/shared';
+
+/**
+ * Abstract base repository that maps generic model operations onto standard Prisma CRUD endpoints.
+ * Supports executing within standard database transactions.
+ */
+export abstract class BaseRepository<T, ID = string, CreateInput = any, UpdateInput = any>
+  implements IRepository<T, ID, CreateInput, UpdateInput>
+{
+  constructor(
+    protected readonly prisma: PrismaClient | Prisma.TransactionClient,
+    protected readonly modelName: string
+  ) {}
+
+  /**
+   * Helper to resolve the model delegate from the prisma client context.
+   */
+  protected get model(): any {
+    const delegate = (this.prisma as any)[this.modelName];
+    if (!delegate) {
+      throw new Error(\`Prisma model delegate for '\${this.modelName}' was not found on client.\`);
+    }
+    return delegate;
+  }
+
+  public async findById(id: ID): Promise<T | null> {
+    return this.model.findUnique({
+      where: { id },
+    });
+  }
+
+  public async findFirst(filters: any): Promise<T | null> {
+    return this.model.findFirst({
+      where: filters,
+    });
+  }
+
+  public async findMany(filters?: any): Promise<T[]> {
+    return this.model.findMany({
+      where: filters,
+    });
+  }
+
+  public async findPaginated(
+    filters: any,
+    pagination: PaginationRequest
+  ): Promise<PaginationResponse<T>> {
+    const page = pagination.page && pagination.page > 0 ? pagination.page : 1;
+    const limit = pagination.limit && pagination.limit > 0 ? pagination.limit : 10;
+    const skip = (page - 1) * limit;
+
+    const [items, total] = await Promise.all([
+      this.model.findMany({
+        where: filters,
+        skip,
+        take: limit,
+        orderBy: pagination.sortBy
+          ? { [pagination.sortBy]: pagination.sortDirection || 'asc' }
+          : undefined,
+      }),
+      this.count(filters),
+    ]);
+
+    const pageInfo = createPageInfo(total, page, limit, items.length);
+
+    return {
+      data: items,
+      meta: pageInfo,
+    };
+  }
+
+  public async create(data: CreateInput): Promise<T> {
+    return this.model.create({
+      data,
+    });
+  }
+
+  public async update(id: ID, data: UpdateInput): Promise<T> {
+    return this.model.update({
+      where: { id },
+      data,
+    });
+  }
+
+  public async delete(id: ID): Promise<T> {
+    return this.model.delete({
+      where: { id },
+    });
+  }
+
+  public async count(filters?: any): Promise<number> {
+    return this.model.count({
+      where: filters,
+    });
+  }
+}`
+  },
+  {
+    name: 'transaction-manager.ts',
+    path: 'packages/database/src/transactions/transaction-manager.ts',
+    language: 'typescript',
+    role: 'Database Transaction Manager',
+    description: 'Enforces database consistency by executing multiple transactional units inside Prisma transactions.',
+    content: `import { Prisma, PrismaClient } from '@prisma/client';
+import { getPrismaClient } from '../client/prisma-client.js';
+
+/**
+ * Enterprise Transaction Manager wrapper for Prisma.
+ * Enables services to execute transactional routines cleanly and securely.
+ */
+export class TransactionManager {
+  constructor(private readonly prisma: PrismaClient = getPrismaClient()) {}
+
+  /**
+   * Runs the provided asynchronous function inside a standard Prisma transactional context.
+   */
+  public async run<T>(work: (tx: Prisma.TransactionClient) => Promise<T>): Promise<T> {
+    return this.prisma.$transaction(work);
+  }
+
+  /**
+   * Runs the transactional operation with advanced options like timeouts or isolation settings.
+   */
+  public async runWithOptions<T>(
+    work: (tx: Prisma.TransactionClient) => Promise<T>,
+    options?: {
+      maxWait?: number;
+      timeout?: number;
+      isolationLevel?: Prisma.TransactionIsolationLevel;
+    }
+  ): Promise<T> {
+    return this.prisma.$transaction(work, options);
+  }
+}`
+  },
+  {
+    name: 'tenant-context.ts',
+    path: 'packages/database/src/tenant/tenant-context.ts',
+    language: 'typescript',
+    role: 'Multi-Tenant Context',
+    description: 'Leverages thread-safe AsyncLocalStorage to isolate and fetch tenant context.',
+    content: `import { AsyncLocalStorage } from 'async_hooks';
+
+export interface TenantContextPayload {
+  tenantId: string;
+  userId?: string;
+}
+
+/**
+ * Enterprise Multi-Tenant Storage Context helper.
+ * Uses Node's AsyncLocalStorage to propagate tenant identity through transactional scopes
+ * without manual argument passing.
+ */
+export class TenantContext {
+  private static readonly storage = new AsyncLocalStorage<TenantContextPayload>();
+
+  /**
+   * Binds the given tenant payload to the active asynchronous thread execution context.
+   */
+  public static run<T>(context: TenantContextPayload, callback: () => T): T {
+    return this.storage.run(context, callback);
+  }
+
+  /**
+   * Retrieves the current active tenant context.
+   */
+  public static get(): TenantContextPayload | undefined {
+    return this.storage.getStore();
+  }
+
+  /**
+   * Quick utility to extract the tenant ID from the active context.
+   */
+  public static getTenantId(): string | undefined {
+    return this.get()?.tenantId;
+  }
+
+  /**
+   * Quick utility to extract the active User ID from the active context.
+   */
+  public static getUserId(): string | undefined {
+    return this.get()?.userId;
+  }
+}
+export type TenantResolver = () => Promise<string | null>;
+export interface TenantExtensionOptions {
+  resolver: TenantResolver;
+  enabled: boolean;
+}`
+  },
+  {
+    name: 'pagination.ts',
+    path: 'packages/database/src/pagination/pagination.ts',
+    language: 'typescript',
+    role: 'Offset Parameter Builder',
+    description: 'Aligns database pagination parameters perfectly with Prisma skip, take, and orderBy inputs.',
+    content: `import { PaginationRequest } from '@sbb/shared';
+
+export interface CursorPaginationRequest extends Omit<PaginationRequest, 'page'> {
+  cursor?: string;
+  take: number;
+}
+
+export interface CursorPaginationResponse<T> {
+  data: T[];
+  nextCursor?: string;
+  hasMore: boolean;
+}
+
+/**
+ * Normalizes standard pagination parameters for clean, direct integration with Prisma findMany queries.
+ */
+export function buildOffsetParams(pagination: PaginationRequest) {
+  const page = pagination.page && pagination.page > 0 ? pagination.page : 1;
+  const limit = pagination.limit && pagination.limit > 0 ? pagination.limit : 10;
+  const skip = (page - 1) * limit;
+
+  return {
+    skip,
+    take: limit,
+    orderBy: pagination.sortBy
+      ? { [pagination.sortBy]: pagination.sortDirection || 'asc' }
+      : undefined,
+  };
+}`
+  },
+  {
+    name: 'query-filter.ts',
+    path: 'packages/database/src/filters/query-filter.ts',
+    language: 'typescript',
+    role: 'Database Filter Normalizer',
+    description: 'Enforces safety standards when building filter models.',
+    content: `export interface BaseFilter {
+  search?: string;
+  startDate?: Date | string;
+  endDate?: Date | string;
+  status?: string;
+  isDeleted?: boolean;
+}
+
+/**
+ * Helper to translate standard application filters into Prisma-friendly \`where\` criteria clauses.
+ */
+export function buildQueryFilters(filter: BaseFilter): Record<string, any> {
+  const where: Record<string, any> = {};
+
+  if (filter.status) {
+    where.status = filter.status;
+  }
+
+  if (filter.isDeleted !== undefined) {
+    where.isDeleted = filter.isDeleted;
+  }
+
+  if (filter.startDate || filter.endDate) {
+    where.createdAt = {};
+    if (filter.startDate) {
+      where.createdAt.gte = new Date(filter.startDate);
+    }
+    if (filter.endDate) {
+      where.createdAt.lte = new Date(filter.endDate);
+    }
+  }
+
+  return where;
+}
+export interface FieldFilterOperator<T> {
+  equals?: T;
+  in?: T[];
+  notIn?: T[];
+  lt?: T;
+  lte?: T;
+  gt?: T;
+  gte?: T;
+  contains?: string;
+  startsWith?: string;
+  endsWith?: string;
+}`
+  },
+  {
+    name: 'database-errors.ts',
+    path: 'packages/database/src/errors/database-errors.ts',
+    language: 'typescript',
+    role: 'Database Error Transpiler',
+    description: 'Safely parses Prisma code states and generates highly explicit, platform-friendly domain errors.',
+    content: `import { Prisma } from '@prisma/client';
+import { AppError, ValidationError, NotFoundError, ConflictError } from '@sbb/shared';
+
+export class DatabaseError extends AppError {
+  constructor(message: string, statusCode: number = 500, details?: any) {
+    super(message, statusCode, details);
+  }
+}
+
+export class DatabaseConflictError extends ConflictError {
+  constructor(message: string, details?: any) {
+    super(message, details);
+  }
+}
+
+export class DatabaseRecordNotFoundError extends NotFoundError {
+  constructor(message: string, details?: any) {
+    super(message, details);
+  }
+}
+
+export class DatabaseValidationError extends ValidationError {
+  constructor(message: string, details?: any) {
+    super(message, details);
+  }
+}
+
+/**
+ * Translates low-level Prisma execution exceptions into highly structured, descriptive platform errors.
+ */
+export function handleDatabaseError(error: any): Error {
+  if (error instanceof Prisma.PrismaClientKnownRequestError) {
+    switch (error.code) {
+      case 'P2002': {
+        const target = Array.isArray(error.meta?.target)
+          ? error.meta.target.join(', ')
+          : 'fields';
+        return new DatabaseConflictError(
+          \`Unique constraint violation detected on target: \${target}\`,
+          error.meta
+        );
+      }
+      case 'P2025':
+        return new DatabaseRecordNotFoundError(
+          error.message || 'The requested database record was not found.',
+          error.meta
+        );
+      case 'P2003':
+        return new DatabaseValidationError(
+          'Foreign key validation constraint failed on target reference.',
+          error.meta
+        );
+      default:
+        return new DatabaseError(
+          \`Database query failed [\${error.code}]: \${error.message}\`,
+          500,
+          error.meta
+        );
+    }
+  }
+
+  if (error instanceof Prisma.PrismaClientValidationError) {
+    return new DatabaseValidationError(\`Database query validation error: \${error.message}\`);
+  }
+
+  if (error instanceof Prisma.PrismaClientInitializationError) {
+    return new DatabaseError(\`Database connection initialization error: \${error.message}\`, 500);
+  }
+
+  if (error instanceof Error) {
+    return error;
+  }
+
+  return new DatabaseError('An unexpected database execution error occurred.');
+}
+export interface DatabaseErrorDetails {
+  code?: string;
+  meta?: Record<string, any>;
+  query?: string;
+}`
+  },
+  {
+    name: 'database-types.ts',
+    path: 'packages/database/src/types/database-types.ts',
+    language: 'typescript',
+    role: 'Core Database Types',
+    description: 'Unified typescript transaction, timeout options, and return signature aliases.',
+    content: `import { Prisma } from '@prisma/client';
+
+export type TransactionClient = Prisma.TransactionClient;
+
+export interface QueryOptions {
+  timeout?: number;
+  throwOnError?: boolean;
+}
+
+export interface WriteOptions extends QueryOptions {
+  softDelete?: boolean;
+  userId?: string;
+}
+
+export type DbResult<T> = Promise<T>;`
+  },
+  {
+    name: 'README.md',
+    path: 'packages/database/src/README.md',
+    language: 'markdown',
+    role: 'Internal Documentation',
+    description: 'Technical document detailing internal patterns and lazy-initialization rules.',
+    content: `# @sbb/database - Source Architecture
+
+This directory contains the implementation of our database infrastructure wrapping Prisma for PostgreSQL.
+
+## 🧱 Key Subdirectories
+
+* **\`client/\`**: Singleton initialization of Prisma Client to prevent duplicate/overloaded connection pools.
+* **\`repositories/\`**: Base CRUD and paginated query contract definitions and concrete abstract implementations.
+* **\`transactions/\`**: Managed database execution wrappers for running multiple operations in an atomic transaction.
+* **\`tenant/\`**: Thread-safe Multi-Tenant identity context using Node's \`AsyncLocalStorage\`.
+* **\`pagination/\`**: Parameter helpers mapping offsets and sorting onto Prisma arguments.
+* **\`filters/\`**: Simple date range, soft delete, and status filters builder.
+* **\`errors/\`**: Auto-translator mapping raw Prisma database codes into typesafe platform exception objects.
+* **\`types/\`**: Helper types, alias signatures, and optional flag interfaces.
+
+## ⚠️ Standards
+
+1. **Lazy Initialization**: The client is only instantiated on first call to prevent startup crashes.
+2. **ESM Compliance**: Keep imports/exports relative using explicit \`.js\` specifiers.`
+  }
+];
+
 
