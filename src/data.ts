@@ -5085,6 +5085,630 @@ This directory houses the shared testing infrastructure for the **SBB Platform**
   }
 ];
 
+export const utilsFileList: FileNode[] = [
+  {
+    name: 'strings/index.ts',
+    path: 'packages/utils/src/strings/index.ts',
+    language: 'typescript',
+    role: 'String Manipulation',
+    description: 'String case converters, camelCase, snakeCase, kebabCase, slugify, and truncate.',
+    content: `/**
+ * Capitalizes the first letter of a string.
+ */
+export function capitalize(str: string): string {
+  if (!str) return '';
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+/**
+ * Converts a string to camelCase.
+ */
+export function camelCase(str: string): string {
+  if (!str) return '';
+  const parts = str.toLowerCase().split(/[^a-zA-Z0-9]+/);
+  return parts
+    .filter(Boolean)
+    .map((part, index) => (index === 0 ? part : part.charAt(0).toUpperCase() + part.slice(1)))
+    .join('');
+}
+
+/**
+ * Converts a string to kebab-case.
+ */
+export function kebabCase(str: string): string {
+  if (!str) return '';
+  return str
+    .replace(/([a-z])([A-Z])/g, '$1-$2')
+    .replace(/[^a-zA-Z0-9]+/g, '-')
+    .toLowerCase()
+    .replace(/^-+|-+$/g, '');
+}
+
+/**
+ * Converts a string to snake_case.
+ */
+export function snakeCase(str: string): string {
+  if (!str) return '';
+  return str
+    .replace(/([a-z])([A-Z])/g, '$1_$2')
+    .replace(/[^a-zA-Z0-9]+/g, '_')
+    .toLowerCase()
+    .replace(/^_+|_+$/g, '');
+}
+
+/**
+ * Truncates a string to a maximum length, appending a suffix if exceeded.
+ */
+export function truncate(str: string, length: number, suffix = '...'): string {
+  if (!str) return '';
+  if (str.length <= length) return str;
+  return str.slice(0, length) + suffix;
+}
+
+/**
+ * Generates a URL-friendly slug from a string.
+ */
+export function slugify(str: string): string {
+  if (!str) return '';
+  return str
+    .toLowerCase()
+    .trim()
+    .normalize('NFD') // Remove accents
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9\s-]/g, '')
+    .replace(/[\s_-]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}`
+  },
+  {
+    name: 'dates/index.ts',
+    path: 'packages/utils/src/dates/index.ts',
+    language: 'typescript',
+    role: 'Date Management',
+    description: 'FormatDate, addDays, differenceInDays, and isExpired utility helpers.',
+    content: `/**
+ * Formats a date using a simple template string (e.g., 'YYYY-MM-DD HH:mm:ss').
+ * Supported tokens: YYYY, MM, DD, HH, mm, ss
+ */
+export function formatDate(date: Date | string | number, formatPattern = 'YYYY-MM-DD'): string {
+  const d = new Date(date);
+  if (isNaN(d.getTime())) return '';
+
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  const hours = String(d.getHours()).padStart(2, '0');
+  const minutes = String(d.getMinutes()).padStart(2, '0');
+  const seconds = String(d.getSeconds()).padStart(2, '0');
+
+  return formatPattern
+    .replace('YYYY', String(year))
+    .replace('MM', month)
+    .replace('DD', day)
+    .replace('HH', hours)
+    .replace('mm', minutes)
+    .replace('ss', seconds);
+}
+
+/**
+ * Adds a specified number of days to a date.
+ */
+export function addDays(date: Date | string | number, days: number): Date {
+  const d = new Date(date);
+  d.setDate(d.getDate() + days);
+  return d;
+}
+
+/**
+ * Calculates the difference in full days between two dates (dateLeft - dateRight).
+ */
+export function differenceInDays(dateLeft: Date | string | number, dateRight: Date | string | number): number {
+  const dLeft = new Date(dateLeft);
+  const dRight = new Date(dateRight);
+
+  // Use UTC to avoid daylight saving transitions skewing the day count
+  const utcLeft = Date.UTC(dLeft.getFullYear(), dLeft.getMonth(), dLeft.getDate());
+  const utcRight = Date.UTC(dRight.getFullYear(), dRight.getMonth(), dRight.getDate());
+
+  const msPerDay = 1000 * 60 * 60 * 24;
+  return Math.floor((utcLeft - utcRight) / msPerDay);
+}
+
+/**
+ * Checks if a given expiry date is in the past compared to a reference date (defaults to now).
+ */
+export function isExpired(expiryDate: Date | string | number, referenceDate: Date | string | number = new Date()): boolean {
+  const expiry = new Date(expiryDate).getTime();
+  const reference = new Date(referenceDate).getTime();
+  return expiry < reference;
+}`
+  },
+  {
+    name: 'uuid/index.ts',
+    path: 'packages/utils/src/uuid/index.ts',
+    language: 'typescript',
+    role: 'Identifier Management',
+    description: 'Validates RFC 4122 v4 UUIDs and generates standard UUID keys.',
+    content: `/**
+ * Generates a standard UUID v4 string.
+ * Uses native crypto.randomUUID() when available, otherwise falls back to a compliant generator.
+ */
+export function generateUuid(): string {
+  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+    return crypto.randomUUID();
+  }
+  // Math.random fallback compliant with RFC 4122 v4
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+    const r = (Math.random() * 16) | 0;
+    const v = c === 'x' ? r : (r & 0x3) | 0x8;
+    return v.toString(16);
+  });
+}
+
+/**
+ * Validates whether a given value is a standard RFC 4122 UUID.
+ */
+export function isValidUuid(val: unknown): boolean {
+  if (typeof val !== 'string') return false;
+  const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+  return uuidRegex.test(val);
+}`
+  },
+  {
+    name: 'objects/index.ts',
+    path: 'packages/utils/src/objects/index.ts',
+    language: 'typescript',
+    role: 'Deep Merge & Clone',
+    description: 'Implements non-destructive deep merging, cloning, and omit/pick modifiers.',
+    content: `/**
+ * Helper to check if a value is a plain object.
+ */
+function isObject(item: unknown): item is Record<string, any> {
+  return item !== null && typeof item === 'object' && !Array.isArray(item) && !(item instanceof Date) && !(item instanceof RegExp);
+}
+
+/**
+ * Deeply merges multiple source objects into a target object.
+ * This is non-destructive and returns a new object.
+ */
+export function deepMerge<T extends Record<string, any> = Record<string, any>>(
+  target: T,
+  ...sources: Array<Partial<T> | Record<string, any>>
+): T {
+  const result = deepClone(target) as any;
+
+  for (const source of sources) {
+    if (!source || typeof source !== 'object') continue;
+    for (const key of Object.keys(source)) {
+      const val = source[key];
+      if (isObject(val)) {
+        if (!isObject(result[key])) {
+          result[key] = {};
+        }
+        result[key] = deepMerge(result[key], val);
+      } else if (Array.isArray(val)) {
+        result[key] = deepClone(val);
+      } else {
+        result[key] = val;
+      }
+    }
+  }
+
+  return result as T;
+}
+
+/**
+ * Creates a deep clone of a value (supports nested objects, arrays, Dates, and RegExps).
+ */
+export function deepClone<T>(val: T): T {
+  if (val === null || val === undefined) return val;
+
+  if (Array.isArray(val)) {
+    return val.map((item) => deepClone(item)) as unknown as T;
+  }
+
+  if (val instanceof Date) {
+    return new Date(val.getTime()) as unknown as T;
+  }
+
+  if (val instanceof RegExp) {
+    return new RegExp(val.source, val.flags) as unknown as T;
+  }
+
+  if (typeof val === 'object') {
+    const clone = Object.create(Object.getPrototypeOf(val));
+    for (const key of Object.keys(val)) {
+      clone[key] = deepClone((val as any)[key]);
+    }
+    return clone as T;
+  }
+
+  return val;
+}
+
+/**
+ * Creates a new object with the specified keys omitted.
+ */
+export function omit<T extends Record<string, any>, K extends keyof T>(obj: T, keys: K[]): Omit<T, K> {
+  const result = { ...obj };
+  for (const key of keys) {
+    delete result[key];
+  }
+  return result;
+}
+
+/**
+ * Creates a new object containing only the specified keys.
+ */
+export function pick<T extends Record<string, any>, K extends keyof T>(obj: T, keys: K[]): Pick<T, K> {
+  const result = {} as any;
+  for (const key of keys) {
+    if (key in obj) {
+      result[key] = obj[key];
+    }
+  }
+  return result;
+}`
+  },
+  {
+    name: 'collections/index.ts',
+    path: 'packages/utils/src/collections/index.ts',
+    language: 'typescript',
+    role: 'Array Helpers',
+    description: 'Filters, groupings, sorting, and array division/chunking helpers.',
+    content: `/**
+ * Returns unique elements of an array.
+ * Optionally resolves uniqueness by an object property key or custom mapper function.
+ */
+export function unique<T>(arr: T[], key?: keyof T | ((item: T) => any)): T[] {
+  if (!key) {
+    return Array.from(new Set(arr));
+  }
+  const seen = new Set<any>();
+  return arr.filter((item) => {
+    const value = typeof key === 'function' ? key(item) : item[key];
+    if (seen.has(value)) return false;
+    seen.add(value);
+    return true;
+  });
+}
+
+/**
+ * Groups an array of elements by a key or mapper function.
+ */
+export function groupBy<T, K extends string | number | symbol>(
+  arr: T[],
+  fn: keyof T | ((item: T) => K)
+): Record<K, T[]> {
+  return arr.reduce((acc, item) => {
+    const key = typeof fn === 'function' ? fn(item) : (item[fn] as unknown as K);
+    if (!acc[key]) {
+      acc[key] = [];
+    }
+    acc[key].push(item);
+    return acc;
+  }, {} as Record<K, T[]>);
+}
+
+/**
+ * Splits an array into chunks of a given maximum size.
+ */
+export function chunk<T>(arr: T[], size: number): T[][] {
+  if (size <= 0) return [];
+  const chunks: T[][] = [];
+  for (let i = 0; i < arr.length; i += size) {
+    chunks.push(arr.slice(i, i + size));
+  }
+  return chunks;
+}
+
+/**
+ * Sorts an array (non-mutating) by a property key or custom selector.
+ */
+export function sortBy<T>(
+  arr: T[],
+  key: keyof T | ((item: T) => any),
+  order: 'asc' | 'desc' = 'asc'
+): T[] {
+  const sorted = [...arr];
+  sorted.sort((a, b) => {
+    const valA = typeof key === 'function' ? key(a) : a[key];
+    const valB = typeof key === 'function' ? key(b) : b[key];
+
+    if (valA === valB) return 0;
+    if (valA === null || valA === undefined) return 1;
+    if (valB === null || valB === undefined) return -1;
+
+    let comparison = 0;
+    if (typeof valA === 'string' && typeof valB === 'string') {
+      comparison = valA.localeCompare(valB);
+    } else {
+      comparison = valA < valB ? -1 : 1;
+    }
+
+    return order === 'asc' ? comparison : -comparison;
+  });
+  return sorted;
+}`
+  },
+  {
+    name: 'numbers/index.ts',
+    path: 'packages/utils/src/numbers/index.ts',
+    language: 'typescript',
+    role: 'Numerical Computations',
+    description: 'Clamp constraints, decimal rounders, and percentage calculations.',
+    content: `/**
+ * Restricts a number to remain between a minimum and maximum value (inclusive).
+ */
+export function clamp(val: number, min: number, max: number): number {
+  return Math.min(Math.max(val, min), max);
+}
+
+/**
+ * Rounds a number to a specified number of decimal places.
+ */
+export function roundTo(val: number, decimals = 0): number {
+  const factor = Math.pow(10, decimals);
+  return Math.round(val * factor) / factor;
+}
+
+/**
+ * Calculates the percentage of a value over a total, rounded to a specified decimal length.
+ */
+export function percentage(value: number, total: number, decimals = 0): number {
+  if (total === 0) return 0;
+  return roundTo((value / total) * 100, decimals);
+}`
+  },
+  {
+    name: 'async/index.ts',
+    path: 'packages/utils/src/async/index.ts',
+    language: 'typescript',
+    role: 'Promise Coordination',
+    description: 'Async-await sleeps, promise timeout wrappers, and standard execution retriers.',
+    content: `/**
+ * Suspends execution for a specified number of milliseconds.
+ */
+export function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+/**
+ * Wraps a promise in a timeout, rejecting if the promise does not resolve within the specified limit.
+ */
+export function timeout<T>(promise: Promise<T>, ms: number, errorMessage = 'Operation timed out'): Promise<T> {
+  return new Promise((resolve, reject) => {
+    const timer = setTimeout(() => {
+      reject(new Error(errorMessage));
+    }, ms);
+
+    promise
+      .then((res) => {
+        clearTimeout(timer);
+        resolve(res);
+      })
+      .catch((err) => {
+        clearTimeout(timer);
+        reject(err);
+      });
+  });
+}
+
+/**
+ * Retries an asynchronous function on failure up to a maximum number of attempts.
+ */
+export async function retry<T>(
+  fn: () => Promise<T>,
+  options: { maxAttempts?: number; delay?: number; exponential?: boolean } = {}
+): Promise<T> {
+  const { maxAttempts = 3, delay = 1000, exponential = true } = options;
+  let currentDelay = delay;
+
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    try {
+      return await fn();
+    } catch (error) {
+      if (attempt === maxAttempts) {
+        throw error;
+      }
+      await sleep(currentDelay);
+      if (exponential) {
+        currentDelay *= 2;
+      }
+    }
+  }
+  throw new Error('Retry failed');
+}`
+  },
+  {
+    name: 'retry/index.ts',
+    path: 'packages/utils/src/retry/index.ts',
+    language: 'typescript',
+    role: 'Robust Retry Strategy',
+    description: 'Stateful, configurable retrier supporting backoff scaling and random jitter.',
+    content: `import { sleep } from '../async';
+
+export interface RetryConfig {
+  maxAttempts: number;
+  delay: number;
+  exponential: boolean;
+  maxDelay?: number;
+  jitter?: boolean;
+}
+
+export interface RetryState {
+  attempt: number;
+  error: any;
+}
+
+/**
+ * Calculates the backoff delay based on the retry configuration.
+ */
+export function calculateBackoff(
+  attempt: number,
+  config: { delay: number; exponential: boolean; maxDelay?: number; jitter?: boolean }
+): number {
+  let nextDelay = config.delay;
+  if (config.exponential) {
+    nextDelay = config.delay * Math.pow(2, attempt - 1);
+  }
+  if (config.maxDelay) {
+    nextDelay = Math.min(nextDelay, config.maxDelay);
+  }
+  if (config.jitter) {
+    // Add random jitter of +/- 10%
+    const jitterAmount = nextDelay * 0.1;
+    const randomShift = (Math.random() * 2 - 1) * jitterAmount;
+    nextDelay += randomShift;
+  }
+  return Math.max(0, nextDelay);
+}
+
+/**
+ * Executes an asynchronous function and retries on failure based on detailed, customizable rules.
+ */
+export async function retryWithConfig<T>(
+  fn: (state: RetryState) => Promise<T>,
+  config: Partial<RetryConfig> = {},
+  onRetry?: (state: RetryState) => void
+): Promise<T> {
+  const fullConfig: RetryConfig = {
+    maxAttempts: 3,
+    delay: 1000,
+    exponential: true,
+    jitter: false,
+    ...config,
+  };
+
+  for (let attempt = 1; attempt <= fullConfig.maxAttempts; attempt++) {
+    try {
+      return await fn({ attempt, error: null });
+    } catch (error) {
+      const state: RetryState = { attempt, error };
+      if (attempt === fullConfig.maxAttempts) {
+        throw error;
+      }
+      if (onRetry) {
+        onRetry(state);
+      }
+      const backoffDelay = calculateBackoff(attempt, fullConfig);
+      await sleep(backoffDelay);
+    }
+  }
+  throw new Error('Retry failed');
+}`
+  },
+  {
+    name: 'index.ts',
+    path: 'packages/utils/src/index.ts',
+    language: 'typescript',
+    role: 'Package Exports',
+    description: 'Exposes strings, numbers, objects, dates, collections, async, and retry APIs.',
+    content: `export * from './async';
+export * from './collections';
+export * from './dates';
+export * from './numbers';
+export * from './objects';
+export * from './retry';
+export * from './strings';
+export * from './uuid';`
+  },
+  {
+    name: 'package.json',
+    path: 'packages/utils/package.json',
+    language: 'json',
+    role: 'Package Manifest',
+    description: 'Declares @sbb/utils module version, exports, and dev dependencies.',
+    content: `{
+  "name": "@sbb/utils",
+  "version": "1.0.0",
+  "description": "Shared utility library for the SBB Platform",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "echo \\"Error: no test specified\\" && exit 0"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "typescript": "^5.4.5"
+  },
+  "publishConfig": {
+    "access": "restricted"
+  }
+}`
+  },
+  {
+    name: 'tsconfig.json',
+    path: 'packages/utils/tsconfig.json',
+    language: 'json',
+    role: 'Compilation Directives',
+    description: 'TypeScript configuration file driving strict builds and output targets.',
+    content: `{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "declaration": true,
+    "outDir": "dist",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
+}`
+  },
+  {
+    name: 'README.md',
+    path: 'packages/utils/README.md',
+    language: 'markdown',
+    role: 'Documentation',
+    description: 'Comprehensive usage patterns, installation, and complete catalog references.',
+    content: `# @sbb/utils
+
+Shared, framework-agnostic utility package for the SBB Platform. This package provides highly optimized, type-safe, and dependency-free functions used across backend services, frontend web applications, and testing environments.
+
+---
+
+## 🚀 Key Modules
+
+* **Strings**: capitalization, camelCase, snakeCase, kebabCase, slugify, and truncate.
+* **Dates**: template-based date formatting, arithmetic, duration offsets, and expiry checks.
+* **UUID**: v4 creation and Regex standard UUID validation.
+* **Objects**: non-mutating deep merging, recursive cloning, and omit/pick modifiers.
+* **Collections**: array filters, grouping, partitioning, and stable sorting.
+* **Numbers**: value range clamps, precision rounders, and percentage calculations.
+* **Async**: promises sleeping, timeouts, and standard executor retriers.
+* **Retry**: customizable stateful retry handlers with exponential backoff and random noise (jitter) to prevent cascading stampedes.`
+  },
+  {
+    name: 'CHANGELOG.md',
+    path: 'packages/utils/CHANGELOG.md',
+    language: 'markdown',
+    role: 'Version Registry',
+    description: 'Historical records tracking added features, adjustments, and package releases.',
+    content: `# Changelog
+
+All notable changes to the \`@sbb/utils\` package will be documented in this file.
+
+## [1.0.0] - 2026-07-02
+
+### Added
+- Created the core shared utilities package (\`@sbb/utils\`) featuring type-safe, framework-agnostic helper modules.
+- Implemented **Strings** utilities: \`capitalize\`, \`camelCase\`, \`kebabCase\`, \`snakeCase\`, \`truncate\`, and \`slugify\`.
+- Implemented **Dates** utilities: \`formatDate\`, \`addDays\`, \`differenceInDays\`, and \`isExpired\`.
+- Implemented **UUID** utilities: \`generateUuid\` and \`isValidUuid\`.
+- Implemented **Objects** utilities: \`deepMerge\`, \`deepClone\`, \`omit\`, and \`pick\`.
+- Implemented **Collections** utilities: \`unique\`, \`groupBy\`, \`chunk\`, and \`sortBy\`.
+- Implemented **Numbers** utilities: \`clamp\`, \`roundTo\`, and \`percentage\`.
+- Implemented **Async** utilities: \`sleep\`, \`timeout\`, and \`retry\`.
+- Implemented **Retry** utilities: Advanced customizable \`retryWithConfig\` and backoff calculation supporting max attempts, delays, and exponential/jitter strategies.`
+  }
+];
+
+
 
 
 
