@@ -3,6 +3,7 @@ import { TicketDetail } from './components/TicketDetail';
 import { FileBrowser } from './components/FileBrowser';
 import { ArchitectureGraph } from './components/ArchitectureGraph';
 import { RoadmapTimeline } from './components/RoadmapTimeline';
+import { ArchitectureReview } from './components/ArchitectureReview';
 import { ticketDetails, fileList, futureTickets, configFileList, loggerFileList, sharedFileList, databaseFileList, authFileList, typesFileList, validationFileList, testingFileList, utilsFileList, uiFileList } from './data';
 import { 
   FolderCheck, 
@@ -14,11 +15,12 @@ import {
   Cpu, 
   Code2, 
   Workflow, 
-  ExternalLink 
+  ExternalLink,
+  ShieldCheck
 } from 'lucide-react';
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState<'ticket' | 'code' | 'pipeline' | 'roadmap'>('ticket');
+  const [activeTab, setActiveTab] = useState<'ticket' | 'code' | 'pipeline' | 'roadmap' | 'review'>('review');
 
   return (
     <div className="min-h-screen bg-[#0A0A0B] text-[#E5E5E5] flex flex-col font-sans" id="app-root">
@@ -115,6 +117,19 @@ export default function App() {
         <section className="flex items-center justify-between border-b border-[#262626] pb-1 overflow-x-auto gap-4 scrollbar-none" id="workspace-tabs">
           <div className="flex items-center gap-2 min-w-max">
             <button
+              onClick={() => setActiveTab('review')}
+              id="tab-btn-review"
+              className={`flex items-center gap-2 px-4 py-2 rounded text-[10px] font-semibold tracking-widest font-mono uppercase transition-all cursor-pointer ${
+                activeTab === 'review'
+                  ? 'bg-[#1C1917] text-emerald-400 border border-[#14532D]'
+                  : 'hover:bg-[#161619] text-[#737373] border border-transparent'
+              }`}
+            >
+              <ShieldCheck className="w-4 h-4 text-emerald-400" />
+              <span>FAR-001 Review</span>
+            </button>
+
+            <button
               onClick={() => setActiveTab('ticket')}
               id="tab-btn-ticket"
               className={`flex items-center gap-2 px-4 py-2 rounded text-[10px] font-semibold tracking-widest font-mono uppercase transition-all cursor-pointer ${
@@ -174,6 +189,10 @@ export default function App() {
 
         {/* Dynamic Display Board based on active tab */}
         <section className="transition-all duration-300" id="dynamic-display-board">
+          {activeTab === 'review' && (
+            <ArchitectureReview />
+          )}
+
           {activeTab === 'ticket' && (
             <TicketDetail details={ticketDetails} />
           )}

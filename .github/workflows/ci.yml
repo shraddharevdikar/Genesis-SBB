@@ -1,0 +1,34 @@
+name: Genesis-SBB Core CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  verify:
+    name: Verify Codebase
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js Environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install Root Dependencies
+        run: npm ci
+
+      - name: Generate Prisma Client Types
+        run: npx prisma generate --schema=packages/database/prisma/schema.prisma
+
+      - name: Run Linter & Type Check
+        run: npm run lint
+
+      - name: Build Core Application
+        run: npm run build
