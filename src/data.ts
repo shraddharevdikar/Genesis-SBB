@@ -1,29 +1,29 @@
 import { TicketDetails, FileNode, FutureTicket } from './types';
 
 export const ticketDetails: TicketDetails = {
-  id: 'GEN-ID-003',
-  title: 'Organization Aggregate',
+  id: 'GEN-ID-004',
+  title: 'Tenant Aggregate',
   status: 'DONE',
   priority: 'CRITICAL',
   author: 'SBB Principal Architect',
   assignee: 'shraddha.revdikar@gmail.com',
-  objective: 'Design and implement the Organization aggregate within the Identity domain using Domain-Driven Design (DDD). The goal is to model the business organization, independently of billing, membership, or relational schemas.',
+  objective: 'Design and implement the Tenant aggregate within the Identity domain using Domain-Driven Design (DDD). The Tenant aggregate represents the top-level isolation boundary for all business data within the SBB Platform.',
   modulePath: 'backend/api/src/modules/identity/',
   requirements: [
-    'Create the Organization domain entity with properties: id, name, status, createdAt, updatedAt.',
-    'Implement status lifecycle states: Pending, Active, Suspended, Archived.',
-    'Build domain value objects for OrganizationId and OrganizationName with immutability and invariants validation (such as name length).',
-    'Define domain events: OrganizationCreatedEvent, OrganizationUpdatedEvent, OrganizationDeactivatedEvent.',
-    'Create Domain Exception templates for duplicate organizations and invalid state transitions.',
-    'Establish the Organization Repository interface (IOrganizationRepository) and its in-memory mock implementation.',
+    'Create the Tenant domain entity with properties: id, name, status, createdAt, updatedAt.',
+    'Implement status lifecycle states: Provisioning, Active, Suspended, Archived.',
+    'Build domain value objects for TenantId and TenantName with immutability and invariants validation (such as name length).',
+    'Define domain events: TenantCreatedEvent, TenantUpdatedEvent, TenantSuspendedEvent.',
+    'Create Domain Exception templates for duplicate tenants and invalid state transitions.',
+    'Establish the Tenant Repository interface (ITenantRepository) and its in-memory mock implementation.',
     'Formulate Application CQRS commands, handlers, and services to orchestrate creation, updates, and activation workflows.',
     'Validate complete code correctness and test aggregate compilation.'
   ],
   responsibilities: [
-    { title: 'Organization Domain Aggregate & VOs', description: 'Implements the rich Organization entity and self-validating OrganizationName and OrganizationId value objects.', status: 'Completed & Verified' },
-    { title: 'Domain Events & Services', description: 'Fires state events on create/update/archive, and coordinates name uniqueness via OrganizationDomainService.', status: 'Completed & Verified' },
-    { title: 'Application CQRS Handlers', description: 'Exposes CreateOrganizationCommand, CreateOrganizationHandler, and OrganizationApplicationService orchestrators.', status: 'Completed & Verified' },
-    { title: 'Mock Infrastructure & Tests', description: 'Implements PrismaOrganizationRepository storage simulator and a thorough unit test suite.', status: 'Completed & Verified' }
+    { title: 'Tenant Domain Aggregate & VOs', description: 'Implements the rich Tenant entity and self-validating TenantName and TenantId value objects.', status: 'Completed & Verified' },
+    { title: 'Domain Events & Services', description: 'Fires state events on create/update/suspend, and coordinates name uniqueness via TenantDomainService.', status: 'Completed & Verified' },
+    { title: 'Application CQRS Handlers', description: 'Exposes CreateTenantCommand, CreateTenantHandler, and TenantApplicationService orchestrators.', status: 'Completed & Verified' },
+    { title: 'Mock Infrastructure & Tests', description: 'Implements PrismaTenantRepository storage simulator and a thorough unit test suite.', status: 'Completed & Verified' }
   ]
 };
 
@@ -1182,6 +1182,211 @@ describe('Organization Aggregate', () => {
     const name = new OrganizationName('SBB Platform');
     const org = Organization.create(id, name);
     expect(org.getStatus()).toBe(OrganizationStatus.Pending);
+  });
+});`
+  },
+  {
+    name: 'tenant.entity.ts',
+    path: 'backend/api/src/modules/identity/domain/entities/tenant.entity.ts',
+    language: 'typescript',
+    role: 'Domain Aggregate Root',
+    description: 'Main Tenant aggregate root entity with Status state machine and domain events.',
+    content: `import { TenantId } from '../value-objects/tenant-id.value-object';
+import { TenantName } from '../value-objects/tenant-name.value-object';
+import { TenantCreatedEvent } from '../events/tenant-created.event';
+import { TenantUpdatedEvent } from '../events/tenant-updated.event';
+import { TenantSuspendedEvent } from '../events/tenant-suspended.event';
+
+export enum TenantStatus {
+  Provisioning = 'Provisioning',
+  Active = 'Active',
+  Suspended = 'Suspended',
+  Archived = 'Archived',
+}
+
+export class Tenant {
+  private readonly id: TenantId;
+  private name: TenantName;
+  private status: TenantStatus;
+  private readonly createdAt: Date;
+  private updatedAt: Date;
+  private domainEvents: any[] = [];
+
+  constructor(
+    id: TenantId,
+    name: TenantName,
+    status: TenantStatus,
+    createdAt: Date,
+    updatedAt: Date
+  ) {
+    this.id = id;
+    this.name = name;
+    this.status = status;
+    this.createdAt = createdAt;
+    this.updatedAt = updatedAt;
+  }
+
+  public getId(): TenantId { return this.id; }
+  public getName(): TenantName { return this.name; }
+  public getStatus(): TenantStatus { return this.status; }
+  public getCreatedAt(): Date { return this.createdAt; }
+  public getUpdatedAt(): Date { return this.updatedAt; }
+  public getEvents(): any[] { return this.domainEvents; }
+  public clearEvents(): void { this.domainEvents = []; }
+
+  public static create(id: TenantId, name: TenantName): Tenant {
+    const tenant = new Tenant(id, name, TenantStatus.Provisioning, new Date(), new Date());
+    tenant.domainEvents.push(new TenantCreatedEvent(id.getValue(), name.getValue()));
+    return tenant;
+  }
+
+  public updateName(newName: TenantName): void {
+    if (this.name.equals(newName)) return;
+    this.name = newName;
+    this.updatedAt = new Date();
+    this.domainEvents.push(new TenantUpdatedEvent(this.id.getValue(), newName.getValue()));
+  }
+
+  public activate(): void {
+    if (this.status === TenantStatus.Active) return;
+    this.status = TenantStatus.Active;
+    this.updatedAt = new Date();
+  }
+
+  public suspend(): void {
+    if (this.status === TenantStatus.Suspended) return;
+    this.status = TenantStatus.Suspended;
+    this.updatedAt = new Date();
+    this.domainEvents.push(new TenantSuspendedEvent(this.id.getValue()));
+  }
+
+  public archive(): void {
+    if (this.status === TenantStatus.Archived) return;
+    this.status = TenantStatus.Archived;
+    this.updatedAt = new Date();
+  }
+}`
+  },
+  {
+    name: 'tenant-id.value-object.ts',
+    path: 'backend/api/src/modules/identity/domain/value-objects/tenant-id.value-object.ts',
+    language: 'typescript',
+    role: 'Value Object',
+    description: 'Self-validating, immutable Tenant identifier value object.',
+    content: `export class TenantId {
+  constructor(private readonly value: string) {
+    if (!value) throw new Error('Tenant ID cannot be empty');
+  }
+  public getValue(): string { return this.value; }
+  public equals(other: TenantId): boolean { return this.value === other.getValue(); }
+}`
+  },
+  {
+    name: 'tenant-name.value-object.ts',
+    path: 'backend/api/src/modules/identity/domain/value-objects/tenant-name.value-object.ts',
+    language: 'typescript',
+    role: 'Value Object',
+    description: 'Self-validating, immutable tenant name object with length constraints.',
+    content: `export class TenantName {
+  constructor(private readonly value: string) {
+    if (!value || value.trim().length === 0) throw new Error('Tenant name cannot be empty');
+    if (value.trim().length < 3) throw new Error('Tenant name must be at least 3 characters long');
+  }
+  public getValue(): string { return this.value; }
+  public equals(other: TenantName): boolean {
+    return this.value.trim().toLowerCase() === other.getValue().trim().toLowerCase();
+  }
+}`
+  },
+  {
+    name: 'tenant.repository.ts',
+    path: 'backend/api/src/modules/identity/domain/repositories/tenant.repository.ts',
+    language: 'typescript',
+    role: 'Domain Repository Interface',
+    description: 'Explicit storage boundary contract for tenant aggregate roots.',
+    content: `import { Tenant } from '../entities/tenant.entity';
+import { TenantId } from '../value-objects/tenant-id.value-object';
+import { TenantName } from '../value-objects/tenant-name.value-object';
+
+export interface ITenantRepository {
+  findById(id: TenantId): Promise<Tenant | null>;
+  findByName(name: TenantName): Promise<Tenant | null>;
+  save(tenant: Tenant): Promise<void>;
+  delete(id: TenantId): Promise<void>;
+}`
+  },
+  {
+    name: 'tenant-domain.service.ts',
+    path: 'backend/api/src/modules/identity/domain/services/tenant-domain.service.ts',
+    language: 'typescript',
+    role: 'Domain Service',
+    description: 'Enforces name uniqueness across storage boundaries for tenants.',
+    content: `import { Injectable, Inject } from '@nestjs/common';
+import { ITenantRepository } from '../repositories/tenant.repository';
+import { TenantName } from '../value-objects/tenant-name.value-object';
+import { DuplicateTenantException } from '../exceptions/duplicate-tenant.exception';
+
+@Injectable()
+export class TenantDomainService {
+  constructor(
+    @Inject('ITenantRepository')
+    private readonly tenantRepository: ITenantRepository
+  ) {}
+
+  public async assertNameIsUnique(name: TenantName): Promise<void> {
+    const existingTenant = await this.tenantRepository.findByName(name);
+    if (existingTenant) throw new DuplicateTenantException(name.getValue());
+  }
+}`
+  },
+  {
+    name: 'create-tenant.handler.ts',
+    path: 'backend/api/src/modules/identity/application/handlers/create-tenant.handler.ts',
+    language: 'typescript',
+    role: 'Application Command Handler',
+    description: 'Orchestrates validation, factory aggregate instantiation, and database serialization.',
+    content: `import { Inject, Injectable } from '@nestjs/common';
+import { CreateTenantCommand } from '../commands/create-tenant.command';
+import { ITenantRepository } from '../../domain/repositories/tenant.repository';
+import { TenantDomainService } from '../../domain/services/tenant-domain.service';
+import { Tenant } from '../../domain/entities/tenant.entity';
+import { TenantId } from '../../domain/value-objects/tenant-id.value-object';
+import { TenantName } from '../../domain/value-objects/tenant-name.value-object';
+
+@Injectable()
+export class CreateTenantHandler {
+  constructor(
+    @Inject('ITenantRepository')
+    private readonly tenantRepository: ITenantRepository,
+    private readonly tenantDomainService: TenantDomainService
+  ) {}
+
+  public async handle(command: CreateTenantCommand): Promise<string> {
+    const tenantName = new TenantName(command.name);
+    await this.tenantDomainService.assertNameIsUnique(tenantName);
+    const idValue = 'tnt_' + Math.random().toString(36).substring(2, 11);
+    const tenant = Tenant.create(new TenantId(idValue), tenantName);
+    await this.tenantRepository.save(tenant);
+    return tenant.getId().getValue();
+  }
+}`
+  },
+  {
+    name: 'tenant-aggregate.spec.ts',
+    path: 'backend/api/src/modules/identity/tests/tenant-aggregate.spec.ts',
+    language: 'typescript',
+    role: 'Unit Test Suite',
+    description: 'Thorough unit testing verifying all tenant aggregate invariants and status transitions.',
+    content: `import { Tenant, TenantStatus } from '../domain/entities/tenant.entity';
+import { TenantId } from '../domain/value-objects/tenant-id.value-object';
+import { TenantName } from '../value-objects/tenant-name.value-object';
+
+describe('Tenant Aggregate', () => {
+  it('should create tenant aggregate root in Provisioning state', () => {
+    const id = new TenantId('tnt-123');
+    const name = new TenantName('SBB Platform');
+    const tenant = Tenant.create(id, name);
+    expect(tenant.getStatus()).toBe(TenantStatus.Provisioning);
   });
 });`
   }

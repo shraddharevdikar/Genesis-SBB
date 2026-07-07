@@ -17,18 +17,22 @@ backend/api/src/modules/identity/
 │   ├── entities/                # DDD Entities and Aggregate Roots
 │   │   ├── identity-root.entity.ts
 │   │   ├── user.entity.ts       # User aggregate root with Status enum state machine
-│   │   └── organization.entity.ts # Organization aggregate root with Status enum
+│   │   ├── organization.entity.ts # Organization aggregate root with Status enum
+│   │   └── tenant.entity.ts     # Tenant aggregate root with Status enum
 │   ├── value-objects/           # Immutable self-validating values
 │   │   ├── email-address.value-object.ts
 │   │   ├── identity-id.value-object.ts
 │   │   ├── user-id.value-object.ts
 │   │   ├── display-name.value-object.ts
 │   │   ├── organization-id.value-object.ts
-│   │   └── organization-name.value-object.ts
+│   │   ├── organization-name.value-object.ts
+│   │   ├── tenant-id.value-object.ts
+│   │   └── tenant-name.value-object.ts
 │   ├── repositories/            # Explicit persistence contracts
 │   │   ├── identity.repository.interface.ts
 │   │   ├── user.repository.ts   # IUserRepository abstraction contract
-│   │   └── organization.repository.ts # IOrganizationRepository abstraction contract
+│   │   ├── organization.repository.ts # IOrganizationRepository abstraction contract
+│   │   └── tenant.repository.ts # ITenantRepository abstraction contract
 │   ├── events/                  # Immutable state change notification schemas
 │   │   ├── identity-created.event.ts
 │   │   ├── user-created.event.ts
@@ -36,11 +40,15 @@ backend/api/src/modules/identity/
 │   │   ├── user-deactivated.event.ts
 │   │   ├── organization-created.event.ts
 │   │   ├── organization-updated.event.ts
-│   │   └── organization-deactivated.event.ts
+│   │   ├── organization-deactivated.event.ts
+│   │   ├── tenant-created.event.ts
+│   │   ├── tenant-updated.event.ts
+│   │   └── tenant-suspended.event.ts
 │   ├── services/                # Domain-specific services managing complex invariants
 │   │   ├── identity-domain.service.ts
 │   │   ├── user-domain.service.ts # Evaluates email uniqueness across storage bounds
-│   │   └── organization-domain.service.ts # Evaluates organization name uniqueness
+│   │   ├── organization-domain.service.ts # Evaluates organization name uniqueness
+│   │   └── tenant-domain.service.ts # Evaluates tenant name uniqueness
 │   ├── policies/                # Discrete rule engines and invariants evaluation
 │   │   └── identity.policy.ts
 │   └── exceptions/              # Specialized domain exceptions
@@ -48,27 +56,33 @@ backend/api/src/modules/identity/
 │       ├── duplicate-email.exception.ts
 │       ├── invalid-user.exception.ts
 │       ├── duplicate-organization.exception.ts
-│       └── invalid-organization.exception.ts
+│       ├── invalid-organization.exception.ts
+│       ├── duplicate-tenant.exception.ts
+│       └── invalid-tenant.exception.ts
 │
 ├── application/                 # Orchestration of domain tasks, commands, and queries (CQRS)
 │   ├── commands/                # Write action request payloads
 │   │   ├── create-identity.command.ts
 │   │   ├── create-user.command.ts
-│   │   └── create-organization.command.ts
+│   │   ├── create-organization.command.ts
+│   │   └── create-tenant.command.ts
 │   ├── queries/                 # Read action request payloads
 │   │   └── get-identity.query.ts
 │   ├── handlers/                # Request processing and execution orchestrators
 │   │   ├── create-identity.handler.ts
 │   │   ├── create-user.handler.ts
-│   │   └── create-organization.handler.ts
+│   │   ├── create-organization.handler.ts
+│   │   └── create-tenant.handler.ts
 │   ├── dto/                     # Application-level serialization Data Transfer Objects
 │   │   ├── identity-response.dto.ts
 │   │   ├── create-user.dto.ts
-│   │   └── create-organization.dto.ts
+│   │   ├── create-organization.dto.ts
+│   │   └── create-tenant.dto.ts
 │   └── services/                # Orchestration services invoking domain and repository layers
 │       ├── identity-application.service.ts
 │       ├── user-application.service.ts
-│       └── organization-application.service.ts
+│       ├── organization-application.service.ts
+│       └── tenant-application.service.ts
 │
 ├── infrastructure/              # Low-level technology adapters and database persistence
 │   └── persistence/
@@ -76,11 +90,13 @@ backend/api/src/modules/identity/
 │       │   └── repositories/    # Prisma-backed repository adapters
 │       │       ├── prisma-identity.repository.ts
 │       │       ├── prisma-user.repository.ts
-│       │       └── prisma-organization.repository.ts
+│       │       ├── prisma-organization.repository.ts
+│       │       └── prisma-tenant.repository.ts
 │       └── mappers/             # Map between database rows and domain aggregate state
 │           ├── identity.mapper.ts
 │           ├── user.mapper.ts
-│           └── organization.mapper.ts
+│           ├── organization.mapper.ts
+│           └── tenant.mapper.ts
 │
 ├── presentation/                # Outer interface boundaries for inbound requests
 │   ├── rest/                    # REST Controllers exposing versioned v1 routes
@@ -90,7 +106,8 @@ backend/api/src/modules/identity/
 ├── tests/                       # Unit specs and behavior validation suites
 │   ├── identity-module.spec.ts
 │   ├── user-aggregate.spec.ts   # Validation of User aggregate invariants, states, and handlers
-│   └── organization-aggregate.spec.ts # Validation of Organization aggregate invariants and handlers
+│   ├── organization-aggregate.spec.ts # Validation of Organization aggregate invariants and handlers
+│   └── tenant-aggregate.spec.ts # Validation of Tenant aggregate invariants and handlers
 │
 └── identity.module.ts           # Main NestJS module declaring providers and bindings
 ```
@@ -150,10 +167,31 @@ The **Organization Aggregate** models an SBB business organization independently
 
 ---
 
+## Tenant Aggregate Specification (GEN-ID-004)
+
+The **Tenant Aggregate** models the top-level isolation boundary for all business data within the SBB Platform, completely independent of billing, membership, or relational schemas.
+
+### Model Schema
+* **TenantId**: Immutable self-validating unique identifier.
+* **TenantName**: Required name string, validated for minimal size (minimum 3 characters).
+* **TenantStatus**: Represents the tenant's lifecycle:
+  * `Provisioning`: State immediately upon registration, waiting for resource allocation.
+  * `Active`: Active tenant capable of interaction.
+  * `Suspended`: Temporarily locked state due to administrative or compliance reasons.
+  * `Archived`: Terminal or deactivated status.
+* **CreatedAt / UpdatedAt**: Domain timestamps indicating registry history.
+
+### Business Rules & Invariants
+* **Tenant Name Valid**: Must be non-empty and at least 3 characters long (enforced by `TenantName` value object).
+* **TenantId Immutability**: Protected through TypeScript `readonly` properties.
+* **Tenant Name Uniqueness**: Managed via cross-repository boundary verification in the `TenantDomainService`.
+
+---
+
 ## Next Steps Roadmap
 
-1. **GEN-ID-004: JWT Session Management & Rotation**
+1. **GEN-ID-005: JWT Session Management & Rotation**
    * Implement token verification, expiry checks, and session revocation caches.
-2. **GEN-ID-005: Roles Authorization Guards**
+2. **GEN-ID-006: Roles Authorization Guards**
    * Bind roles metadata descriptors and evaluate permissions rules in execution pipes.
 

@@ -18,6 +18,12 @@ import { OrganizationDomainService } from './domain/services/organization-domain
 import { CreateOrganizationHandler } from './application/handlers/create-organization.handler';
 import { PrismaOrganizationRepository } from './infrastructure/persistence/prisma/repositories/prisma-organization.repository';
 
+// Tenant aggregate components
+import { TenantApplicationService } from './application/services/tenant-application.service';
+import { TenantDomainService } from './domain/services/tenant-domain.service';
+import { CreateTenantHandler } from './application/handlers/create-tenant.handler';
+import { PrismaTenantRepository } from './infrastructure/persistence/prisma/repositories/prisma-tenant.repository';
+
 @Module({
   imports: [],
   controllers: [IdentityController],
@@ -46,6 +52,14 @@ import { PrismaOrganizationRepository } from './infrastructure/persistence/prism
       provide: 'IOrganizationRepository',
       useClass: PrismaOrganizationRepository,
     },
+    // Tenant aggregate providers
+    TenantApplicationService,
+    TenantDomainService,
+    CreateTenantHandler,
+    {
+      provide: 'ITenantRepository',
+      useClass: PrismaTenantRepository,
+    },
   ],
   exports: [
     IdentityApplicationService,
@@ -54,6 +68,8 @@ import { PrismaOrganizationRepository } from './infrastructure/persistence/prism
     UserDomainService,
     OrganizationApplicationService,
     OrganizationDomainService,
+    TenantApplicationService,
+    TenantDomainService,
   ],
 })
 export class IdentityModule {}

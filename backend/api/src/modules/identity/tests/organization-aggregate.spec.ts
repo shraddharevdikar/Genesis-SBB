@@ -4,7 +4,7 @@ import { OrganizationDomainService } from '../domain/services/organization-domai
 import { PrismaOrganizationRepository } from '../infrastructure/persistence/prisma/repositories/prisma-organization.repository';
 import { Organization, OrganizationStatus } from '../domain/entities/organization.entity';
 import { OrganizationId } from '../domain/value-objects/organization-id.value-object';
-import { OrganizationName } from '../value-objects/organization-name.value-object';
+import { OrganizationName } from '../domain/value-objects/organization-name.value-object';
 import { CreateOrganizationCommand } from '../application/commands/create-organization.command';
 
 describe('Organization Aggregate (DDD)', () => {
