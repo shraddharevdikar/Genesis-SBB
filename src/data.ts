@@ -1,28 +1,28 @@
 import { TicketDetails, FileNode, FutureTicket } from './types';
 
 export const ticketDetails: TicketDetails = {
-  id: 'GEN-ID-008',
-  title: 'Authorization Foundation (RBAC + PBAC)',
+  id: 'GEN-ID-009',
+  title: 'Session Management Foundation',
   status: 'DONE',
   priority: 'CRITICAL',
   author: 'SBB Principal Architect',
   assignee: 'shraddha.revdikar@gmail.com',
-  objective: 'Design and implement the authorization foundation (RBAC + PBAC) within the Identity / Authorization module using Domain-Driven Design (DDD).',
-  modulePath: 'backend/api/src/modules/authorization/',
+  objective: 'Design and implement the session management foundation (session lifecycle, active device tracking, state mutation triggers) within the Identity / Session module using Domain-Driven Design (DDD).',
+  modulePath: 'backend/api/src/modules/session/',
   requirements: [
-    'Create the Role, Permission, and Policy domain entities and Aggregate Roots.',
-    'Build value objects RoleId, PermissionId, and PolicyId supporting immutability and invariants.',
-    'Expose repository abstractions for RoleRepository, PermissionRepository, and PolicyRepository.',
-    'Define placeholder Domain Services: AuthorizationService and PolicyEvaluationService.',
-    'Establish JSON-style PBAC structure: Resource, Action, Effect, and Conditions.',
-    'Declare placeholder Domain Events: RoleCreated, PermissionGranted, PolicyCreated.',
-    'Build standard NestJS Authorization module structure and write an exhaustive unit test suite.'
+    'Create the Session domain entity and Aggregate Root (SessionId, UserId, TenantId, DeviceId, SessionStatus, lifespan variables).',
+    'Build strong value objects SessionId and DeviceId supporting immutability and invariant guards.',
+    'Implement the session status lifecycle enum with Active, Expired, and Revoked states.',
+    'Declare placeholder Domain Events: SessionCreated, SessionRevoked, and SessionExpired.',
+    'Expose repository abstraction ISessionRepository with clean domain contract signatures.',
+    'Create placeholder Domain Services: SessionManagementService to coordinate token validity checks.',
+    'Build standard NestJS Session module structure and write an exhaustive unit test suite.'
   ],
   responsibilities: [
-    { title: 'Domain Entities & Value Objects', description: 'Defines Role, Permission, and Policy entities/aggregates and strong value object classes.', status: 'Completed & Verified' },
-    { title: 'Events & Exceptions', description: 'Fires events for role creation, permission grants, policy additions, and raises custom domain errors.', status: 'Completed & Verified' },
-    { title: 'CQRS Orchestrators & Services', description: 'Wires up AssignRoleCommand, AssignRoleHandler handler, and AuthorizationApplicationService wrapper.', status: 'Completed & Verified' },
-    { title: 'In-Memory Repository Adapters & Tests', description: 'Implements in-memory mock repositories and runs a complete unit test suite.', status: 'Completed & Verified' }
+    { title: 'Domain Aggregate & Value Objects', description: 'Defines Session aggregate root, SessionStatus states, and self-validating SessionId and DeviceId value objects.', status: 'Completed & Verified' },
+    { title: 'Events & Domain Exception Templates', description: 'Triggers events for session creation, revocation, and expiration while throwing custom domain error templates.', status: 'Completed & Verified' },
+    { title: 'CQRS Orchestrators & Services', description: 'Wires up CreateSessionCommand, RevokeSessionCommand, their respective handlers, and SessionApplicationService helper.', status: 'Completed & Verified' },
+    { title: 'In-Memory Repository & Tests', description: 'Supplies in-memory repository mock storage adapters and runs a complete unit test suite.', status: 'Completed & Verified' }
   ]
 };
 
