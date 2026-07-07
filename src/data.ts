@@ -1,28 +1,27 @@
 import { TicketDetails, FileNode, FutureTicket } from './types';
 
 export const ticketDetails: TicketDetails = {
-  id: 'GEN-PLATFORM-002',
-  title: 'Global Error Model & Problem Details Foundation',
+  id: 'GEN-PLATFORM-003',
+  title: 'Validation Pipeline & Platform Request Context',
   status: 'DONE',
   priority: 'CRITICAL',
   author: 'SBB Principal Architect',
   assignee: 'shraddha.revdikar@gmail.com',
-  objective: 'Create a single platform-wide immutable error handling model (Problem Details, exception mapping, error catalog, categories) for every SBB module.',
-  modulePath: 'backend/api/src/modules/platform/errors/',
+  objective: 'Create the global validation pipeline and platform request context for the SBB Platform.',
+  modulePath: 'backend/api/src/modules/platform/context/',
   requirements: [
-    'Create base immutable AppError hierarchy (category, statusCode, correlationId, details, timestamp).',
-    'Define standard error categories (Validation, Authentication, Authorization, Business, Infrastructure, External, AI, Unknown).',
-    'Expose RFC 9457 compliant Problem Details response model (type, title, status, detail, instance, code, correlationId, timestamp).',
-    'Build robust ErrorMapper translating standard NestJS exceptions, native Errors, and AppErrors to ProblemDetails.',
-    'Create central Error Catalog specifying standardized error codes (IDENTITY_001, AUTH_001, AUTHZ_001, PLATFORM_001, AI_001, CRM_001).',
-    'Update GlobalExceptionFilter to emit RFC 9457 compliant ProblemDetails on all unhandled exceptions.',
-    'Verify compilation with robust unit tests for error hierarchy and mapping pipelines.'
+    'Create platform context classes (platform-context, request-context, identity-context, tenant-context, organization-context, client-context, feature-flag-context).',
+    'Build PlatformContextProvider leveraging AsyncLocalStorage for read-only, framework-independent access to active request metadata.',
+    'Implement RequestContextMiddleware capturing Correlation ID, Request ID, Client IP, User Agent, Locale, and Timezone.',
+    'Create placeholder middlewares for LocaleMiddleware and FeatureFlagMiddleware.',
+    'Upgrade ZodValidationPipe to serve as both an explicit schema validator and a dynamic DTO-based validation adapter.',
+    'Expose common platform context contracts and the ZodValidatable interface through @sbb/shared.'
   ],
   responsibilities: [
-    { title: 'Base Error Hierarchy & Categories', description: 'Creates immutable, serializable AppError subclasses with comprehensive timestamps and category tracking.', status: 'Completed & Verified' },
-    { title: 'Standardized Error Catalog', description: 'Establishes central ErrorCode and ErrorCategory catalogs inside shared SBB package definitions.', status: 'Completed & Verified' },
-    { title: 'RFC 9457 Problem Details', description: 'Designs compliant ProblemDetails model containing type URIs, HTTP status codes, correlation IDs, and specific instances.', status: 'Completed & Verified' },
-    { title: 'Error Mapper & Global Filter', description: 'Integrates bidirectional Exception-to-ProblemDetails translation logic into the global NestJS exception pipeline.', status: 'Completed & Verified' }
+    { title: 'Platform Request Contexts', description: 'Creates fully immutable and serializable context classes mapping request, client, tenant, and identity state.', status: 'Completed & Verified' },
+    { title: 'Context Provider via AsyncLocalStorage', description: 'Leverages Node async hooks to expose active context values without leaking HTTP framework constructs.', status: 'Completed & Verified' },
+    { title: 'Pipelines & Adapter-based Validation', description: 'Provides a custom, dynamic Zod validation pipe that seamlessly resolves schemas from ZodValidatable DTO prototypes.', status: 'Completed & Verified' },
+    { title: 'Integration Middlewares', description: 'Hooks up request context, locale resolver, and feature flags into the global NestJS application pipeline.', status: 'Completed & Verified' }
   ]
 };
 

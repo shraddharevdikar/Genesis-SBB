@@ -9,9 +9,15 @@ import { CorrelationIdMiddleware } from './middleware/correlation-id.middleware.
 import { RequestLoggingMiddleware } from './middleware/request-logging.middleware.js';
 import { RequestTimingMiddleware } from './middleware/request-timing.middleware.js';
 
+import { PlatformContextProvider } from './context/platform-context.provider.js';
+import { RequestContextMiddleware } from './middleware/request-context.middleware.js';
+import { LocaleMiddleware } from './middleware/locale.middleware.js';
+import { FeatureFlagMiddleware } from './middleware/feature-flag.middleware.js';
+
 @Module({
   imports: [HealthModule],
   providers: [
+    PlatformContextProvider,
     {
       provide: APP_FILTER,
       useClass: GlobalExceptionFilter,
@@ -29,6 +35,7 @@ import { RequestTimingMiddleware } from './middleware/request-timing.middleware.
       useClass: AuditHookInterceptor,
     },
   ],
+  exports: [PlatformContextProvider],
 })
 export class PlatformModule implements NestModule {
   public configure(consumer: MiddlewareConsumer): void {
@@ -36,6 +43,9 @@ export class PlatformModule implements NestModule {
       .apply(
         CorrelationIdMiddleware,
         RequestTimingMiddleware,
+        RequestContextMiddleware,
+        LocaleMiddleware,
+        FeatureFlagMiddleware,
         RequestLoggingMiddleware
       )
       .forRoutes({ path: '*', method: RequestMethod.ALL });

@@ -17,3 +17,7 @@ export interface SoftDelete {
   deletedBy?: string | null;
   isDeleted: boolean;
 }
+
+export interface ZodValidatable {
+  getSchema(): any;
+}
