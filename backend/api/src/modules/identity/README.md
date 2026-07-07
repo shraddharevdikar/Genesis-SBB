@@ -18,7 +18,8 @@ backend/api/src/modules/identity/
 │   │   ├── identity-root.entity.ts
 │   │   ├── user.entity.ts       # User aggregate root with Status enum state machine
 │   │   ├── organization.entity.ts # Organization aggregate root with Status enum
-│   │   └── tenant.entity.ts     # Tenant aggregate root with Status enum
+│   │   ├── tenant.entity.ts     # Tenant aggregate root with Status enum
+│   │   └── membership.entity.ts # Membership aggregate root with Status enum
 │   ├── value-objects/           # Immutable self-validating values
 │   │   ├── email-address.value-object.ts
 │   │   ├── identity-id.value-object.ts
@@ -27,12 +28,15 @@ backend/api/src/modules/identity/
 │   │   ├── organization-id.value-object.ts
 │   │   ├── organization-name.value-object.ts
 │   │   ├── tenant-id.value-object.ts
-│   │   └── tenant-name.value-object.ts
+│   │   ├── tenant-name.value-object.ts
+│   │   ├── membership-id.value-object.ts
+│   │   └── membership-role.value-object.ts
 │   ├── repositories/            # Explicit persistence contracts
 │   │   ├── identity.repository.interface.ts
 │   │   ├── user.repository.ts   # IUserRepository abstraction contract
 │   │   ├── organization.repository.ts # IOrganizationRepository abstraction contract
-│   │   └── tenant.repository.ts # ITenantRepository abstraction contract
+│   │   ├── tenant.repository.ts # ITenantRepository abstraction contract
+│   │   └── membership.repository.ts # IMembershipRepository abstraction contract
 │   ├── events/                  # Immutable state change notification schemas
 │   │   ├── identity-created.event.ts
 │   │   ├── user-created.event.ts
@@ -43,12 +47,16 @@ backend/api/src/modules/identity/
 │   │   ├── organization-deactivated.event.ts
 │   │   ├── tenant-created.event.ts
 │   │   ├── tenant-updated.event.ts
-│   │   └── tenant-suspended.event.ts
+│   │   ├── tenant-suspended.event.ts
+│   │   ├── membership-created.event.ts
+│   │   ├── membership-activated.event.ts
+│   │   └── membership-deactivated.event.ts
 │   ├── services/                # Domain-specific services managing complex invariants
 │   │   ├── identity-domain.service.ts
 │   │   ├── user-domain.service.ts # Evaluates email uniqueness across storage bounds
 │   │   ├── organization-domain.service.ts # Evaluates organization name uniqueness
-│   │   └── tenant-domain.service.ts # Evaluates tenant name uniqueness
+│   │   ├── tenant-domain.service.ts # Evaluates tenant name uniqueness
+│   │   └── membership-domain.service.ts # Evaluates membership uniqueness
 │   ├── policies/                # Discrete rule engines and invariants evaluation
 │   │   └── identity.policy.ts
 │   └── exceptions/              # Specialized domain exceptions
@@ -58,31 +66,37 @@ backend/api/src/modules/identity/
 │       ├── duplicate-organization.exception.ts
 │       ├── invalid-organization.exception.ts
 │       ├── duplicate-tenant.exception.ts
-│       └── invalid-tenant.exception.ts
+│       ├── invalid-tenant.exception.ts
+│       ├── duplicate-membership.exception.ts
+│       └── invalid-membership.exception.ts
 │
 ├── application/                 # Orchestration of domain tasks, commands, and queries (CQRS)
 │   ├── commands/                # Write action request payloads
 │   │   ├── create-identity.command.ts
 │   │   ├── create-user.command.ts
 │   │   ├── create-organization.command.ts
-│   │   └── create-tenant.command.ts
+│   │   ├── create-tenant.command.ts
+│   │   └── create-membership.command.ts
 │   ├── queries/                 # Read action request payloads
 │   │   └── get-identity.query.ts
 │   ├── handlers/                # Request processing and execution orchestrators
 │   │   ├── create-identity.handler.ts
 │   │   ├── create-user.handler.ts
 │   │   ├── create-organization.handler.ts
-│   │   └── create-tenant.handler.ts
+│   │   ├── create-tenant.handler.ts
+│   │   └── create-membership.handler.ts
 │   ├── dto/                     # Application-level serialization Data Transfer Objects
 │   │   ├── identity-response.dto.ts
 │   │   ├── create-user.dto.ts
 │   │   ├── create-organization.dto.ts
-│   │   └── create-tenant.dto.ts
+│   │   ├── create-tenant.dto.ts
+│   │   └── create-membership.dto.ts
 │   └── services/                # Orchestration services invoking domain and repository layers
 │       ├── identity-application.service.ts
 │       ├── user-application.service.ts
 │       ├── organization-application.service.ts
-│       └── tenant-application.service.ts
+│       ├── tenant-application.service.ts
+│       └── membership-application.service.ts
 │
 ├── infrastructure/              # Low-level technology adapters and database persistence
 │   └── persistence/
@@ -91,12 +105,14 @@ backend/api/src/modules/identity/
 │       │       ├── prisma-identity.repository.ts
 │       │       ├── prisma-user.repository.ts
 │       │       ├── prisma-organization.repository.ts
-│       │       └── prisma-tenant.repository.ts
+│       │       ├── prisma-tenant.repository.ts
+│       │       └── prisma-membership.repository.ts
 │       └── mappers/             # Map between database rows and domain aggregate state
 │           ├── identity.mapper.ts
 │           ├── user.mapper.ts
 │           ├── organization.mapper.ts
-│           └── tenant.mapper.ts
+│           ├── tenant.mapper.ts
+│           └── membership.mapper.ts
 │
 ├── presentation/                # Outer interface boundaries for inbound requests
 │   ├── rest/                    # REST Controllers exposing versioned v1 routes
@@ -107,7 +123,8 @@ backend/api/src/modules/identity/
 │   ├── identity-module.spec.ts
 │   ├── user-aggregate.spec.ts   # Validation of User aggregate invariants, states, and handlers
 │   ├── organization-aggregate.spec.ts # Validation of Organization aggregate invariants and handlers
-│   └── tenant-aggregate.spec.ts # Validation of Tenant aggregate invariants and handlers
+│   ├── tenant-aggregate.spec.ts # Validation of Tenant aggregate invariants and handlers
+│   └── membership-aggregate.spec.ts # Validation of Membership aggregate invariants and handlers
 │
 └── identity.module.ts           # Main NestJS module declaring providers and bindings
 ```
@@ -188,10 +205,39 @@ The **Tenant Aggregate** models the top-level isolation boundary for all busines
 
 ---
 
+## Membership Aggregate Specification (GEN-ID-005)
+
+The **Membership Aggregate** models the relationship between a User and an Organization within the platform, establishing role capabilities and operational bounds.
+
+### Model Schema
+* **MembershipId**: Immutable self-validating unique identifier.
+* **UserId**: Reference ID of the associated User.
+* **OrganizationId**: Reference ID of the associated Organization.
+* **MembershipRole**: Validated role identifier representing high-level hierarchy permissions. Allowed values:
+  * `Owner`: Primary organization owner with full controls.
+  * `Admin`: Administrative controls.
+  * `Manager`: Management/operational duties.
+  * `Member`: Active team member.
+  * `Viewer`: Read-only observer.
+* **MembershipStatus**: Represents the membership's lifecycle:
+  * `Invited`: Sent invitation, waiting for verification/acceptance.
+  * `Active`: Valid operational membership status.
+  * `Suspended`: Temporarily blocked relationship.
+  * `Revoked`: Revoked/terminated relationship (disabled/inactive).
+* **JoinedAt / UpdatedAt**: Domain timestamps indicating registry history.
+
+### Business Rules & Invariants
+* **Required Properties**: `UserId` and `OrganizationId` are mandatory.
+* **MembershipId Immutability**: Implemented using TypeScript `readonly` properties.
+* **Valid Role Enforced**: Supported roles are verified on assignment via `MembershipRole` value object invariants.
+* **Unique Relationship**: A user cannot have multiple active/pending memberships in the same organization, enforced by `MembershipDomainService`.
+
+---
+
 ## Next Steps Roadmap
 
-1. **GEN-ID-005: JWT Session Management & Rotation**
+1. **GEN-ID-006: JWT Session Management & Rotation**
    * Implement token verification, expiry checks, and session revocation caches.
-2. **GEN-ID-006: Roles Authorization Guards**
+2. **GEN-ID-007: Roles Authorization Guards**
    * Bind roles metadata descriptors and evaluate permissions rules in execution pipes.
 

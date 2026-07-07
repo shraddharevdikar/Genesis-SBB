@@ -24,6 +24,12 @@ import { TenantDomainService } from './domain/services/tenant-domain.service';
 import { CreateTenantHandler } from './application/handlers/create-tenant.handler';
 import { PrismaTenantRepository } from './infrastructure/persistence/prisma/repositories/prisma-tenant.repository';
 
+// Membership aggregate components
+import { MembershipApplicationService } from './application/services/membership-application.service';
+import { MembershipDomainService } from './domain/services/membership-domain.service';
+import { CreateMembershipHandler } from './application/handlers/create-membership.handler';
+import { PrismaMembershipRepository } from './infrastructure/persistence/prisma/repositories/prisma-membership.repository';
+
 @Module({
   imports: [],
   controllers: [IdentityController],
@@ -60,6 +66,14 @@ import { PrismaTenantRepository } from './infrastructure/persistence/prisma/repo
       provide: 'ITenantRepository',
       useClass: PrismaTenantRepository,
     },
+    // Membership aggregate providers
+    MembershipApplicationService,
+    MembershipDomainService,
+    CreateMembershipHandler,
+    {
+      provide: 'IMembershipRepository',
+      useClass: PrismaMembershipRepository,
+    },
   ],
   exports: [
     IdentityApplicationService,
@@ -70,6 +84,8 @@ import { PrismaTenantRepository } from './infrastructure/persistence/prisma/repo
     OrganizationDomainService,
     TenantApplicationService,
     TenantDomainService,
+    MembershipApplicationService,
+    MembershipDomainService,
   ],
 })
 export class IdentityModule {}
