@@ -1,29 +1,29 @@
 import { TicketDetails, FileNode, FutureTicket } from './types';
 
 export const ticketDetails: TicketDetails = {
-  id: 'GEN-AI-003',
-  title: 'Prompt Management System',
+  id: 'GEN-AI-004',
+  title: 'Intelligent Model Router',
   status: 'DONE',
   priority: 'CRITICAL',
   author: 'SBB Principal Architect',
   assignee: 'shraddha.revdikar@gmail.com',
-  objective: 'Build the enterprise Prompt Management System for the SBB Platform to manage prompts as governed platform assets.',
-  modulePath: 'packages/ai-sdk/src/prompts/registry/prompt-registry.ts',
+  objective: 'Build the intelligent routing engine that selects the optimal AI provider and model based on capabilities and policies.',
+  modulePath: 'packages/ai-sdk/src/routing/router/routing-engine.ts',
   requirements: [
-    'Create structured PromptTemplate containing PromptId, Name, Category, Purpose, Capability, Variables, and Metadata.',
-    'Formulate immutable PromptVersion model supporting Draft, Review, Approved, Active, Deprecated, and Archived statuses.',
-    'Build dynamic PromptRegistry supporting template registration, lookups, and active version resolution.',
-    'Define formal approval contracts including Reviewer, Status, ApprovedAt, and Comments.',
-    'Construct prompt metadata tracking Owner, Team, Module, Tags, and Supported Providers/Capabilities.',
-    'Define reusable PromptVariable model holding Name, Type, Required flag, and Default value.',
-    'Implement A/B testing experiment contracts tracking variants, traffic allocations, and runtime statuses.',
-    'Establish event contract schemas for PromptCreated, PromptPublished, and PromptDeprecated transitions.'
+    'Define strongly typed AICapabilities (Chat, Reasoning, Planning, Coding, Summarization, etc.).',
+    'Formulate TaskComplexity definitions (Low, Medium, High, Expert).',
+    'Create abstractions for Cost Policy, Latency Policy, Quality Policy, Region Policy, and Safety Policy.',
+    'Create provider selection contracts based on capability, health, cost tier, priority, and region.',
+    'Create model selection contracts so business modules never reference model strings directly.',
+    'Define comprehensive RoutingDecision encapsulating selected provider, model, confidence, cost, and latency estimations.',
+    'Establish FallbackStrategy tracking primary/secondary providers and retry policies.',
+    'Construct Event Schemas for RoutingCompleted and RoutingFailed transitions.'
   ],
   responsibilities: [
-    { title: 'Dynamic Prompt Registry', description: 'Supports registering templates, looking up prompts, and resolving active versions.', status: 'Completed & Verified' },
-    { title: 'Prompt Versioning & Governance', description: 'Structures immutable versions, life-cycle states, and review approvals.', status: 'Completed & Verified' },
-    { title: 'A/B Experimentation Contracts', description: 'Specifies variant splits, allocation weights, and experimentation statuses.', status: 'Completed & Verified' },
-    { title: 'Metadata & Variable Models', description: 'Standardizes dynamic template variables, owners, tags, and target capabilities.', status: 'Completed & Verified' }
+    { title: 'AI Capability & Complexity', description: 'Supports standard capability tags and task complexity resource constraints.', status: 'Completed & Verified' },
+    { title: 'Routing Policies Contracts', description: 'Structures flexible cost, latency, quality, region, and safety policy parameters.', status: 'Completed & Verified' },
+    { title: 'Selection & Strategy Engines', description: 'Resolves providers and models using dynamic selector and robust fallback policies.', status: 'Completed & Verified' },
+    { title: 'Routing Decisions & Events', description: 'Outputs fully enriched routing decision payloads and tracks success/failure event records.', status: 'Completed & Verified' }
   ]
 };
 

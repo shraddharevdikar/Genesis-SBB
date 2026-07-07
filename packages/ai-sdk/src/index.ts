@@ -7,8 +7,7 @@ export * from './gateway/ai-request.js';
 export * from './gateway/ai-response.js';
 
 // Routing
-export * from './routing/model-router.js';
-export * from './routing/routing-policy.js';
+export * from './routing/index.js';
 
 // Prompts
 export * from './prompts/index.js';

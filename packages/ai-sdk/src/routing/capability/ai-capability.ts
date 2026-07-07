@@ -1,0 +1,15 @@
+export enum AICapability {
+  CHAT = 'chat',
+  REASONING = 'reasoning',
+  PLANNING = 'planning',
+  CODING = 'coding',
+  EMBEDDING = 'embedding',
+  VISION = 'vision',
+  IMAGE_GENERATION = 'image_generation',
+  AUDIO = 'audio',
+  SPEECH = 'speech',
+  TRANSLATION = 'translation',
+  SUMMARIZATION = 'summarization',
+  CLASSIFICATION = 'classification',
+  EXTRACTION = 'extraction',
+}

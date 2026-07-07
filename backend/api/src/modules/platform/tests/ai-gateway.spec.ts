@@ -17,7 +17,13 @@ import {
   ProviderResolver,
   DefaultProviderHealthMonitor,
   ProviderFactory,
-  ProviderDescriptor
+  ProviderDescriptor,
+  AICapability,
+  TaskComplexity,
+  DefaultProviderSelector,
+  DefaultModelSelector,
+  RoutingEngine,
+  FallbackStrategy
 } from '@sbb/ai-sdk';
 
 describe('SBB AI Gateway & Provider Registry (GEN-AI-001 & GEN-AI-002)', () => {
@@ -266,6 +272,79 @@ describe('SBB AI Gateway & Provider Registry (GEN-AI-001 & GEN-AI-002)', () => {
       // Bypass cache
       const thirdResponse = await gateway.execute({ ...req, bypassCache: true });
       expect(thirdResponse.id).not.toBe(firstResponse.id);
+    });
+  });
+
+  describe('Intelligent Model Router (GEN-AI-004)', () => {
+    it('should correctly define capabilities and task complexities', () => {
+      expect(AICapability.CHAT).toBe('chat');
+      expect(AICapability.REASONING).toBe('reasoning');
+      expect(TaskComplexity.LOW).toBe('low');
+      expect(TaskComplexity.EXPERT).toBe('expert');
+    });
+
+    it('should support provider selection matching capability criteria', async () => {
+      const descriptors = providerRegistry.listDescriptors();
+      const selector = new DefaultProviderSelector(descriptors);
+      const candidates = await selector.selectProviders({
+        capability: ProviderCapability.CHAT,
+      });
+
+      expect(candidates.length).toBe(1);
+      expect(candidates[0].providerId).toBe('google-gemini');
+    });
+
+    it('should support model selection with criteria constraints', async () => {
+      const selector = new DefaultModelSelector();
+      const models = await selector.selectModels('google-gemini', {
+        supportsStreaming: true,
+      });
+
+      expect(models).toContain('gemini-1.5-flash');
+      expect(models).toContain('gemini-1.5-pro');
+    });
+
+    it('should evaluate and create routing decisions in the routing engine', async () => {
+      const selector = new DefaultProviderSelector(providerRegistry.listDescriptors());
+      const modelSelector = new DefaultModelSelector();
+      const mockStrategy = {
+        name: 'Cost-Optimized Strategy',
+        description: 'Prefers lower cost models',
+        decide: async () => ({
+          selectedProviderId: 'google-gemini',
+          selectedModelId: 'gemini-1.5-flash',
+          reason: 'Matches low cost criteria',
+          confidence: 0.99,
+          matchedCriteria: ['cost'],
+        }),
+      };
+
+      const engine = new RoutingEngine(selector, modelSelector, mockStrategy);
+      const decision = await engine.evaluate({
+        id: 'test-req',
+        prompt: 'test',
+        requestedProvider: 'google-gemini',
+      });
+
+      expect(decision.selectedProviderId).toBe('google-gemini');
+      expect(decision.selectedModelId).toBe('gemini-1.5-flash');
+      expect(decision.reason).toContain('Cost-Optimized Strategy');
+    });
+
+    it('should support fallback strategy structure config', () => {
+      const fallback = new FallbackStrategy({
+        primaryProviderId: 'google-gemini',
+        secondaryProviderId: 'openai',
+        retryPolicy: {
+          maxAttempts: 3,
+          initialDelayMs: 200,
+          backoffMultiplier: 2,
+        },
+      });
+
+      expect(fallback.getPrimaryProviderId()).toBe('google-gemini');
+      expect(fallback.getSecondaryProviderId()).toBe('openai');
+      expect(fallback.getRetryPolicy().maxAttempts).toBe(3);
     });
   });
 });
