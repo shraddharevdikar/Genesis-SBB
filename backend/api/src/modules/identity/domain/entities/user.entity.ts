@@ -1,3 +1,4 @@
+import { AggregateRoot } from '@sbb/shared';
 import { UserId } from '../value-objects/user-id.value-object';
 import { EmailAddress } from '../value-objects/email-address.value-object';
 import { DisplayName } from '../value-objects/display-name.value-object';
@@ -12,14 +13,13 @@ export enum UserStatus {
   Disabled = 'Disabled',
 }
 
-export class User {
+export class User extends AggregateRoot {
   private readonly id: UserId;
   private email: EmailAddress;
   private displayName: DisplayName;
   private status: UserStatus;
   private readonly createdAt: Date;
   private updatedAt: Date;
-  private domainEvents: any[] = [];
 
   constructor(
     id: UserId,
@@ -29,6 +29,7 @@ export class User {
     createdAt: Date,
     updatedAt: Date
   ) {
+    super();
     this.id = id;
     this.email = email;
     this.displayName = displayName;
@@ -61,14 +62,6 @@ export class User {
     return this.updatedAt;
   }
 
-  public getEvents(): any[] {
-    return this.domainEvents;
-  }
-
-  public clearEvents(): void {
-    this.domainEvents = [];
-  }
-
   public static create(
     id: UserId,
     email: EmailAddress,
@@ -83,7 +76,7 @@ export class User {
       new Date()
     );
 
-    user.domainEvents.push(
+    user.addDomainEvent(
       new UserCreatedEvent(id.getValue(), email.getValue(), displayName.getValue())
     );
 
@@ -96,7 +89,7 @@ export class User {
     }
     this.status = UserStatus.Active;
     this.updatedAt = new Date();
-    this.domainEvents.push(new UserActivatedEvent(this.id.getValue()));
+    this.addDomainEvent(new UserActivatedEvent(this.id.getValue()));
   }
 
   public deactivate(): void {
@@ -105,7 +98,7 @@ export class User {
     }
     this.status = UserStatus.Disabled;
     this.updatedAt = new Date();
-    this.domainEvents.push(new UserDeactivatedEvent(this.id.getValue()));
+    this.addDomainEvent(new UserDeactivatedEvent(this.id.getValue()));
   }
 
   public suspend(): void {

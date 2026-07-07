@@ -1,3 +1,4 @@
+import { AggregateRoot } from '@sbb/shared';
 import { TenantId } from '../value-objects/tenant-id.value-object';
 import { TenantName } from '../value-objects/tenant-name.value-object';
 import { TenantCreatedEvent } from '../events/tenant-created.event';
@@ -11,13 +12,12 @@ export enum TenantStatus {
   Archived = 'Archived',
 }
 
-export class Tenant {
+export class Tenant extends AggregateRoot {
   private readonly id: TenantId;
   private name: TenantName;
   private status: TenantStatus;
   private readonly createdAt: Date;
   private updatedAt: Date;
-  private domainEvents: any[] = [];
 
   constructor(
     id: TenantId,
@@ -26,6 +26,7 @@ export class Tenant {
     createdAt: Date,
     updatedAt: Date
   ) {
+    super();
     this.id = id;
     this.name = name;
     this.status = status;
@@ -53,14 +54,6 @@ export class Tenant {
     return this.updatedAt;
   }
 
-  public getEvents(): any[] {
-    return this.domainEvents;
-  }
-
-  public clearEvents(): void {
-    this.domainEvents = [];
-  }
-
   public static create(id: TenantId, name: TenantName): Tenant {
     const tenant = new Tenant(
       id,
@@ -70,7 +63,7 @@ export class Tenant {
       new Date()
     );
 
-    tenant.domainEvents.push(
+    tenant.addDomainEvent(
       new TenantCreatedEvent(id.getValue(), name.getValue())
     );
 
@@ -83,7 +76,7 @@ export class Tenant {
     }
     this.name = newName;
     this.updatedAt = new Date();
-    this.domainEvents.push(
+    this.addDomainEvent(
       new TenantUpdatedEvent(this.id.getValue(), newName.getValue())
     );
   }
@@ -102,7 +95,7 @@ export class Tenant {
     }
     this.status = TenantStatus.Suspended;
     this.updatedAt = new Date();
-    this.domainEvents.push(new TenantSuspendedEvent(this.id.getValue()));
+    this.addDomainEvent(new TenantSuspendedEvent(this.id.getValue()));
   }
 
   public archive(): void {

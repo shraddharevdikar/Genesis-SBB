@@ -1,3 +1,4 @@
+import { AggregateRoot } from '@sbb/shared';
 import { MembershipId } from '../value-objects/membership-id.value-object';
 import { MembershipRole } from '../value-objects/membership-role.value-object';
 import { MembershipCreatedEvent } from '../events/membership-created.event';
@@ -11,7 +12,7 @@ export enum MembershipStatus {
   Revoked = 'Revoked',
 }
 
-export class Membership {
+export class Membership extends AggregateRoot {
   private readonly id: MembershipId;
   private readonly userId: string;
   private readonly organizationId: string;
@@ -19,7 +20,6 @@ export class Membership {
   private status: MembershipStatus;
   private readonly joinedAt: Date;
   private updatedAt: Date;
-  private domainEvents: any[] = [];
 
   constructor(
     id: MembershipId,
@@ -30,6 +30,7 @@ export class Membership {
     joinedAt: Date,
     updatedAt: Date
   ) {
+    super();
     if (!userId || userId.trim() === '') {
       throw new Error('User ID is required');
     }
@@ -74,14 +75,6 @@ export class Membership {
     return this.updatedAt;
   }
 
-  public getEvents(): any[] {
-    return this.domainEvents;
-  }
-
-  public clearEvents(): void {
-    this.domainEvents = [];
-  }
-
   public static create(
     id: MembershipId,
     userId: string,
@@ -98,7 +91,7 @@ export class Membership {
       new Date()
     );
 
-    membership.domainEvents.push(
+    membership.addDomainEvent(
       new MembershipCreatedEvent(
         id.getValue(),
         userId,
@@ -124,7 +117,7 @@ export class Membership {
     }
     this.status = MembershipStatus.Active;
     this.updatedAt = new Date();
-    this.domainEvents.push(new MembershipActivatedEvent(this.id.getValue()));
+    this.addDomainEvent(new MembershipActivatedEvent(this.id.getValue()));
   }
 
   public suspend(): void {
@@ -141,6 +134,6 @@ export class Membership {
     }
     this.status = MembershipStatus.Revoked;
     this.updatedAt = new Date();
-    this.domainEvents.push(new MembershipDeactivatedEvent(this.id.getValue()));
+    this.addDomainEvent(new MembershipDeactivatedEvent(this.id.getValue()));
   }
 }

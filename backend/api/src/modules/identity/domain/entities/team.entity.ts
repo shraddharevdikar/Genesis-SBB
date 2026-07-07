@@ -1,3 +1,4 @@
+import { AggregateRoot } from '@sbb/shared';
 import { TeamId } from '../value-objects/team-id.value-object';
 import { TeamName } from '../value-objects/team-name.value-object';
 import { TeamCreatedEvent } from '../events/team-created.event';
@@ -9,14 +10,13 @@ export enum TeamStatus {
   Archived = 'Archived',
 }
 
-export class Team {
+export class Team extends AggregateRoot {
   private readonly id: TeamId;
   private readonly organizationId: string;
   private name: TeamName;
   private status: TeamStatus;
   private readonly createdAt: Date;
   private updatedAt: Date;
-  private domainEvents: any[] = [];
 
   constructor(
     id: TeamId,
@@ -26,6 +26,7 @@ export class Team {
     createdAt: Date,
     updatedAt: Date
   ) {
+    super();
     if (!organizationId || organizationId.trim() === '') {
       throw new Error('Organization ID is required');
     }
@@ -62,14 +63,6 @@ export class Team {
     return this.updatedAt;
   }
 
-  public getEvents(): any[] {
-    return this.domainEvents;
-  }
-
-  public clearEvents(): void {
-    this.domainEvents = [];
-  }
-
   public static create(
     id: TeamId,
     organizationId: string,
@@ -84,7 +77,7 @@ export class Team {
       new Date()
     );
 
-    team.domainEvents.push(
+    team.addDomainEvent(
       new TeamCreatedEvent(id.getValue(), organizationId, name.getValue())
     );
 
@@ -98,7 +91,7 @@ export class Team {
     const oldName = this.name.getValue();
     this.name = newName;
     this.updatedAt = new Date();
-    this.domainEvents.push(
+    this.addDomainEvent(
       new TeamRenamedEvent(this.id.getValue(), oldName, newName.getValue())
     );
   }
@@ -109,6 +102,6 @@ export class Team {
     }
     this.status = TeamStatus.Archived;
     this.updatedAt = new Date();
-    this.domainEvents.push(new TeamArchivedEvent(this.id.getValue()));
+    this.addDomainEvent(new TeamArchivedEvent(this.id.getValue()));
   }
 }

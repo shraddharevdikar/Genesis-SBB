@@ -1,3 +1,4 @@
+import { AggregateRoot } from '@sbb/shared';
 import { OrganizationId } from '../value-objects/organization-id.value-object';
 import { OrganizationName } from '../value-objects/organization-name.value-object';
 import { OrganizationCreatedEvent } from '../events/organization-created.event';
@@ -11,13 +12,12 @@ export enum OrganizationStatus {
   Archived = 'Archived',
 }
 
-export class Organization {
+export class Organization extends AggregateRoot {
   private readonly id: OrganizationId;
   private name: OrganizationName;
   private status: OrganizationStatus;
   private readonly createdAt: Date;
   private updatedAt: Date;
-  private domainEvents: any[] = [];
 
   constructor(
     id: OrganizationId,
@@ -26,6 +26,7 @@ export class Organization {
     createdAt: Date,
     updatedAt: Date
   ) {
+    super();
     this.id = id;
     this.name = name;
     this.status = status;
@@ -53,14 +54,6 @@ export class Organization {
     return this.updatedAt;
   }
 
-  public getEvents(): any[] {
-    return this.domainEvents;
-  }
-
-  public clearEvents(): void {
-    this.domainEvents = [];
-  }
-
   public static create(
     id: OrganizationId,
     name: OrganizationName
@@ -73,7 +66,7 @@ export class Organization {
       new Date()
     );
 
-    org.domainEvents.push(
+    org.addDomainEvent(
       new OrganizationCreatedEvent(id.getValue(), name.getValue())
     );
 
@@ -86,7 +79,7 @@ export class Organization {
     }
     this.name = newName;
     this.updatedAt = new Date();
-    this.domainEvents.push(
+    this.addDomainEvent(
       new OrganizationUpdatedEvent(this.id.getValue(), newName.getValue())
     );
   }
@@ -113,6 +106,6 @@ export class Organization {
     }
     this.status = OrganizationStatus.Archived;
     this.updatedAt = new Date();
-    this.domainEvents.push(new OrganizationDeactivatedEvent(this.id.getValue()));
+    this.addDomainEvent(new OrganizationDeactivatedEvent(this.id.getValue()));
   }
 }

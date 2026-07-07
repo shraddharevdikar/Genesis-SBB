@@ -1,15 +1,15 @@
+import { AggregateRoot } from '@sbb/shared';
 import { IdentityId } from '../value-objects/identity-id.value-object';
 import { EmailAddress } from '../value-objects/email-address.value-object';
 import { IdentityCreatedEvent } from '../events/identity-created.event';
 
-export class Identity {
+export class Identity extends AggregateRoot {
   private readonly id: IdentityId;
   private email: EmailAddress;
   private passwordHash: string;
   private isActive: boolean;
   private createdAt: Date;
   private updatedAt: Date;
-  private domainEvents: any[] = [];
 
   constructor(
     id: IdentityId,
@@ -19,6 +19,7 @@ export class Identity {
     createdAt: Date,
     updatedAt: Date
   ) {
+    super();
     this.id = id;
     this.email = email;
     this.passwordHash = passwordHash;
@@ -51,14 +52,6 @@ export class Identity {
     return this.updatedAt;
   }
 
-  public getEvents(): any[] {
-    return this.domainEvents;
-  }
-
-  public clearEvents(): void {
-    this.domainEvents = [];
-  }
-
   public static create(
     id: IdentityId,
     email: EmailAddress,
@@ -73,7 +66,7 @@ export class Identity {
       new Date()
     );
 
-    identity.domainEvents.push(
+    identity.addDomainEvent(
       new IdentityCreatedEvent(id.getValue(), email.getValue())
     );
 
