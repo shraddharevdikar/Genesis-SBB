@@ -42,6 +42,9 @@
       ],
       "@sbb/validation": [
         "./packages/validation/src/index.ts"
+      ],
+      "@sbb/ai-sdk": [
+        "./packages/ai-sdk/src/index.ts"
       ]
     },
     "allowImportingTsExtensions": true,
