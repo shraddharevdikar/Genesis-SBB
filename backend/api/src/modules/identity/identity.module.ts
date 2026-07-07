@@ -6,6 +6,12 @@ import { IdentityDomainService } from './domain/services/identity-domain.service
 import { PrismaIdentityRepository } from './infrastructure/persistence/prisma/repositories/prisma-identity.repository';
 import { IdentityResolver } from './presentation/graphql/identity.resolver';
 
+// User aggregate components
+import { UserApplicationService } from './application/services/user-application.service';
+import { UserDomainService } from './domain/services/user-domain.service';
+import { CreateUserHandler } from './application/handlers/create-user.handler';
+import { PrismaUserRepository } from './infrastructure/persistence/prisma/repositories/prisma-user.repository';
+
 @Module({
   imports: [],
   controllers: [IdentityController],
@@ -18,10 +24,20 @@ import { IdentityResolver } from './presentation/graphql/identity.resolver';
       provide: 'IIdentityRepository',
       useClass: PrismaIdentityRepository,
     },
+    // User aggregate providers
+    UserApplicationService,
+    UserDomainService,
+    CreateUserHandler,
+    {
+      provide: 'IUserRepository',
+      useClass: PrismaUserRepository,
+    },
   ],
   exports: [
     IdentityApplicationService,
     IdentityDomainService,
+    UserApplicationService,
+    UserDomainService,
   ],
 })
 export class IdentityModule {}
