@@ -1,28 +1,28 @@
 import { TicketDetails, FileNode, FutureTicket } from './types';
 
 export const ticketDetails: TicketDetails = {
-  id: 'GEN-ID-009',
-  title: 'Session Management Foundation',
+  id: 'GEN-ID-009.1',
+  title: 'Identity Integration Layer',
   status: 'DONE',
   priority: 'CRITICAL',
   author: 'SBB Principal Architect',
   assignee: 'shraddha.revdikar@gmail.com',
-  objective: 'Design and implement the session management foundation (session lifecycle, active device tracking, state mutation triggers) within the Identity / Session module using Domain-Driven Design (DDD).',
-  modulePath: 'backend/api/src/modules/session/',
+  objective: 'Design and implement the shared Identity Integration Layer (context structures, providers, guards, param decorators, middleware, and interceptors) using Domain-Driven Design (DDD).',
+  modulePath: 'backend/api/src/modules/identity-integration/',
   requirements: [
-    'Create the Session domain entity and Aggregate Root (SessionId, UserId, TenantId, DeviceId, SessionStatus, lifespan variables).',
-    'Build strong value objects SessionId and DeviceId supporting immutability and invariant guards.',
-    'Implement the session status lifecycle enum with Active, Expired, and Revoked states.',
-    'Declare placeholder Domain Events: SessionCreated, SessionRevoked, and SessionExpired.',
-    'Expose repository abstraction ISessionRepository with clean domain contract signatures.',
-    'Create placeholder Domain Services: SessionManagementService to coordinate token validity checks.',
-    'Build standard NestJS Session module structure and write an exhaustive unit test suite.'
+    'Create the core context interfaces including IdentityContext, CurrentUser, CurrentTenant, CurrentOrganization, and CurrentMembership.',
+    'Build providers and resolvers for context extraction: IdentityContextProvider, CurrentUserProvider, TenantResolver, and OrganizationResolver.',
+    'Expose placeholder framework guards including AuthenticationGuard, AuthorizationGuard, and TenantGuard.',
+    'Declare custom parameter decorators: @CurrentUser(), @CurrentTenant(), and @CurrentOrganization().',
+    'Build request middleware and interceptor wrappers: IdentityContextMiddleware and IdentityContextInterceptor.',
+    'Expose application helper service IdentityContextService to retrieve request contexts.',
+    'Build standard NestJS IdentityIntegration module structure and write an exhaustive unit test suite.'
   ],
   responsibilities: [
-    { title: 'Domain Aggregate & Value Objects', description: 'Defines Session aggregate root, SessionStatus states, and self-validating SessionId and DeviceId value objects.', status: 'Completed & Verified' },
-    { title: 'Events & Domain Exception Templates', description: 'Triggers events for session creation, revocation, and expiration while throwing custom domain error templates.', status: 'Completed & Verified' },
-    { title: 'CQRS Orchestrators & Services', description: 'Wires up CreateSessionCommand, RevokeSessionCommand, their respective handlers, and SessionApplicationService helper.', status: 'Completed & Verified' },
-    { title: 'In-Memory Repository & Tests', description: 'Supplies in-memory repository mock storage adapters and runs a complete unit test suite.', status: 'Completed & Verified' }
+    { title: 'Domain Models & Context Types', description: 'Defines clean, read-only interfaces for users, tenants, organizations, memberships, and multi-tenant correlation IDs.', status: 'Completed & Verified' },
+    { title: 'Resolvers & Provider Contracts', description: 'Exposes resolver contracts for extracting and verifying enterprise context bindings.', status: 'Completed & Verified' },
+    { title: 'Guards, Middleware, & Interceptors', description: 'Supplies pluggable NestJS middleware, interceptors, and guards as integration boundaries.', status: 'Completed & Verified' },
+    { title: 'Decorators, Services, & Specs', description: 'Implements custom NestJS decorators, active service endpoints, and registers full unit coverage.', status: 'Completed & Verified' }
   ]
 };
 
