@@ -234,10 +234,31 @@ The **Membership Aggregate** models the relationship between a User and an Organ
 
 ---
 
+## Team Aggregate Specification (GEN-ID-006)
+
+The **Team Aggregate** models an organizational unit within an Organization, allowing structured grouping and operational compartmentalization.
+
+### Model Schema
+* **TeamId**: Immutable self-validating unique identifier.
+* **OrganizationId**: Reference ID of the parent Organization.
+* **TeamName**: Required name string, validated for length (minimum 3 characters).
+* **TeamStatus**: Represents the team's lifecycle:
+  * `Active`: Active team, ready for operations.
+  * `Archived`: Archived team, disabled for operations.
+* **CreatedAt / UpdatedAt**: Domain timestamps indicating registry history.
+
+### Business Rules & Invariants
+* **Required Properties**: `OrganizationId` and `TeamName` are mandatory.
+* **TeamId Immutability**: Protected through TypeScript `readonly` properties.
+* **Team Name Validation**: Enforced length of at least 3 characters via `TeamName` value object invariants.
+* **Unique Team Name in Organization**: Managed via cross-repository boundary verification in the `TeamDomainService`.
+
+---
+
 ## Next Steps Roadmap
 
-1. **GEN-ID-006: JWT Session Management & Rotation**
+1. **GEN-ID-007: JWT Session Management & Rotation**
    * Implement token verification, expiry checks, and session revocation caches.
-2. **GEN-ID-007: Roles Authorization Guards**
+2. **GEN-ID-008: Roles Authorization Guards**
    * Bind roles metadata descriptors and evaluate permissions rules in execution pipes.
 

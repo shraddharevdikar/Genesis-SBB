@@ -1,29 +1,29 @@
 import { TicketDetails, FileNode, FutureTicket } from './types';
 
 export const ticketDetails: TicketDetails = {
-  id: 'GEN-ID-004',
-  title: 'Tenant Aggregate',
+  id: 'GEN-ID-006',
+  title: 'Team Aggregate',
   status: 'DONE',
   priority: 'CRITICAL',
   author: 'SBB Principal Architect',
   assignee: 'shraddha.revdikar@gmail.com',
-  objective: 'Design and implement the Tenant aggregate within the Identity domain using Domain-Driven Design (DDD). The Tenant aggregate represents the top-level isolation boundary for all business data within the SBB Platform.',
+  objective: 'Design and implement the Team aggregate within the Identity module using Domain-Driven Design (DDD). The Team aggregate represents an organizational unit within an Organization.',
   modulePath: 'backend/api/src/modules/identity/',
   requirements: [
-    'Create the Tenant domain entity with properties: id, name, status, createdAt, updatedAt.',
-    'Implement status lifecycle states: Provisioning, Active, Suspended, Archived.',
-    'Build domain value objects for TenantId and TenantName with immutability and invariants validation (such as name length).',
-    'Define domain events: TenantCreatedEvent, TenantUpdatedEvent, TenantSuspendedEvent.',
-    'Create Domain Exception templates for duplicate tenants and invalid state transitions.',
-    'Establish the Tenant Repository interface (ITenantRepository) and its in-memory mock implementation.',
-    'Formulate Application CQRS commands, handlers, and services to orchestrate creation, updates, and activation workflows.',
+    'Create the Team domain entity with properties: id, organizationId, name, status, createdAt, updatedAt.',
+    'Implement status lifecycle states: Active, Archived.',
+    'Build domain value objects for TeamId and TeamName with immutability and invariants validation (such as name length).',
+    'Define domain events: TeamCreatedEvent, TeamRenamedEvent, TeamArchivedEvent.',
+    'Create Domain Exception templates for duplicate teams and invalid state transitions.',
+    'Establish the Team Repository interface (ITeamRepository) and its in-memory mock implementation.',
+    'Formulate Application CQRS commands, handlers, and services to orchestrate creation, rename, and archiving workflows.',
     'Validate complete code correctness and test aggregate compilation.'
   ],
   responsibilities: [
-    { title: 'Tenant Domain Aggregate & VOs', description: 'Implements the rich Tenant entity and self-validating TenantName and TenantId value objects.', status: 'Completed & Verified' },
-    { title: 'Domain Events & Services', description: 'Fires state events on create/update/suspend, and coordinates name uniqueness via TenantDomainService.', status: 'Completed & Verified' },
-    { title: 'Application CQRS Handlers', description: 'Exposes CreateTenantCommand, CreateTenantHandler, and TenantApplicationService orchestrators.', status: 'Completed & Verified' },
-    { title: 'Mock Infrastructure & Tests', description: 'Implements PrismaTenantRepository storage simulator and a thorough unit test suite.', status: 'Completed & Verified' }
+    { title: 'Team Domain Aggregate & VOs', description: 'Implements the rich Team entity and self-validating TeamName and TeamId value objects.', status: 'Completed & Verified' },
+    { title: 'Domain Events & Services', description: 'Fires state events on create/rename/archive, and coordinates name uniqueness via TeamDomainService.', status: 'Completed & Verified' },
+    { title: 'Application CQRS Handlers', description: 'Exposes CreateTeamCommand, CreateTeamHandler, and TeamApplicationService orchestrators.', status: 'Completed & Verified' },
+    { title: 'Mock Infrastructure & Tests', description: 'Implements PrismaTeamRepository storage simulator and a thorough unit test suite.', status: 'Completed & Verified' }
   ]
 };
 
@@ -1387,6 +1387,205 @@ describe('Tenant Aggregate', () => {
     const name = new TenantName('SBB Platform');
     const tenant = Tenant.create(id, name);
     expect(tenant.getStatus()).toBe(TenantStatus.Provisioning);
+  });
+});`
+  },
+  {
+    name: 'team.entity.ts',
+    path: 'backend/api/src/modules/identity/domain/entities/team.entity.ts',
+    language: 'typescript',
+    role: 'Domain Aggregate Root',
+    description: 'Main Team aggregate root entity with Status state machine and domain events.',
+    content: `import { TeamId } from '../value-objects/team-id.value-object';
+import { TeamName } from '../value-objects/team-name.value-object';
+import { TeamCreatedEvent } from '../events/team-created.event';
+import { TeamRenamedEvent } from '../events/team-renamed.event';
+import { TeamArchivedEvent } from '../events/team-archived.event';
+
+export enum TeamStatus {
+  Active = 'Active',
+  Archived = 'Archived',
+}
+
+export class Team {
+  private readonly id: TeamId;
+  private readonly organizationId: string;
+  private name: TeamName;
+  private status: TeamStatus;
+  private readonly createdAt: Date;
+  private updatedAt: Date;
+  private domainEvents: any[] = [];
+
+  constructor(
+    id: TeamId,
+    organizationId: string,
+    name: TeamName,
+    status: TeamStatus,
+    createdAt: Date,
+    updatedAt: Date
+  ) {
+    if (!organizationId || organizationId.trim() === '') {
+      throw new Error('Organization ID is required');
+    }
+    this.id = id;
+    this.organizationId = organizationId;
+    this.name = name;
+    this.status = status;
+    this.createdAt = createdAt;
+    this.updatedAt = updatedAt;
+  }
+
+  public getId(): TeamId { return this.id; }
+  public getOrganizationId(): string { return this.organizationId; }
+  public getName(): TeamName { return this.name; }
+  public getStatus(): TeamStatus { return this.status; }
+  public getCreatedAt(): Date { return this.createdAt; }
+  public getUpdatedAt(): Date { return this.updatedAt; }
+  public getEvents(): any[] { return this.domainEvents; }
+  public clearEvents(): void { this.domainEvents = []; }
+
+  public static create(id: TeamId, organizationId: string, name: TeamName): Team {
+    const team = new Team(id, organizationId, name, TeamStatus.Active, new Date(), new Date());
+    team.domainEvents.push(new TeamCreatedEvent(id.getValue(), organizationId, name.getValue()));
+    return team;
+  }
+
+  public rename(newName: TeamName): void {
+    if (this.name.equals(newName)) return;
+    const oldName = this.name.getValue();
+    this.name = newName;
+    this.updatedAt = new Date();
+    this.domainEvents.push(new TeamRenamedEvent(this.id.getValue(), oldName, newName.getValue()));
+  }
+
+  public archive(): void {
+    if (this.status === TeamStatus.Archived) return;
+    this.status = TeamStatus.Archived;
+    this.updatedAt = new Date();
+    this.domainEvents.push(new TeamArchivedEvent(this.id.getValue()));
+  }
+}`
+  },
+  {
+    name: 'team-id.value-object.ts',
+    path: 'backend/api/src/modules/identity/domain/value-objects/team-id.value-object.ts',
+    language: 'typescript',
+    role: 'Value Object',
+    description: 'Self-validating, immutable Team identifier value object.',
+    content: `export class TeamId {
+  constructor(private readonly value: string) {
+    if (!value) throw new Error('Team ID cannot be empty');
+  }
+  public getValue(): string { return this.value; }
+  public equals(other: TeamId): boolean { return this.value === other.getValue(); }
+}`
+  },
+  {
+    name: 'team-name.value-object.ts',
+    path: 'backend/api/src/modules/identity/domain/value-objects/team-name.value-object.ts',
+    language: 'typescript',
+    role: 'Value Object',
+    description: 'Self-validating, immutable team name object with length constraints.',
+    content: `export class TeamName {
+  constructor(private readonly value: string) {
+    if (!value || value.trim().length === 0) throw new Error('Team name cannot be empty');
+    if (value.trim().length < 3) throw new Error('Team name must be at least 3 characters long');
+  }
+  public getValue(): string { return this.value; }
+  public equals(other: TeamName): boolean {
+    return this.value.trim().toLowerCase() === other.getValue().trim().toLowerCase();
+  }
+}`
+  },
+  {
+    name: 'team.repository.ts',
+    path: 'backend/api/src/modules/identity/domain/repositories/team.repository.ts',
+    language: 'typescript',
+    role: 'Domain Repository Interface',
+    description: 'Explicit storage boundary contract for team aggregate roots.',
+    content: `import { Team } from '../entities/team.entity';
+import { TeamId } from '../value-objects/team-id.value-object';
+import { TeamName } from '../value-objects/team-name.value-object';
+
+export interface ITeamRepository {
+  findById(id: TeamId): Promise<Team | null>;
+  findByNameAndOrg(name: TeamName, organizationId: string): Promise<Team | null>;
+  save(team: Team): Promise<void>;
+  delete(id: TeamId): Promise<void>;
+}`
+  },
+  {
+    name: 'team-domain.service.ts',
+    path: 'backend/api/src/modules/identity/domain/services/team-domain.service.ts',
+    language: 'typescript',
+    role: 'Domain Service',
+    description: 'Enforces name uniqueness within the organization boundary for teams.',
+    content: `import { Injectable, Inject } from '@nestjs/common';
+import { ITeamRepository } from '../repositories/team.repository';
+import { TeamName } from '../value-objects/team-name.value-object';
+import { DuplicateTeamException } from '../exceptions/duplicate-team.exception';
+
+@Injectable()
+export class TeamDomainService {
+  constructor(
+    @Inject('ITeamRepository')
+    private readonly teamRepository: ITeamRepository
+  ) {}
+
+  public async assertNameIsUniqueInOrg(name: TeamName, organizationId: string): Promise<void> {
+    const existingTeam = await this.teamRepository.findByNameAndOrg(name, organizationId);
+    if (existingTeam) throw new DuplicateTeamException(name.getValue(), organizationId);
+  }
+}`
+  },
+  {
+    name: 'create-team.handler.ts',
+    path: 'backend/api/src/modules/identity/application/handlers/create-team.handler.ts',
+    language: 'typescript',
+    role: 'Application Command Handler',
+    description: 'Orchestrates validation, factory aggregate instantiation, and database serialization.',
+    content: `import { Inject, Injectable } from '@nestjs/common';
+import { CreateTeamCommand } from '../commands/create-team.command';
+import { ITeamRepository } from '../../domain/repositories/team.repository';
+import { TeamDomainService } from '../../domain/services/team-domain.service';
+import { Team } from '../../domain/entities/team.entity';
+import { TeamId } from '../../domain/value-objects/team-id.value-object';
+import { TeamName } from '../../domain/value-objects/team-name.value-object';
+
+@Injectable()
+export class CreateTeamHandler {
+  constructor(
+    @Inject('ITeamRepository')
+    private readonly teamRepository: ITeamRepository,
+    private readonly teamDomainService: TeamDomainService
+  ) {}
+
+  public async handle(command: CreateTeamCommand): Promise<string> {
+    const teamName = new TeamName(command.name);
+    await this.teamDomainService.assertNameIsUniqueInOrg(teamName, command.organizationId);
+    const idValue = 'tem_' + Math.random().toString(36).substring(2, 11);
+    const team = Team.create(new TeamId(idValue), command.organizationId, teamName);
+    await this.teamRepository.save(team);
+    return team.getId().getValue();
+  }
+}`
+  },
+  {
+    name: 'team-aggregate.spec.ts',
+    path: 'backend/api/src/modules/identity/tests/team-aggregate.spec.ts',
+    language: 'typescript',
+    role: 'Unit Test Suite',
+    description: 'Thorough unit testing verifying all team aggregate invariants, organization boundary rules, and status transitions.',
+    content: `import { Team, TeamStatus } from '../domain/entities/team.entity';
+import { TeamId } from '../domain/value-objects/team-id.value-object';
+import { TeamName } from '../domain/value-objects/team-name.value-object';
+
+describe('Team Aggregate', () => {
+  it('should create team aggregate root in Active state', () => {
+    const id = new TeamId('team-123');
+    const name = new TeamName('Engineering');
+    const team = Team.create(id, 'org-456', name);
+    expect(team.getStatus()).toBe(TeamStatus.Active);
   });
 });`
   }

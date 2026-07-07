@@ -30,6 +30,12 @@ import { MembershipDomainService } from './domain/services/membership-domain.ser
 import { CreateMembershipHandler } from './application/handlers/create-membership.handler';
 import { PrismaMembershipRepository } from './infrastructure/persistence/prisma/repositories/prisma-membership.repository';
 
+// Team aggregate components
+import { TeamApplicationService } from './application/services/team-application.service';
+import { TeamDomainService } from './domain/services/team-domain.service';
+import { CreateTeamHandler } from './application/handlers/create-team.handler';
+import { PrismaTeamRepository } from './infrastructure/persistence/prisma/repositories/prisma-team.repository';
+
 @Module({
   imports: [],
   controllers: [IdentityController],
@@ -74,6 +80,14 @@ import { PrismaMembershipRepository } from './infrastructure/persistence/prisma/
       provide: 'IMembershipRepository',
       useClass: PrismaMembershipRepository,
     },
+    // Team aggregate providers
+    TeamApplicationService,
+    TeamDomainService,
+    CreateTeamHandler,
+    {
+      provide: 'ITeamRepository',
+      useClass: PrismaTeamRepository,
+    },
   ],
   exports: [
     IdentityApplicationService,
@@ -86,6 +100,8 @@ import { PrismaMembershipRepository } from './infrastructure/persistence/prisma/
     TenantDomainService,
     MembershipApplicationService,
     MembershipDomainService,
+    TeamApplicationService,
+    TeamDomainService,
   ],
 })
 export class IdentityModule {}
