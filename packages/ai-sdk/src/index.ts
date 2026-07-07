@@ -11,9 +11,7 @@ export * from './routing/model-router.js';
 export * from './routing/routing-policy.js';
 
 // Prompts
-export * from './prompts/prompt-template.js';
-export * from './prompts/prompt-version.js';
-export * from './prompts/prompt-registry.js';
+export * from './prompts/index.js';
 
 // Safety
 export * from './safety/safety-policy.js';

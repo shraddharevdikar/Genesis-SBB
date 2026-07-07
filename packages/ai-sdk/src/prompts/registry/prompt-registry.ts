@@ -1,4 +1,5 @@
-import { PromptTemplate } from './prompt-template.js';
+import { PromptTemplate } from '../templates/prompt-template.js';
+import { PromptVersion } from '../versions/prompt-version.js';
 
 export class PromptRegistry {
   private readonly templates = new Map<string, PromptTemplate>();
@@ -20,6 +21,11 @@ export class PromptRegistry {
       throw new Error(`Prompt template with id ${id} is not registered.`);
     }
     return template;
+  }
+
+  public resolveActiveVersion(promptId: string): PromptVersion {
+    const template = this.getRequired(promptId);
+    return template.activeVersion;
   }
 
   public list(): PromptTemplate[] {

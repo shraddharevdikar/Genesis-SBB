@@ -1,28 +1,29 @@
 import { TicketDetails, FileNode, FutureTicket } from './types';
 
 export const ticketDetails: TicketDetails = {
-  id: 'GEN-AI-002',
-  title: 'AI Provider Registry & Factory',
+  id: 'GEN-AI-003',
+  title: 'Prompt Management System',
   status: 'DONE',
   priority: 'CRITICAL',
   author: 'SBB Principal Architect',
   assignee: 'shraddha.revdikar@gmail.com',
-  objective: 'Build the provider management infrastructure for the AI Gateway including registration, health tracking, and capability negotiation.',
-  modulePath: 'packages/ai-sdk/src/providers/registry/provider-registry.ts',
+  objective: 'Build the enterprise Prompt Management System for the SBB Platform to manage prompts as governed platform assets.',
+  modulePath: 'packages/ai-sdk/src/prompts/registry/prompt-registry.ts',
   requirements: [
-    'Create dynamic ProviderRegistry supporting registration, deletion, and retrieval of providers and descriptors.',
-    'Formulate ProviderDescriptor holding ID, Name, Version, Capabilities, Status, Region, Priority, and CostTier.',
-    'Build multi-mode Capability model supporting Chat, Reasoning, Embedding, Image, Vision, Audio, Speech, and Code.',
-    'Establish extensible ProviderFactory with dependency-injection hooks for instantiation from configs.',
-    'Implement ProviderResolver utilizing status filtering, regional affinity, cost preference, and priority weights.',
-    'Define ProviderHealthStatus enum (Healthy, Degraded, Offline, Maintenance) and health monitoring interfaces.',
-    'Construct event specifications (ProviderRegistered, ProviderRemoved, ProviderHealthChanged) for registry-wide updates.'
+    'Create structured PromptTemplate containing PromptId, Name, Category, Purpose, Capability, Variables, and Metadata.',
+    'Formulate immutable PromptVersion model supporting Draft, Review, Approved, Active, Deprecated, and Archived statuses.',
+    'Build dynamic PromptRegistry supporting template registration, lookups, and active version resolution.',
+    'Define formal approval contracts including Reviewer, Status, ApprovedAt, and Comments.',
+    'Construct prompt metadata tracking Owner, Team, Module, Tags, and Supported Providers/Capabilities.',
+    'Define reusable PromptVariable model holding Name, Type, Required flag, and Default value.',
+    'Implement A/B testing experiment contracts tracking variants, traffic allocations, and runtime statuses.',
+    'Establish event contract schemas for PromptCreated, PromptPublished, and PromptDeprecated transitions.'
   ],
   responsibilities: [
-    { title: 'Dynamic Provider Registry', description: 'Handles registration, removal, listing, and capability lookup for AI providers.', status: 'Completed & Verified' },
-    { title: 'Capability Negotiation', description: 'Supports standard cap tags such as Chat, Reasoning, Vision, Audio, and Speech.', status: 'Completed & Verified' },
-    { title: 'Factory and Prioritized Resolver', description: 'Initializes and dynamically routes to the best healthy provider matching criteria.', status: 'Completed & Verified' },
-    { title: 'Health & Events Models', description: 'Tracks provider status states and standardizes event models for telemetry updates.', status: 'Completed & Verified' }
+    { title: 'Dynamic Prompt Registry', description: 'Supports registering templates, looking up prompts, and resolving active versions.', status: 'Completed & Verified' },
+    { title: 'Prompt Versioning & Governance', description: 'Structures immutable versions, life-cycle states, and review approvals.', status: 'Completed & Verified' },
+    { title: 'A/B Experimentation Contracts', description: 'Specifies variant splits, allocation weights, and experimentation statuses.', status: 'Completed & Verified' },
+    { title: 'Metadata & Variable Models', description: 'Standardizes dynamic template variables, owners, tags, and target capabilities.', status: 'Completed & Verified' }
   ]
 };
 
