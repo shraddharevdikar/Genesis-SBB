@@ -1,28 +1,28 @@
 import { TicketDetails, FileNode, FutureTicket } from './types';
 
 export const ticketDetails: TicketDetails = {
-  id: 'GEN-PLATFORM-001',
-  title: 'API Gateway & Request Pipeline Foundation',
+  id: 'GEN-PLATFORM-002',
+  title: 'Global Error Model & Problem Details Foundation',
   status: 'DONE',
   priority: 'CRITICAL',
   author: 'SBB Principal Architect',
   assignee: 'shraddha.revdikar@gmail.com',
-  objective: 'Create the shared API infrastructure, request/response pipeline, standardized error handlers, health probes, and API Swagger configs.',
-  modulePath: 'backend/api/src/modules/platform/',
+  objective: 'Create a single platform-wide immutable error handling model (Problem Details, exception mapping, error catalog, categories) for every SBB module.',
+  modulePath: 'backend/api/src/modules/platform/errors/',
   requirements: [
-    'Create global Exception Filters to map application exceptions into standard error envelopes.',
-    'Build inbound Middlewares for Correlation ID assignment, request timing headers, and request logging.',
-    'Implement a standard success response wrapping Interceptor.',
-    'Provide placeholder Interceptors for platform metrics and audit hooks.',
-    'Create the HealthModule with /health, /health/ready, and /health/live checkpoints.',
-    'Bootstrap Swagger OpenAPI document configurations.',
-    'Incorporate standard ZodValidationPipes for request validation.'
+    'Create base immutable AppError hierarchy (category, statusCode, correlationId, details, timestamp).',
+    'Define standard error categories (Validation, Authentication, Authorization, Business, Infrastructure, External, AI, Unknown).',
+    'Expose RFC 9457 compliant Problem Details response model (type, title, status, detail, instance, code, correlationId, timestamp).',
+    'Build robust ErrorMapper translating standard NestJS exceptions, native Errors, and AppErrors to ProblemDetails.',
+    'Create central Error Catalog specifying standardized error codes (IDENTITY_001, AUTH_001, AUTHZ_001, PLATFORM_001, AI_001, CRM_001).',
+    'Update GlobalExceptionFilter to emit RFC 9457 compliant ProblemDetails on all unhandled exceptions.',
+    'Verify compilation with robust unit tests for error hierarchy and mapping pipelines.'
   ],
   responsibilities: [
-    { title: 'Global Filters & Response Envelopes', description: 'Implements global ExceptionFilter and ResponseTransformInterceptor ensuring predictable execution envelopes.', status: 'Completed & Verified' },
-    { title: 'Inbound Middlewares & Decorators', description: 'Applies request logging, high-resolution response timing headers, and automatic correlation/request ID generation.', status: 'Completed & Verified' },
-    { title: 'Health Modules & Probes', description: 'Wires up multiple health status checks (/health, /health/ready, /health/live) as standard platform routing checkpoints.', status: 'Completed & Verified' },
-    { title: 'OpenAPI Swagger & Pipes', description: 'Sets up Swagger DocumentBuilder and mounts custom Zod-validation pipeline filters for schema assertion.', status: 'Completed & Verified' }
+    { title: 'Base Error Hierarchy & Categories', description: 'Creates immutable, serializable AppError subclasses with comprehensive timestamps and category tracking.', status: 'Completed & Verified' },
+    { title: 'Standardized Error Catalog', description: 'Establishes central ErrorCode and ErrorCategory catalogs inside shared SBB package definitions.', status: 'Completed & Verified' },
+    { title: 'RFC 9457 Problem Details', description: 'Designs compliant ProblemDetails model containing type URIs, HTTP status codes, correlation IDs, and specific instances.', status: 'Completed & Verified' },
+    { title: 'Error Mapper & Global Filter', description: 'Integrates bidirectional Exception-to-ProblemDetails translation logic into the global NestJS exception pipeline.', status: 'Completed & Verified' }
   ]
 };
 

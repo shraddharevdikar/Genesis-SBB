@@ -1,6 +1,6 @@
-import { ExceptionFilter, Catch, ArgumentsHost, HttpException, HttpStatus, Logger } from '@nestjs/common';
+import { ExceptionFilter, Catch, ArgumentsHost, Logger } from '@nestjs/common';
 import { Response } from 'express';
-import { AppError } from '@sbb/shared';
+import { ErrorMapper } from '../errors/error-mapper.js';
 
 @Catch()
 export class GlobalExceptionFilter implements ExceptionFilter {
@@ -12,80 +12,20 @@ export class GlobalExceptionFilter implements ExceptionFilter {
     const request = ctx.getRequest<any>();
 
     const correlationId = request.correlationId || request.traceId || 'unknown';
-    const timestamp = new Date().toISOString();
+    const instance = request.url || request.originalUrl || 'unknown';
 
-    let status = HttpStatus.INTERNAL_SERVER_ERROR;
-    let code = 'INTERNAL_SERVER_ERROR';
-    let message = 'An unexpected error occurred on the platform';
-    let details: any = undefined;
+    // Map incoming exception to a standard AppError
+    const appError = ErrorMapper.toAppError(exception, correlationId);
 
-    if (exception instanceof AppError) {
-      status = exception.statusCode;
-      code = this.getErrorCodeFromClassName(exception.name);
-      message = exception.message;
-      details = exception.details;
-    } else if (exception instanceof HttpException) {
-      status = exception.getStatus();
-      const responseBody = exception.getResponse();
-      message = exception.message;
-      code = this.getErrorCodeFromStatus(status);
-
-      if (typeof responseBody === 'object' && responseBody !== null) {
-        if ('message' in responseBody) {
-          message = Array.isArray((responseBody as any).message)
-            ? (responseBody as any).message.join(', ')
-            : String((responseBody as any).message);
-        }
-        if ('error' in responseBody) {
-          code = String((responseBody as any).error).toUpperCase().replace(/\s+/g, '_');
-        }
-      }
-    } else if (exception instanceof Error) {
-      message = exception.message;
-      code = this.getErrorCodeFromClassName(exception.constructor.name);
-    }
+    // Convert AppError to standard RFC 9457 Problem Details
+    const problemDetails = ErrorMapper.toProblemDetails(appError, instance);
 
     this.logger.error(
-      `[${request.method}] ${request.url} - Error Code: ${code} - Message: ${message} - CorrelationId: ${correlationId}`,
+      `[${request.method || 'UNKNOWN'}] ${instance} - Error Code: ${problemDetails.code} - Title: ${problemDetails.title} - Detail: ${problemDetails.detail} - CorrelationId: ${correlationId}`,
       exception instanceof Error ? exception.stack : undefined
     );
 
-    response.status(status).json({
-      success: false,
-      error: {
-        code,
-        message,
-        ...(details ? { details } : {}),
-      },
-      correlationId,
-      timestamp,
-    });
-  }
-
-  private getErrorCodeFromClassName(className: string): string {
-    return className
-      .replace(/Exception$/, '')
-      .replace(/Error$/, '')
-      .replace(/([a-z0-9])([A-Z])/g, '$1_$2')
-      .toUpperCase();
-  }
-
-  private getErrorCodeFromStatus(status: number): string {
-    switch (status) {
-      case HttpStatus.BAD_REQUEST:
-        return 'BAD_REQUEST';
-      case HttpStatus.UNAUTHORIZED:
-        return 'UNAUTHORIZED';
-      case HttpStatus.FORBIDDEN:
-        return 'FORBIDDEN';
-      case HttpStatus.NOT_FOUND:
-        return 'NOT_FOUND';
-      case HttpStatus.CONFLICT:
-        return 'CONFLICT';
-      case HttpStatus.UNPROCESSABLE_ENTITY:
-        return 'UNPROCESSABLE_ENTITY';
-      default:
-        return 'INTERNAL_SERVER_ERROR';
-    }
+    // Return the Problem Details response directly
+    response.status(problemDetails.status).json(problemDetails);
   }
 }

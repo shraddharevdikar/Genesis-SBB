@@ -148,7 +148,7 @@ describe('API Gateway & Request Pipeline Foundation', () => {
   });
 
   describe('GlobalExceptionFilter', () => {
-    it('should map standard AppError to normalized error JSON response', () => {
+    it('should map standard AppError to normalized ProblemDetails response', () => {
       const filter = new GlobalExceptionFilter();
       const res: any = {
         status: jest.fn().mockReturnThis(),
@@ -172,12 +172,14 @@ describe('API Gateway & Request Pipeline Foundation', () => {
       expect(res.status).toHaveBeenCalledWith(404);
       expect(res.json).toHaveBeenCalledWith(
         expect.objectContaining({
-          success: false,
-          error: {
-            code: 'APP',
-            message: 'Sample NotFound error',
-          },
+          type: 'https://sbb.platform/errors/platform-001',
+          title: 'Internal Platform Error',
+          status: 404,
+          detail: 'Sample NotFound error',
+          instance: '/test-error',
+          code: 'PLATFORM_001',
           correlationId: 'err_corr_1',
+          timestamp: expect.any(String),
         })
       );
     });
