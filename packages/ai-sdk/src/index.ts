@@ -1,7 +1,5 @@
 // Providers
-export * from './providers/ai-provider.js';
-export * from './providers/provider-registry.js';
-export * from './providers/provider-factory.js';
+export * from './providers/index.js';
 
 // Gateway
 export * from './gateway/ai-gateway.js';

@@ -1,6 +1,6 @@
 import { AIRequest } from './ai-request.js';
 import { AIResponse } from './ai-response.js';
-import { ProviderRegistry } from '../providers/provider-registry.js';
+import { ProviderRegistry } from '../providers/index.js';
 import { ModelRouter, DefaultModelRouter } from '../routing/model-router.js';
 import { SafetyPolicy, SafetyPolicyEvaluator } from '../safety/safety-policy.js';
 import { AITelemetry } from '../telemetry/ai-telemetry.js';

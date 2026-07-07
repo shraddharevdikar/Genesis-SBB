@@ -1,4 +1,4 @@
-import { ChatMessage } from '../providers/ai-provider.js';
+import { ChatMessage } from '../providers/index.js';
 
 export interface AIRequest {
   readonly id: string;

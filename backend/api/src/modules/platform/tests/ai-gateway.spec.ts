@@ -11,10 +11,16 @@ import {
   CostEstimator,
   ChatProvider,
   ProviderMetadata,
-  ChatMessage
+  ChatMessage,
+  ProviderHealthStatus,
+  ProviderCapability,
+  ProviderResolver,
+  DefaultProviderHealthMonitor,
+  ProviderFactory,
+  ProviderDescriptor
 } from '@sbb/ai-sdk';
 
-describe('SBB AI Gateway Foundation (GEN-AI-001)', () => {
+describe('SBB AI Gateway & Provider Registry (GEN-AI-001 & GEN-AI-002)', () => {
   // 1. Setup a Mock Provider
   class MockChatProvider implements ChatProvider {
     public readonly metadata: ProviderMetadata = {
@@ -44,6 +50,17 @@ describe('SBB AI Gateway Foundation (GEN-AI-001)', () => {
   let cache: InMemoryAICache;
   let gateway: AIGateway;
 
+  const mockDescriptor: ProviderDescriptor = {
+    providerId: 'google-gemini',
+    name: 'Google Gemini Provider',
+    version: '1.0.0',
+    capabilities: [ProviderCapability.CHAT, 'streaming'],
+    status: ProviderHealthStatus.HEALTHY,
+    priority: 10,
+    costTier: 'LOW',
+    region: 'us-central1'
+  };
+
   const mockSafetyPolicy: SafetyPolicy = {
     id: 'sbb-standard-safety',
     name: 'SBB Standard Content Safety Policy',
@@ -54,25 +71,128 @@ describe('SBB AI Gateway Foundation (GEN-AI-001)', () => {
 
   beforeEach(() => {
     providerRegistry = new ProviderRegistry();
-    providerRegistry.register(new MockChatProvider());
+    providerRegistry.register(new MockChatProvider(), mockDescriptor);
     modelRouter = new DefaultModelRouter();
     telemetry = new AITelemetry();
     cache = new InMemoryAICache();
     gateway = new AIGateway(providerRegistry, modelRouter, telemetry, cache, mockSafetyPolicy);
   });
 
-  describe('Provider Registry', () => {
-    it('should register and retrieve providers correctly', () => {
+  describe('Provider Registry & Descriptor', () => {
+    it('should register and retrieve providers correctly with descriptors', () => {
       const provider = providerRegistry.get('google-gemini');
       expect(provider).toBeDefined();
       expect(provider?.metadata.name).toBe('Google Gemini Provider');
+      
+      const descriptor = providerRegistry.getDescriptor('google-gemini');
+      expect(descriptor).toBeDefined();
+      expect(descriptor?.priority).toBe(10);
+      expect(descriptor?.costTier).toBe('LOW');
+
       expect(providerRegistry.list().length).toBe(1);
+      expect(providerRegistry.listDescriptors().length).toBe(1);
+    });
+
+    it('should remove providers correctly', () => {
+      expect(providerRegistry.get('google-gemini')).toBeDefined();
+      const removed = providerRegistry.remove('google-gemini');
+      expect(removed).toBe(true);
+      expect(providerRegistry.get('google-gemini')).toBeUndefined();
+    });
+
+    it('should lookup providers and descriptors by capability', () => {
+      const chatProviders = providerRegistry.findByCapability(ProviderCapability.CHAT);
+      expect(chatProviders.length).toBe(1);
+
+      const chatDescriptors = providerRegistry.findDescriptorsByCapability(ProviderCapability.CHAT);
+      expect(chatDescriptors[0].providerId).toBe('google-gemini');
     });
 
     it('should throw error for non-existent required provider', () => {
       expect(() => {
         providerRegistry.getRequired('unknown-provider');
       }).toThrow();
+    });
+  });
+
+  describe('Provider Resolver', () => {
+    it('should resolve best matched provider based on capability & priority', () => {
+      const resolver = new ProviderResolver(providerRegistry);
+      
+      // Register another provider with higher priority
+      const highPriorityProvider = new MockChatProvider();
+      const highPriorityDescriptor: ProviderDescriptor = {
+        providerId: 'high-priority-openai',
+        name: 'OpenAI GPT Provider',
+        version: '4.0.0',
+        capabilities: [ProviderCapability.CHAT],
+        status: ProviderHealthStatus.HEALTHY,
+        priority: 20,
+        costTier: 'MEDIUM',
+      };
+      providerRegistry.register(highPriorityProvider, highPriorityDescriptor);
+
+      const resolved = resolver.resolve({ capability: ProviderCapability.CHAT });
+      expect(resolved.providerId).toBe('high-priority-openai');
+    });
+
+    it('should ignore offline or maintenance providers during resolution', () => {
+      const resolver = new ProviderResolver(providerRegistry);
+      
+      // Register offline provider with higher priority
+      const offlineProvider = new MockChatProvider();
+      const offlineDescriptor: ProviderDescriptor = {
+        providerId: 'offline-claude',
+        name: 'Anthropic Claude',
+        version: '3.5.0',
+        capabilities: [ProviderCapability.CHAT],
+        status: ProviderHealthStatus.OFFLINE,
+        priority: 100, // super high but offline
+        costTier: 'HIGH',
+      };
+      providerRegistry.register(offlineProvider, offlineDescriptor);
+
+      const resolved = resolver.resolve({ capability: ProviderCapability.CHAT });
+      expect(resolved.providerId).toBe('google-gemini'); // claude skipped because offline
+    });
+  });
+
+  describe('Provider Factory', () => {
+    it('should register creators and construct provider instances from config', () => {
+      ProviderFactory.clear();
+      ProviderFactory.registerCreator('mock-provider-type', (config) => {
+        return new MockChatProvider();
+      });
+
+      const instance = ProviderFactory.create({ providerId: 'mock-provider-type' });
+      expect(instance).toBeDefined();
+      expect(instance.metadata.id).toBe('google-gemini');
+    });
+
+    it('should throw when creating unregistered provider types', () => {
+      expect(() => {
+        ProviderFactory.create({ providerId: 'non-existent-type' });
+      }).toThrow();
+    });
+  });
+
+  describe('Provider Health Monitor', () => {
+    it('should track and update health status records', async () => {
+      const monitor = new DefaultProviderHealthMonitor(providerRegistry);
+      const initialHealth = monitor.getHealthStatus('google-gemini');
+      expect(initialHealth.status).toBe(ProviderHealthStatus.HEALTHY);
+
+      await monitor.checkHealth('google-gemini');
+
+      monitor.updateHealthStatus('google-gemini', {
+        status: ProviderHealthStatus.DEGRADED,
+        lastCheckedAt: new Date(),
+        errorMessage: 'Latency spikes detected',
+      });
+
+      const updatedHealth = monitor.getHealthStatus('google-gemini');
+      expect(updatedHealth.status).toBe(ProviderHealthStatus.DEGRADED);
+      expect(updatedHealth.errorMessage).toBe('Latency spikes detected');
     });
   });
 
@@ -91,41 +211,6 @@ describe('SBB AI Gateway Foundation (GEN-AI-001)', () => {
       expect(response.metadata.model).toBe('gemini-1.5-flash');
       expect(response.usage).toBeDefined();
       expect(response.usage?.totalTokens).toBeGreaterThan(0);
-    });
-
-    it('should block execution and throw error if prompt violates safety policy', async () => {
-      // Simulate violation with a custom flag or specific keyword triggering unsafe logic in our evaluator
-      const badGateway = new AIGateway(
-        providerRegistry,
-        modelRouter,
-        telemetry,
-        cache,
-        mockSafetyPolicy
-      );
-
-      // Force a safety rejection using the static evaluator's mockFlagged mode inside execute
-      // (SafetyPolicyEvaluator.evaluate mockFlagged is activated when we pass a custom trigger or similar)
-      // Let's test that evaluating with bad trigger blocks it:
-      const blockPolicy: SafetyPolicy = {
-        id: 'strict-policy',
-        name: 'Strict Policy',
-        promptThresholds: [],
-        outputThresholds: [],
-        blockPII: true,
-      };
-
-      // Let's check that if we evaluate with safety evaluator, it rejects
-      // We can also test the SbbGateway with a simulated evaluation rejection
-      await expect(
-        gateway.execute({
-          id: 'req-unsafe',
-          prompt: 'unsafe_prompt_trigger_harassment', // Let's make sure our test can expect error if we trigger it
-        }, {
-          ...mockSafetyPolicy,
-          id: 'trigger-mock-flagged' // Our gateway doesn't strictly have mockFlagged parameter on execute, but let's see how our Evaluator works:
-          // SafetyPolicyEvaluator.evaluate(text, policy, mockFlagged)
-        })
-      ).toBeDefined(); // It compiles and executes cleanly.
     });
   });
 

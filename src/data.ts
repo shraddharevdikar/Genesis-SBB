@@ -1,29 +1,28 @@
 import { TicketDetails, FileNode, FutureTicket } from './types';
 
 export const ticketDetails: TicketDetails = {
-  id: 'GEN-AI-001',
-  title: 'AI Gateway Foundation',
+  id: 'GEN-AI-002',
+  title: 'AI Provider Registry & Factory',
   status: 'DONE',
   priority: 'CRITICAL',
   author: 'SBB Principal Architect',
   assignee: 'shraddha.revdikar@gmail.com',
-  objective: 'Build the foundational AI Gateway that every AI capability in the SBB Platform will use.',
-  modulePath: 'packages/ai-sdk/src/gateway/ai-gateway.ts',
+  objective: 'Build the provider management infrastructure for the AI Gateway including registration, health tracking, and capability negotiation.',
+  modulePath: 'packages/ai-sdk/src/providers/registry/provider-registry.ts',
   requirements: [
-    'Create provider interfaces only (AIProvider, ChatProvider, EmbeddingProvider, ImageProvider, AudioProvider)',
-    'Create AIGateway with resolve provider, resolve model, apply policies, return response and caching support',
-    'Create ModelRouter supporting future routing based on Tenant, Cost, Capability, Latency, Region',
-    'Create prompt management abstractions (PromptTemplate, PromptVersion, PromptRegistry)',
-    'Create safety abstractions for Moderation, Content Safety, Prompt Safety, Output Safety',
-    'Create cost tracking (TokenUsage, CostEstimate) and cost estimator contracts',
-    'Create in-memory AICache support and stream response contracts',
-    'Create AITelemetry tracking Request, Provider, Model, Tokens, Duration'
+    'Create dynamic ProviderRegistry supporting registration, deletion, and retrieval of providers and descriptors.',
+    'Formulate ProviderDescriptor holding ID, Name, Version, Capabilities, Status, Region, Priority, and CostTier.',
+    'Build multi-mode Capability model supporting Chat, Reasoning, Embedding, Image, Vision, Audio, Speech, and Code.',
+    'Establish extensible ProviderFactory with dependency-injection hooks for instantiation from configs.',
+    'Implement ProviderResolver utilizing status filtering, regional affinity, cost preference, and priority weights.',
+    'Define ProviderHealthStatus enum (Healthy, Degraded, Offline, Maintenance) and health monitoring interfaces.',
+    'Construct event specifications (ProviderRegistered, ProviderRemoved, ProviderHealthChanged) for registry-wide updates.'
   ],
   responsibilities: [
-    { title: 'Provider Contracts', description: 'Standardized interfaces (AIProvider, ChatProvider, EmbeddingProvider, etc.) implemented by adapters.', status: 'Completed & Verified' },
-    { title: 'AI Gateway Engine', description: 'Orchestrates safety policies, model routing, caching, and telemetry updates.', status: 'Completed & Verified' },
-    { title: 'Prompt Management', description: 'Clean structures for compiling dynamic prompts with template variable interpolation.', status: 'Completed & Verified' },
-    { title: 'Content Safety & Moderation', description: 'Evaluators and score thresholds to filter out harmful or non-compliant content.', status: 'Completed & Verified' }
+    { title: 'Dynamic Provider Registry', description: 'Handles registration, removal, listing, and capability lookup for AI providers.', status: 'Completed & Verified' },
+    { title: 'Capability Negotiation', description: 'Supports standard cap tags such as Chat, Reasoning, Vision, Audio, and Speech.', status: 'Completed & Verified' },
+    { title: 'Factory and Prioritized Resolver', description: 'Initializes and dynamically routes to the best healthy provider matching criteria.', status: 'Completed & Verified' },
+    { title: 'Health & Events Models', description: 'Tracks provider status states and standardizes event models for telemetry updates.', status: 'Completed & Verified' }
   ]
 };
 

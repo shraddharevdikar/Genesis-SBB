@@ -1,18 +1,20 @@
-import { AIProvider } from './ai-provider.js';
+import { AIProvider } from '../contracts/ai-provider.js';
 
 export interface ProviderConfig {
-  providerId: string;
-  apiKey?: string;
-  endpoint?: string;
-  options?: Record<string, any>;
+  readonly providerId: string;
+  readonly apiKey?: string;
+  readonly endpoint?: string;
+  readonly options?: Record<string, any>;
 }
 
+export type ProviderCreator = (config: ProviderConfig) => AIProvider;
+
 export class ProviderFactory {
-  private static readonly creators = new Map<string, (config: ProviderConfig) => AIProvider>();
+  private static readonly creators = new Map<string, ProviderCreator>();
 
   public static registerCreator(
     providerId: string,
-    creator: (config: ProviderConfig) => AIProvider
+    creator: ProviderCreator
   ): void {
     this.creators.set(providerId, creator);
   }
@@ -23,5 +25,9 @@ export class ProviderFactory {
       throw new Error(`No provider creator registered for providerId: ${config.providerId}`);
     }
     return creator(config);
+  }
+
+  public static clear(): void {
+    this.creators.clear();
   }
 }
