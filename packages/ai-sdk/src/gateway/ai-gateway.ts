@@ -2,7 +2,7 @@ import { AIRequest } from './ai-request.js';
 import { AIResponse } from './ai-response.js';
 import { ProviderRegistry } from '../providers/index.js';
 import { ModelRouter, DefaultModelRouter } from '../routing/index.js';
-import { SafetyPolicy, SafetyPolicyEvaluator } from '../safety/safety-policy.js';
+import { SafetyPolicy, SafetyPolicyEvaluator } from '../safety/index.js';
 import { AITelemetry } from '../telemetry/ai-telemetry.js';
 import { AICache, InMemoryAICache } from '../cache/ai-cache.js';
 

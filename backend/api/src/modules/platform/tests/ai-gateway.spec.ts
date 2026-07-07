@@ -23,7 +23,15 @@ import {
   DefaultProviderSelector,
   DefaultModelSelector,
   RoutingEngine,
-  FallbackStrategy
+  FallbackStrategy,
+  SafetyPolicyRegistry,
+  RiskLevel,
+  SafetyCategory,
+  DefaultSafetyClassifier,
+  DefaultModerationEngine,
+  DefaultPromptValidator,
+  DefaultInputValidator,
+  DefaultOutputValidator
 } from '@sbb/ai-sdk';
 
 describe('SBB AI Gateway & Provider Registry (GEN-AI-001 & GEN-AI-002)', () => {
@@ -345,6 +353,81 @@ describe('SBB AI Gateway & Provider Registry (GEN-AI-001 & GEN-AI-002)', () => {
       expect(fallback.getPrimaryProviderId()).toBe('google-gemini');
       expect(fallback.getSecondaryProviderId()).toBe('openai');
       expect(fallback.getRetryPolicy().maxAttempts).toBe(3);
+    });
+  });
+
+  describe('AI Safety & Moderation Framework (GEN-AI-005)', () => {
+    it('should define risk levels and safety categories correctly', () => {
+      expect(RiskLevel.CRITICAL).toBe('critical');
+      expect(RiskLevel.NONE).toBe('none');
+      expect(SafetyCategory.HATE).toBe('hate');
+      expect(SafetyCategory.PII).toBe('pii');
+    });
+
+    it('should support registering safety policies in PolicyRegistry', () => {
+      const registry = new SafetyPolicyRegistry();
+      const policy: SafetyPolicy = {
+        id: 'sbb-default-safety',
+        name: 'SBB Standard Safety Guardrails',
+        promptThresholds: [
+          { category: SafetyCategory.HATE, maxAllowedScore: 0.6 },
+          { category: SafetyCategory.HARASSMENT, maxAllowedScore: 0.6 },
+        ],
+        outputThresholds: [],
+        blockPII: true,
+      };
+
+      const descriptor = {
+        policyId: 'sbb-default-safety',
+        name: 'SBB Standard Safety Guardrails',
+        version: '1.0.0',
+        owner: 'SecOps',
+        team: 'AI Safety',
+        enabled: true,
+        policy,
+      };
+
+      registry.register(policy, descriptor);
+      expect(registry.get('sbb-default-safety')).toBe(policy);
+      expect(registry.getDescriptor('sbb-default-safety')?.owner).toBe('SecOps');
+    });
+
+    it('should process safety classifications and make moderation decisions', async () => {
+      const registry = new SafetyPolicyRegistry();
+      const mockClassifier = {
+        classify: async (content: string) => [
+          { category: SafetyCategory.HATE, riskLevel: RiskLevel.HIGH, confidence: 0.95, score: 0.85 }
+        ]
+      };
+
+      const engine = new DefaultModerationEngine(
+        registry,
+        mockClassifier,
+        new DefaultPromptValidator(),
+        new DefaultInputValidator(),
+        new DefaultOutputValidator()
+      );
+
+      const policy: SafetyPolicy = {
+        id: 'sbb-default-safety',
+        name: 'SBB Standard Safety Guardrails',
+        promptThresholds: [
+          { category: SafetyCategory.HATE, maxAllowedScore: 0.6 },
+        ],
+        outputThresholds: [],
+        blockPII: true,
+      };
+
+      const result = await engine.moderate({
+        id: 'test-mod-id',
+        content: 'some content',
+        type: 'input',
+        customPolicy: policy,
+      });
+
+      expect(result.safe).toBe(false);
+      expect(result.flaggedCategories).toContain(SafetyCategory.HATE);
+      expect(result.actionTaken).toBe('block');
     });
   });
 });

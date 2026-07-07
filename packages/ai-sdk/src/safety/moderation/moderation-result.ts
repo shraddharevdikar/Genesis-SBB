@@ -1,7 +1,11 @@
+import { SafetyCategory } from '../classification/safety-category.js';
+import { RiskLevel } from '../classification/risk-level.js';
+
 export interface SafetyCategoryScore {
-  readonly category: 'harassment' | 'hate_speech' | 'sexually_explicit' | 'dangerous_content' | 'pII' | string;
+  readonly category: SafetyCategory | string;
   readonly score: number; // 0.0 to 1.0
   readonly flagged: boolean;
+  readonly riskLevel?: RiskLevel;
 }
 
 export interface ModerationResult {
@@ -10,4 +14,5 @@ export interface ModerationResult {
   readonly scores: SafetyCategoryScore[];
   readonly flaggedCategories: string[];
   readonly summary?: string;
+  readonly actionTaken?: 'allow' | 'block' | 'human_review' | 'redact';
 }

@@ -1,29 +1,28 @@
 import { TicketDetails, FileNode, FutureTicket } from './types';
 
 export const ticketDetails: TicketDetails = {
-  id: 'GEN-AI-004',
-  title: 'Intelligent Model Router',
+  id: 'GEN-AI-005',
+  title: 'AI Safety & Moderation Framework',
   status: 'DONE',
   priority: 'CRITICAL',
   author: 'SBB Principal Architect',
   assignee: 'shraddha.revdikar@gmail.com',
-  objective: 'Build the intelligent routing engine that selects the optimal AI provider and model based on capabilities and policies.',
-  modulePath: 'packages/ai-sdk/src/routing/router/routing-engine.ts',
+  objective: 'Build the enterprise AI Safety & Moderation framework to govern every AI request and response across the SBB Platform.',
+  modulePath: 'packages/ai-sdk/src/safety/moderation/moderation-engine.ts',
   requirements: [
-    'Define strongly typed AICapabilities (Chat, Reasoning, Planning, Coding, Summarization, etc.).',
-    'Formulate TaskComplexity definitions (Low, Medium, High, Expert).',
-    'Create abstractions for Cost Policy, Latency Policy, Quality Policy, Region Policy, and Safety Policy.',
-    'Create provider selection contracts based on capability, health, cost tier, priority, and region.',
-    'Create model selection contracts so business modules never reference model strings directly.',
-    'Define comprehensive RoutingDecision encapsulating selected provider, model, confidence, cost, and latency estimations.',
-    'Establish FallbackStrategy tracking primary/secondary providers and retry policies.',
-    'Construct Event Schemas for RoutingCompleted and RoutingFailed transitions.'
+    'Create contracts for Input Policy, Output Policy, Prompt Policy, Tenant Policy, and Compliance Policy.',
+    'Build the central ModerationEngine coordinating validation, policy lookup, risk classification, and action resolution.',
+    'Define strongly typed risk levels (None, Low, Medium, High, Critical) and safety categories (Hate, Violence, Self-Harm, PII, etc.).',
+    'Establish extensible Prompt, Input, and Output validators.',
+    'Formulate human approval policy contracts tracking required reviewers, reasons, and escalations.',
+    'Establish PII, Secret, and Sensitive business data redaction/masking abstractions.',
+    'Construct Event Schemas for ModerationPassed, ModerationBlocked, and HumanReviewRequired transitions.'
   ],
   responsibilities: [
-    { title: 'AI Capability & Complexity', description: 'Supports standard capability tags and task complexity resource constraints.', status: 'Completed & Verified' },
-    { title: 'Routing Policies Contracts', description: 'Structures flexible cost, latency, quality, region, and safety policy parameters.', status: 'Completed & Verified' },
-    { title: 'Selection & Strategy Engines', description: 'Resolves providers and models using dynamic selector and robust fallback policies.', status: 'Completed & Verified' },
-    { title: 'Routing Decisions & Events', description: 'Outputs fully enriched routing decision payloads and tracks success/failure event records.', status: 'Completed & Verified' }
+    { title: 'Core Moderation Engine', description: 'Handles request validation, risk classification, and mitigation action determination.', status: 'Completed & Verified' },
+    { title: 'Modular Safety Policies', description: 'Structures safety thresholds, input/output limits, tenant constraints, and compliance properties.', status: 'Completed & Verified' },
+    { title: 'Redaction & Validator APIs', description: 'Provides extensible redaction of secrets, masking of PII, and custom content validation stubs.', status: 'Completed & Verified' },
+    { title: 'Governance & Event Schemas', description: 'Tracks human approval policies, reviewer decisions, and lifecycle event records.', status: 'Completed & Verified' }
   ]
 };
 

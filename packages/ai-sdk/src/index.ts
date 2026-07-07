@@ -13,8 +13,7 @@ export * from './routing/index.js';
 export * from './prompts/index.js';
 
 // Safety
-export * from './safety/safety-policy.js';
-export * from './safety/moderation-result.js';
+export * from './safety/index.js';
 
 // Cost
 export * from './cost/token-usage.js';
