@@ -1,6 +1,6 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { JwtTokenService } from '../../../infrastructure/jwt/jwt-token.service.js';
-import { IRefreshTokenRepository } from '../../../domain/repositories/refresh-token-repository.interface.js';
+import { JwtTokenService } from '../../infrastructure/jwt/jwt-token.service.js';
+import { IRefreshTokenRepository } from '../../domain/repositories/refresh-token-repository.interface.js';
 
 @Injectable()
 export class AuthenticationApplicationService {

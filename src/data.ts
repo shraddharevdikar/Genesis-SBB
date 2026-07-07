@@ -1,27 +1,28 @@
 import { TicketDetails, FileNode, FutureTicket } from './types';
 
 export const ticketDetails: TicketDetails = {
-  id: 'GEN-ID-007',
-  title: 'Authentication Service Foundation',
+  id: 'GEN-ID-008',
+  title: 'Authorization Foundation (RBAC + PBAC)',
   status: 'DONE',
   priority: 'CRITICAL',
   author: 'SBB Principal Architect',
   assignee: 'shraddha.revdikar@gmail.com',
-  objective: 'Design and implement a provider-based authentication architecture within the Identity / Authentication module using Domain-Driven Design (DDD).',
-  modulePath: 'backend/api/src/modules/authentication/',
+  objective: 'Design and implement the authorization foundation (RBAC + PBAC) within the Identity / Authorization module using Domain-Driven Design (DDD).',
+  modulePath: 'backend/api/src/modules/authorization/',
   requirements: [
-    'Create NestJS Authentication module structure with proper division into domain, application, infrastructure, and presentation layers.',
-    'Build Domain provider interfaces (AuthenticationProvider, PasswordAuthenticationProvider, OAuthAuthenticationProvider, PasskeyAuthenticationProvider).',
-    'Define DDD Domain events: UserAuthenticated, AuthenticationFailed, RefreshTokenIssued, PasswordChanged.',
-    'Expose application CQRS AuthenticateUserCommand, AuthenticateUserHandler, and AuthenticationApplicationService.',
-    'Establish mock infrastructure adapters including BcryptHashingService, JwtTokenService, and PasswordProvider.',
-    'Validate complete code correctness and test module compilation.'
+    'Create the Role, Permission, and Policy domain entities and Aggregate Roots.',
+    'Build value objects RoleId, PermissionId, and PolicyId supporting immutability and invariants.',
+    'Expose repository abstractions for RoleRepository, PermissionRepository, and PolicyRepository.',
+    'Define placeholder Domain Services: AuthorizationService and PolicyEvaluationService.',
+    'Establish JSON-style PBAC structure: Resource, Action, Effect, and Conditions.',
+    'Declare placeholder Domain Events: RoleCreated, PermissionGranted, PolicyCreated.',
+    'Build standard NestJS Authorization module structure and write an exhaustive unit test suite.'
   ],
   responsibilities: [
-    { title: 'Authentication Domain Providers', description: 'Implements abstract provider contracts (Password, OAuth, Passkey) and password strength policy checks.', status: 'Completed & Verified' },
-    { title: 'Domain Events & Exception Templates', description: 'Creates immutable events for key status changes and custom exceptions for invalid credentials or unsupported providers.', status: 'Completed & Verified' },
-    { title: 'Application CQRS Handlers', description: 'Wires up AuthenticateUserCommand, AuthenticateUserHandler orchestrator, and AuthenticationApplicationService helper.', status: 'Completed & Verified' },
-    { title: 'Mock Infrastructure Placeholders', description: 'Supplies mock adapter implementations of BcryptHashingService, JwtTokenService, and in-memory refresh token storage.', status: 'Completed & Verified' }
+    { title: 'Domain Entities & Value Objects', description: 'Defines Role, Permission, and Policy entities/aggregates and strong value object classes.', status: 'Completed & Verified' },
+    { title: 'Events & Exceptions', description: 'Fires events for role creation, permission grants, policy additions, and raises custom domain errors.', status: 'Completed & Verified' },
+    { title: 'CQRS Orchestrators & Services', description: 'Wires up AssignRoleCommand, AssignRoleHandler handler, and AuthorizationApplicationService wrapper.', status: 'Completed & Verified' },
+    { title: 'In-Memory Repository Adapters & Tests', description: 'Implements in-memory mock repositories and runs a complete unit test suite.', status: 'Completed & Verified' }
   ]
 };
 
