@@ -46,6 +46,9 @@ export class RequestContextMiddleware implements NestMiddleware {
       appVersion,
     });
 
+    const traceId = (req as any).traceId || 'trace_' + Math.random().toString(36).substring(2, 11);
+    const spanId = (req as any).spanId || 'span_' + Math.random().toString(36).substring(2, 11);
+
     // Populate contexts with default placeholders as per requirements
     const identityContext = new IdentityContext();
     const tenantContext = new TenantContext();
@@ -64,6 +67,8 @@ export class RequestContextMiddleware implements NestMiddleware {
       organization: organizationContext,
       client: clientContext,
       featureFlags: featureFlagContext,
+      traceId,
+      spanId,
     });
 
     // Bind PlatformContext instance to express request object for easy framework reference

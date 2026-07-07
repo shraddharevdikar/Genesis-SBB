@@ -48,4 +48,6 @@ export interface PlatformContextType {
   readonly organization?: OrganizationContextType;
   readonly client?: ClientContextType;
   readonly featureFlags?: FeatureFlagContextType;
+  readonly traceId?: string;
+  readonly spanId?: string;
 }

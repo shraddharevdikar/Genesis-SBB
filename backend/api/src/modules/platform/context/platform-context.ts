@@ -13,6 +13,8 @@ export class PlatformContext implements PlatformContextType {
   public readonly organization?: OrganizationContext;
   public readonly client?: ClientContext;
   public readonly featureFlags?: FeatureFlagContext;
+  public readonly traceId?: string;
+  public readonly spanId?: string;
 
   constructor(options: {
     request: RequestContext;
@@ -21,6 +23,8 @@ export class PlatformContext implements PlatformContextType {
     organization?: OrganizationContext;
     client?: ClientContext;
     featureFlags?: FeatureFlagContext;
+    traceId?: string;
+    spanId?: string;
   }) {
     this.request = options.request;
     this.identity = options.identity;
@@ -28,6 +32,8 @@ export class PlatformContext implements PlatformContextType {
     this.organization = options.organization;
     this.client = options.client;
     this.featureFlags = options.featureFlags;
+    this.traceId = options.traceId;
+    this.spanId = options.spanId;
     Object.freeze(this);
   }
 }

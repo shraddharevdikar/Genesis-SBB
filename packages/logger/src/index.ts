@@ -10,6 +10,8 @@ export * from './redaction.js';
 export * from './factory.js';
 export * from './child-logger.js';
 export * from './logger.js';
+export * from './structured-logger.js';
+export * from './logger-factory.js';
 
 let defaultLogger: SBBLogger | null = null;
 

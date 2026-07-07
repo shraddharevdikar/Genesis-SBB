@@ -1,27 +1,27 @@
 import { TicketDetails, FileNode, FutureTicket } from './types';
 
 export const ticketDetails: TicketDetails = {
-  id: 'GEN-PLATFORM-003',
-  title: 'Validation Pipeline & Platform Request Context',
+  id: 'GEN-PLATFORM-004',
+  title: 'Observability Foundation',
   status: 'DONE',
   priority: 'CRITICAL',
   author: 'SBB Principal Architect',
   assignee: 'shraddha.revdikar@gmail.com',
-  objective: 'Create the global validation pipeline and platform request context for the SBB Platform.',
-  modulePath: 'backend/api/src/modules/platform/context/',
+  objective: 'Establish the observability foundation for the SBB Platform. Create shared infrastructure for logging, metrics, tracing, audit hooks, and health monitoring.',
+  modulePath: 'packages/observability/',
   requirements: [
-    'Create platform context classes (platform-context, request-context, identity-context, tenant-context, organization-context, client-context, feature-flag-context).',
-    'Build PlatformContextProvider leveraging AsyncLocalStorage for read-only, framework-independent access to active request metadata.',
-    'Implement RequestContextMiddleware capturing Correlation ID, Request ID, Client IP, User Agent, Locale, and Timezone.',
-    'Create placeholder middlewares for LocaleMiddleware and FeatureFlagMiddleware.',
-    'Upgrade ZodValidationPipe to serve as both an explicit schema validator and a dynamic DTO-based validation adapter.',
-    'Expose common platform context contracts and the ZodValidatable interface through @sbb/shared.'
+    'Enhance the existing logger package with StructuredLogger, LoggerFactory, LogContext, and LogLevel.',
+    'Create trace contracts (trace-context, trace-provider, trace-span) with zero OpenTelemetry dependency.',
+    'Formulate metric contracts (Metric, Counter, Gauge, Histogram, Timer) for custom backend adapters.',
+    'Expose audit contracts (AuditEvent, AuditContext, AuditPublisher) without persistent storage baggage.',
+    'Extend Health Module and construct Database, Redis, AIProvider, Queue, and Storage health indicator placeholders.',
+    'Extend PlatformContext with read-only traceId and spanId properties.'
   ],
   responsibilities: [
-    { title: 'Platform Request Contexts', description: 'Creates fully immutable and serializable context classes mapping request, client, tenant, and identity state.', status: 'Completed & Verified' },
-    { title: 'Context Provider via AsyncLocalStorage', description: 'Leverages Node async hooks to expose active context values without leaking HTTP framework constructs.', status: 'Completed & Verified' },
-    { title: 'Pipelines & Adapter-based Validation', description: 'Provides a custom, dynamic Zod validation pipe that seamlessly resolves schemas from ZodValidatable DTO prototypes.', status: 'Completed & Verified' },
-    { title: 'Integration Middlewares', description: 'Hooks up request context, locale resolver, and feature flags into the global NestJS application pipeline.', status: 'Completed & Verified' }
+    { title: 'Structured Logger & Factory', description: 'Enhances the @sbb/logger package with standard enums, structured log wrapper, and a clean LoggerFactory class.', status: 'Completed & Verified' },
+    { title: 'Tracing & Metrics Abstractions', description: 'Exposes provider-independent contracts for distributed tracing and time-series metrics under @sbb/observability.', status: 'Completed & Verified' },
+    { title: 'Auditing Framework', description: 'Formulates transient publisher-oriented auditing models to emit secure, contextual actor-based logs.', status: 'Completed & Verified' },
+    { title: 'Aggregated Health Module', description: 'Assembles five standalone health indicators into a centralized, modern microservice health status endpoint.', status: 'Completed & Verified' }
   ]
 };
 

@@ -6,6 +6,11 @@ import { CorrelationIdMiddleware } from '../middleware/correlation-id.middleware
 import { RequestTimingMiddleware } from '../middleware/request-timing.middleware.js';
 import { ZodValidationPipe } from '../pipes/zod-validation.pipe.js';
 import { HealthController } from '../health/health.controller.js';
+import { DatabaseHealthIndicator } from '../health/indicators/database-health.indicator.js';
+import { RedisHealthIndicator } from '../health/indicators/redis-health.indicator.js';
+import { AIProviderHealthIndicator } from '../health/indicators/ai-provider-health.indicator.js';
+import { QueueHealthIndicator } from '../health/indicators/queue-health.indicator.js';
+import { StorageHealthIndicator } from '../health/indicators/storage-health.indicator.js';
 import { AppError, ValidationError } from '@sbb/shared';
 import { z } from 'zod';
 import { of } from 'rxjs';
@@ -209,9 +214,15 @@ describe('API Gateway & Request Pipeline Foundation', () => {
   });
 
   describe('HealthController', () => {
-    it('should return UP and state metrics', () => {
-      const controller = new HealthController();
-      const health = controller.getHealth();
+    it('should return UP and state metrics', async () => {
+      const controller = new HealthController(
+        new DatabaseHealthIndicator(),
+        new RedisHealthIndicator(),
+        new AIProviderHealthIndicator(),
+        new QueueHealthIndicator(),
+        new StorageHealthIndicator()
+      );
+      const health = await controller.getHealth();
       const ready = controller.getReady();
       const live = controller.getLive();
 

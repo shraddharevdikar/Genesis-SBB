@@ -28,6 +28,9 @@
       "@sbb/logger": [
         "./packages/logger/src/index.ts"
       ],
+      "@sbb/observability": [
+        "./packages/observability/src/index.ts"
+      ],
       "@sbb/database": [
         "./packages/database/src/index.ts"
       ],

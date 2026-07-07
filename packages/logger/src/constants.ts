@@ -1,6 +1,6 @@
 import { LogLevel } from './types.js';
 
-export const DEFAULT_LOG_LEVEL: LogLevel = 'info';
+export const DEFAULT_LOG_LEVEL: LogLevel = LogLevel.INFO;
 
 export const DEFAULT_LOGGER_NAME = 'sbb-platform';
 
