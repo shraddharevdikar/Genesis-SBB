@@ -30,3 +30,11 @@ export enum Status {
   SUSPENDED = 'suspended',
   ARCHIVED = 'archived',
 }
+
+export enum ApiLifecycle {
+  PREVIEW = 'preview',
+  BETA = 'beta',
+  STABLE = 'stable',
+  DEPRECATED = 'deprecated',
+  SUNSET = 'sunset',
+}

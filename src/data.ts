@@ -1,29 +1,31 @@
 import { TicketDetails, FileNode, FutureTicket } from './types';
 
 export const ticketDetails: TicketDetails = {
-  id: 'GEN-PLATFORM-004',
-  title: 'Observability Foundation',
+  id: 'GEN-PLATFORM-005',
+  title: 'API Versioning & Lifecycle Management',
   status: 'DONE',
   priority: 'CRITICAL',
   author: 'SBB Principal Architect',
   assignee: 'shraddha.revdikar@gmail.com',
-  objective: 'Establish the observability foundation for the SBB Platform. Create shared infrastructure for logging, metrics, tracing, audit hooks, and health monitoring.',
-  modulePath: 'packages/observability/',
+  objective: 'Establish the platform-wide API versioning and lifecycle strategy.',
+  modulePath: 'packages/shared/src/utils/api-versioning.ts',
   requirements: [
-    'Enhance the existing logger package with StructuredLogger, LoggerFactory, LogContext, and LogLevel.',
-    'Create trace contracts (trace-context, trace-provider, trace-span) with zero OpenTelemetry dependency.',
-    'Formulate metric contracts (Metric, Counter, Gauge, Histogram, Timer) for custom backend adapters.',
-    'Expose audit contracts (AuditEvent, AuditContext, AuditPublisher) without persistent storage baggage.',
-    'Extend Health Module and construct Database, Redis, AIProvider, Queue, and Storage health indicator placeholders.',
-    'Extend PlatformContext with read-only traceId and spanId properties.'
+    'Create shared versioning support supporting URI Versioning, Header Versioning, and Media-Type Versioning.',
+    'Formulate immutable ApiVersion metadata tracking version status, release, deprecation, and sunset timestamps.',
+    'Expose ApiLifecycle enum mapping Preview, Beta, Stable, Deprecated, and Sunset states.',
+    'Implement SbbApiVersionResolver supporting custom defaults, fallback to latest stable, and validation checks.',
+    'Create deprecation support generating standard headers (Warning, Sunset, Deprecation) and migration hints.',
+    'Provide multi-version Swagger bootstrap hooks and future OpenAPI version grouping configurations.',
+    'Add comprehensive markdown documentation detailing policies, backward compatibility, and client expectations.'
   ],
   responsibilities: [
-    { title: 'Structured Logger & Factory', description: 'Enhances the @sbb/logger package with standard enums, structured log wrapper, and a clean LoggerFactory class.', status: 'Completed & Verified' },
-    { title: 'Tracing & Metrics Abstractions', description: 'Exposes provider-independent contracts for distributed tracing and time-series metrics under @sbb/observability.', status: 'Completed & Verified' },
-    { title: 'Auditing Framework', description: 'Formulates transient publisher-oriented auditing models to emit secure, contextual actor-based logs.', status: 'Completed & Verified' },
-    { title: 'Aggregated Health Module', description: 'Assembles five standalone health indicators into a centralized, modern microservice health status endpoint.', status: 'Completed & Verified' }
+    { title: 'API Version & Lifecycle Models', description: 'Defines type-safe ApiVersion metadata and ApiLifecycle enums published inside @sbb/shared.', status: 'Completed & Verified' },
+    { title: 'Versatile Version Resolver', description: 'Leverages SbbApiVersionResolver to decode version tags from URIs, request headers, or vendor-specific media-types.', status: 'Completed & Verified' },
+    { title: 'Deprecation & Sunset Support', description: 'Assembles warning, sunset, and deprecation headers combined with developer-centric migration hints.', status: 'Completed & Verified' },
+    { title: 'Multi-Version Swagger Blueprint', description: 'Sets up isolated, version-grouped Swagger UI gateways (e.g. /api-docs/v1) alongside the root API gateway.', status: 'Completed & Verified' }
   ]
 };
+
 
 export const futureTickets: FutureTicket[] = [
   {

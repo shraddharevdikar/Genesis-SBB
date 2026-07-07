@@ -13,3 +13,5 @@ export type DeepPartial<T> = {
 export type ValueOf<T> = T[keyof T];
 
 export * from './platform-context.types.js';
+export * from './api-versioning.types.js';
+
