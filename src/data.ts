@@ -1,28 +1,28 @@
 import { TicketDetails, FileNode, FutureTicket } from './types';
 
 export const ticketDetails: TicketDetails = {
-  id: 'GEN-ID-009.1',
-  title: 'Identity Integration Layer',
+  id: 'GEN-PLATFORM-001',
+  title: 'API Gateway & Request Pipeline Foundation',
   status: 'DONE',
   priority: 'CRITICAL',
   author: 'SBB Principal Architect',
   assignee: 'shraddha.revdikar@gmail.com',
-  objective: 'Design and implement the shared Identity Integration Layer (context structures, providers, guards, param decorators, middleware, and interceptors) using Domain-Driven Design (DDD).',
-  modulePath: 'backend/api/src/modules/identity-integration/',
+  objective: 'Create the shared API infrastructure, request/response pipeline, standardized error handlers, health probes, and API Swagger configs.',
+  modulePath: 'backend/api/src/modules/platform/',
   requirements: [
-    'Create the core context interfaces including IdentityContext, CurrentUser, CurrentTenant, CurrentOrganization, and CurrentMembership.',
-    'Build providers and resolvers for context extraction: IdentityContextProvider, CurrentUserProvider, TenantResolver, and OrganizationResolver.',
-    'Expose placeholder framework guards including AuthenticationGuard, AuthorizationGuard, and TenantGuard.',
-    'Declare custom parameter decorators: @CurrentUser(), @CurrentTenant(), and @CurrentOrganization().',
-    'Build request middleware and interceptor wrappers: IdentityContextMiddleware and IdentityContextInterceptor.',
-    'Expose application helper service IdentityContextService to retrieve request contexts.',
-    'Build standard NestJS IdentityIntegration module structure and write an exhaustive unit test suite.'
+    'Create global Exception Filters to map application exceptions into standard error envelopes.',
+    'Build inbound Middlewares for Correlation ID assignment, request timing headers, and request logging.',
+    'Implement a standard success response wrapping Interceptor.',
+    'Provide placeholder Interceptors for platform metrics and audit hooks.',
+    'Create the HealthModule with /health, /health/ready, and /health/live checkpoints.',
+    'Bootstrap Swagger OpenAPI document configurations.',
+    'Incorporate standard ZodValidationPipes for request validation.'
   ],
   responsibilities: [
-    { title: 'Domain Models & Context Types', description: 'Defines clean, read-only interfaces for users, tenants, organizations, memberships, and multi-tenant correlation IDs.', status: 'Completed & Verified' },
-    { title: 'Resolvers & Provider Contracts', description: 'Exposes resolver contracts for extracting and verifying enterprise context bindings.', status: 'Completed & Verified' },
-    { title: 'Guards, Middleware, & Interceptors', description: 'Supplies pluggable NestJS middleware, interceptors, and guards as integration boundaries.', status: 'Completed & Verified' },
-    { title: 'Decorators, Services, & Specs', description: 'Implements custom NestJS decorators, active service endpoints, and registers full unit coverage.', status: 'Completed & Verified' }
+    { title: 'Global Filters & Response Envelopes', description: 'Implements global ExceptionFilter and ResponseTransformInterceptor ensuring predictable execution envelopes.', status: 'Completed & Verified' },
+    { title: 'Inbound Middlewares & Decorators', description: 'Applies request logging, high-resolution response timing headers, and automatic correlation/request ID generation.', status: 'Completed & Verified' },
+    { title: 'Health Modules & Probes', description: 'Wires up multiple health status checks (/health, /health/ready, /health/live) as standard platform routing checkpoints.', status: 'Completed & Verified' },
+    { title: 'OpenAPI Swagger & Pipes', description: 'Sets up Swagger DocumentBuilder and mounts custom Zod-validation pipeline filters for schema assertion.', status: 'Completed & Verified' }
   ]
 };
 
