@@ -62,6 +62,601 @@ export const fileList: FileNode[] = [
     path: 'backend/api/src/modules/identity/README.md',
     language: 'markdown',
     role: 'Documentation',
+    description: 'Full architectural documentation and DDD responsibilities index.',
+    content: `# Identity Module Foundation (DDD Architecture)
+
+## Module Purpose
+The **Identity Module** is the core foundational security layer for the **SBB Platform**. It is responsible for establishing trust, authenticating principals (users, services), issuing session tokens, managing MFA requirements, and enforcing authorization policies.
+
+This module is architected using **Domain-Driven Design (DDD)** and **Clean Architecture** principles to isolate security-sensitive workflows from standard business domains, establishing a strict, robust boundary.
+
+---
+
+## Folder Organization & DDD Layers
+
+Following the architectural review specifications (FAR-001) and M1 core principles, the module is divided into four distinct concentric layers:
+
+\`\`\`text
+backend/api/src/modules/identity/
+├── domain/                      # Core business models, values, and policies (No dependencies)
+│   ├── entities/                # DDD Entities and Aggregate Roots (e.g., Identity aggregate)
+│   ├── value-objects/           # Immutable self-validating values (e.g., EmailAddress, IdentityId)
+│   ├── repositories/            # Explicit persistence contracts (IIdentityRepository)
+│   ├── events/                  # Immutable state change notification schemas (IdentityCreatedEvent)
+│   ├── services/                # Domain-specific services managing complex invariants
+│   ├── policies/                # Discrete rule engines and invariants evaluation (IdentityPolicy)
+│   └── exceptions/              # Specialized domain exceptions (IdentityDomainException)
+│
+├── application/                 # Orchestration of domain tasks, commands, and queries (CQRS)
+│   ├── commands/                # Write action request payloads (CreateIdentityCommand)
+│   ├── queries/                 # Read action request payloads (GetIdentityQuery)
+│   ├── handlers/                # Request processing and execution orchestrators
+│   ├── dto/                     # Application-level serialization Data Transfer Objects
+│   └── services/                # Orchestration services invoking domain and repository layers
+│
+├── infrastructure/              # Low-level technology adapters and database persistence
+│   └── persistence/
+│       ├── prisma/
+│       │   └── repositories/    # Prisma-backed repository adapters (PrismaIdentityRepository)
+│       └── mappers/             # Map between database rows and domain aggregate state
+│
+├── presentation/                # Outer interface boundaries for inbound requests
+│   ├── rest/                    # REST Controllers exposing versioned v1 routes
+│   │   └── dto/                 # HTTP payload models and inputs validation schemas
+│   └── graphql/                 # GraphQL Resolvers and query schemas
+│
+├── tests/                       # Unit specs and behavior validation suites
+│   └── identity-module.spec.ts  # Validation of domain entities and state invariants
+│
+└── identity.module.ts           # Main NestJS module declaring providers and bindings
+\`\`\`
+
+---
+
+## Core DDD Design Principles
+
+1. **Aggregates and Entities**: Entities possess identities and state, while Aggregate Roots act as gateways to coordinate consistent operations within their domain.
+2. **Value Objects**: Immutable, self-contained constructs that contain zero identities but encapsulate business invariants (e.g., validating email structure on creation).
+3. **Repository Pattern**: Prevents domain models from directly referencing database schemas or ORM clients. The \`IIdentityRepository\` defines the contract, while \`PrismaIdentityRepository\` implements it in the infrastructure layer.
+4. **Decoupled Communications**: Application handlers trigger changes, and the system publishes explicit \`Domain Events\` to keep other microservices asynchronously updated.
+
+---
+
+## Next Steps Roadmap
+
+1. **GEN-ID-002: Hashing Service & Persistence Storage**
+   * Introduce Bcrypt/Argon2id hashing implementations.
+   * Configure real PostgreSQL / Prisma database row persistence.
+2. **GEN-ID-003: JWT Session Management & Rotation**
+   * Implement token verification, expiry checks, and session revocation caches.
+3. **GEN-ID-004: Roles Authorization Guards**
+   * Bind roles metadata descriptors and evaluate permissions rules in execution pipes.
+`
+  },
+  {
+    name: 'identity.module.ts',
+    path: 'backend/api/src/modules/identity/identity.module.ts',
+    language: 'typescript',
+    role: 'Module Registry',
+    description: 'Registers core Domain, Application, Infrastructure, and Presentation providers as a clean modular unit.',
+    content: `import { Module } from '@nestjs/common';
+import { IdentityController } from './presentation/rest/identity.controller';
+import { IdentityApplicationService } from './application/services/identity-application.service';
+import { CreateIdentityHandler } from './application/handlers/create-identity.handler';
+import { IdentityDomainService } from './domain/services/identity-domain.service';
+import { PrismaIdentityRepository } from './infrastructure/persistence/prisma/repositories/prisma-identity.repository';
+import { IdentityResolver } from './presentation/graphql/identity.resolver';
+
+@Module({
+  imports: [],
+  controllers: [IdentityController],
+  providers: [
+    IdentityApplicationService,
+    IdentityDomainService,
+    CreateIdentityHandler,
+    IdentityResolver,
+    {
+      provide: 'IIdentityRepository',
+      useClass: PrismaIdentityRepository,
+    },
+  ],
+  exports: [
+    IdentityApplicationService,
+    IdentityDomainService,
+  ],
+})
+export class IdentityModule {}`
+  },
+  {
+    name: 'identity-root.entity.ts',
+    path: 'backend/api/src/modules/identity/domain/entities/identity-root.entity.ts',
+    language: 'typescript',
+    role: 'Domain Aggregate Root',
+    description: 'Models state, accessors, and triggers domain events for Identity aggregates.',
+    content: `import { IdentityId } from '../value-objects/identity-id.value-object';
+import { EmailAddress } from '../value-objects/email-address.value-object';
+import { IdentityCreatedEvent } from '../events/identity-created.event';
+
+export class Identity {
+  private readonly id: IdentityId;
+  private email: EmailAddress;
+  private passwordHash: string;
+  private isActive: boolean;
+  private createdAt: Date;
+  private updatedAt: Date;
+  private domainEvents: any[] = [];
+
+  constructor(
+    id: IdentityId,
+    email: EmailAddress,
+    passwordHash: string,
+    isActive: boolean,
+    createdAt: Date,
+    updatedAt: Date
+  ) {
+    this.id = id;
+    this.email = email;
+    this.passwordHash = passwordHash;
+    this.isActive = isActive;
+    this.createdAt = createdAt;
+    this.updatedAt = updatedAt;
+  }
+
+  public getId(): IdentityId {
+    return this.id;
+  }
+
+  public getEmail(): EmailAddress {
+    return this.email;
+  }
+
+  public getPasswordHash(): string {
+    return this.passwordHash;
+  }
+
+  public getIsActive(): boolean {
+    return this.isActive;
+  }
+
+  public getCreatedAt(): Date {
+    return this.createdAt;
+  }
+
+  public getUpdatedAt(): Date {
+    return this.updatedAt;
+  }
+
+  public getEvents(): any[] {
+    return this.domainEvents;
+  }
+
+  public clearEvents(): void {
+    this.domainEvents = [];
+  }
+
+  public static create(
+    id: IdentityId,
+    email: EmailAddress,
+    passwordHash: string
+  ): Identity {
+    const identity = new Identity(
+      id,
+      email,
+      passwordHash,
+      true,
+      new Date(),
+      new Date()
+    );
+
+    identity.domainEvents.push(
+      new IdentityCreatedEvent(id.getValue(), email.getValue())
+    );
+
+    return identity;
+  }
+}`
+  },
+  {
+    name: 'identity-id.value-object.ts',
+    path: 'backend/api/src/modules/identity/domain/value-objects/identity-id.value-object.ts',
+    language: 'typescript',
+    role: 'Domain Value Object',
+    description: 'Ensures the structural validity of unique Aggregate Identity identifiers.',
+    content: `export class IdentityId {
+  constructor(private readonly value: string) {
+    if (!value) {
+      throw new Error('Identity ID cannot be empty');
+    }
+  }
+
+  public getValue(): string {
+    return this.value;
+  }
+
+  public equals(other: IdentityId): boolean {
+    return this.value === other.getValue();
+  }
+}`
+  },
+  {
+    name: 'email-address.value-object.ts',
+    path: 'backend/api/src/modules/identity/domain/value-objects/email-address.value-object.ts',
+    language: 'typescript',
+    role: 'Domain Value Object',
+    description: 'Implements self-validating email formats, enforcing core domain constraints.',
+    content: `export class EmailAddress {
+  constructor(private readonly value: string) {
+    if (!value || !value.includes('@')) {
+      throw new Error('Invalid email address format');
+    }
+  }
+
+  public getValue(): string {
+    return this.value;
+  }
+
+  public equals(other: EmailAddress): boolean {
+    return this.value.toLowerCase() === other.getValue().toLowerCase();
+  }
+}`
+  },
+  {
+    name: 'identity-created.event.ts',
+    path: 'backend/api/src/modules/identity/domain/events/identity-created.event.ts',
+    language: 'typescript',
+    role: 'Domain Event',
+    description: 'An immutable domain message dispatched immediately upon identity establishment.',
+    content: `export class IdentityCreatedEvent {
+  public readonly occurredAt: Date;
+
+  constructor(
+    public readonly identityId: string,
+    public readonly email: string
+  ) {
+    this.occurredAt = new Date();
+  }
+}`
+  },
+  {
+    name: 'identity.repository.interface.ts',
+    path: 'backend/api/src/modules/identity/domain/repositories/identity.repository.interface.ts',
+    language: 'typescript',
+    role: 'Domain Repository Contract',
+    description: 'Declares abstraction contracts for querying and writing identity aggregates, decoupling from database frameworks.',
+    content: `import { Identity } from '../entities/identity-root.entity';
+import { IdentityId } from '../value-objects/identity-id.value-object';
+import { EmailAddress } from '../value-objects/email-address.value-object';
+
+export interface IIdentityRepository {
+  findById(id: IdentityId): Promise<Identity | null>;
+  findByEmail(email: EmailAddress): Promise<Identity | null>;
+  save(identity: Identity): Promise<void>;
+  delete(id: IdentityId): Promise<void>;
+}`
+  },
+  {
+    name: 'identity-domain.service.ts',
+    path: 'backend/api/src/modules/identity/domain/services/identity-domain.service.ts',
+    language: 'typescript',
+    role: 'Domain Service',
+    description: 'Processes business rule flows spanning across entities without exposing storage details.',
+    content: `import { Injectable } from '@nestjs/common';
+
+@Injectable()
+export class IdentityDomainService {
+  constructor() {}
+
+  public validateIdentityPolicy(): boolean {
+    return true;
+  }
+}`
+  },
+  {
+    name: 'identity.policy.ts',
+    path: 'backend/api/src/modules/identity/domain/policies/identity.policy.ts',
+    language: 'typescript',
+    role: 'Domain Policy',
+    description: 'Defines rules for assessing whether profiles can be activated under corporate policy checks.',
+    content: `export class IdentityPolicy {
+  public static canActivate(identityStatus: boolean): boolean {
+    return identityStatus === true;
+  }
+}`
+  },
+  {
+    name: 'identity-domain.exception.ts',
+    path: 'backend/api/src/modules/identity/domain/exceptions/identity-domain.exception.ts',
+    language: 'typescript',
+    role: 'Domain Exception',
+    description: 'A specialized domain error thrown when domain invariant checks fail.',
+    content: `export class IdentityDomainException extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'IdentityDomainException';
+  }
+}`
+  },
+  {
+    name: 'create-identity.command.ts',
+    path: 'backend/api/src/modules/identity/application/commands/create-identity.command.ts',
+    language: 'typescript',
+    role: 'Application Command',
+    description: 'Delineates input structures for executing registration/creation flows.',
+    content: `export class CreateIdentityCommand {
+  constructor(
+    public readonly email: string,
+    public readonly passwordHash: string
+  ) {}
+}`
+  },
+  {
+    name: 'get-identity.query.ts',
+    path: 'backend/api/src/modules/identity/application/queries/get-identity.query.ts',
+    language: 'typescript',
+    role: 'Application Query',
+    description: 'Expresses request properties for looking up specific profile contexts.',
+    content: `export class GetIdentityQuery {
+  constructor(public readonly identityId: string) {}
+}`
+  },
+  {
+    name: 'create-identity.handler.ts',
+    path: 'backend/api/src/modules/identity/application/handlers/create-identity.handler.ts',
+    language: 'typescript',
+    role: 'Application CQRS Handler',
+    description: 'Processes commands by building entities, invoking invariants validation, and saving state.',
+    content: `import { Inject, Injectable } from '@nestjs/common';
+import { CreateIdentityCommand } from '../commands/create-identity.command';
+import { IIdentityRepository } from '../../domain/repositories/identity.repository.interface';
+import { Identity } from '../../domain/entities/identity-root.entity';
+import { IdentityId } from '../../domain/value-objects/identity-id.value-object';
+import { EmailAddress } from '../../domain/value-objects/email-address.value-object';
+
+@Injectable()
+export class CreateIdentityHandler {
+  constructor(
+    @Inject('IIdentityRepository')
+    private readonly identityRepository: IIdentityRepository
+  ) {}
+
+  public async handle(command: CreateIdentityCommand): Promise<string> {
+    const idValue = Math.random().toString(36).substring(7);
+    const identity = Identity.create(
+      new IdentityId(idValue),
+      new EmailAddress(command.email),
+      command.passwordHash
+    );
+    await this.identityRepository.save(identity);
+    return identity.getId().getValue();
+  }
+}`
+  },
+  {
+    name: 'identity-response.dto.ts',
+    path: 'backend/api/src/modules/identity/application/dto/identity-response.dto.ts',
+    language: 'typescript',
+    role: 'Application DTO',
+    description: 'Models safe public return values, shielding database rows from raw leakages.',
+    content: `export class IdentityResponseDto {
+  id!: string;
+  email!: string;
+  isActive!: boolean;
+  createdAt!: Date;
+}`
+  },
+  {
+    name: 'identity-application.service.ts',
+    path: 'backend/api/src/modules/identity/application/services/identity-application.service.ts',
+    language: 'typescript',
+    role: 'Application Orchestrator',
+    description: 'Integrates use-case flows, loading repositories and mapping output entities.',
+    content: `import { Injectable, Inject } from '@nestjs/common';
+import { IIdentityRepository } from '../../domain/repositories/identity.repository.interface';
+import { IdentityId } from '../../domain/value-objects/identity-id.value-object';
+
+@Injectable()
+export class IdentityApplicationService {
+  constructor(
+    @Inject('IIdentityRepository')
+    private readonly identityRepository: IIdentityRepository
+  ) {}
+
+  public async getIdentityById(id: string): Promise<any> {
+    const identity = await this.identityRepository.findById(new IdentityId(id));
+    if (!identity) {
+      return null;
+    }
+    return {
+      id: identity.getId().getValue(),
+      email: identity.getEmail().getValue(),
+      isActive: identity.getIsActive(),
+      createdAt: identity.getCreatedAt(),
+    };
+  }
+}`
+  },
+  {
+    name: 'identity.mapper.ts',
+    path: 'backend/api/src/modules/identity/infrastructure/persistence/mappers/identity.mapper.ts',
+    language: 'typescript',
+    role: 'Persistence Mapper',
+    description: 'Ensures unidirectional mapping between database rows structures and domain model constructs.',
+    content: `import { Identity } from '../../../domain/entities/identity-root.entity';
+import { IdentityId } from '../../../domain/value-objects/identity-id.value-object';
+import { EmailAddress } from '../../../domain/value-objects/email-address.value-object';
+
+export class IdentityMapper {
+  public static toDomain(raw: any): Identity {
+    return new Identity(
+      new IdentityId(raw.id),
+      new EmailAddress(raw.email),
+      raw.passwordHash,
+      raw.isActive,
+      new Date(raw.createdAt),
+      new Date(raw.updatedAt)
+    );
+  }
+
+  public static toPersistence(domain: Identity): any {
+    return {
+      id: domain.getId().getValue(),
+      email: domain.getEmail().getValue(),
+      passwordHash: domain.getPasswordHash(),
+      isActive: domain.getIsActive(),
+      createdAt: domain.getCreatedAt(),
+      updatedAt: domain.getUpdatedAt(),
+    };
+  }
+}`
+  },
+  {
+    name: 'prisma-identity.repository.ts',
+    path: 'backend/api/src/modules/identity/infrastructure/persistence/prisma/repositories/prisma-identity.repository.ts',
+    language: 'typescript',
+    role: 'Prisma Storage Adapter',
+    description: 'Implements explicit storage contracts, loading database context values cleanly.',
+    content: `import { Injectable } from '@nestjs/common';
+import { IIdentityRepository } from '../../../../domain/repositories/identity.repository.interface';
+import { Identity } from '../../../../domain/entities/identity-root.entity';
+import { IdentityId } from '../../../../domain/value-objects/identity-id.value-object';
+import { EmailAddress } from '../../../../domain/value-objects/email-address.value-object';
+import { IdentityMapper } from '../../mappers/identity.mapper';
+
+@Injectable()
+export class PrismaIdentityRepository implements IIdentityRepository {
+  private readonly storage = new Map<string, any>();
+
+  constructor() {
+    // Concrete repo wrapper using memory mock contracts as per ticket skeleton instructions
+  }
+
+  public async findById(id: IdentityId): Promise<Identity | null> {
+    const raw = this.storage.get(id.getValue());
+    if (!raw) return null;
+    return IdentityMapper.toDomain(raw);
+  }
+
+  public async findByEmail(email: EmailAddress): Promise<Identity | null> {
+    for (const raw of this.storage.values()) {
+      if (raw.email === email.getValue()) {
+        return IdentityMapper.toDomain(raw);
+      }
+    }
+    return null;
+  }
+
+  public async save(identity: Identity): Promise<void> {
+    const raw = IdentityMapper.toPersistence(identity);
+    this.storage.set(identity.getId().getValue(), raw);
+  }
+
+  public async delete(id: IdentityId): Promise<void> {
+    this.storage.delete(id.getValue());
+  }
+}`
+  },
+  {
+    name: 'identity.controller.ts',
+    path: 'backend/api/src/modules/identity/presentation/rest/identity.controller.ts',
+    language: 'typescript',
+    role: 'REST Handler Interface',
+    description: 'Exposes HTTP controllers for versioned identity retrieval actions.',
+    content: `import { Controller, Get, Param, NotFoundException } from '@nestjs/common';
+import { IdentityApplicationService } from '../../application/services/identity-application.service';
+
+@Controller('v1/identity')
+export class IdentityController {
+  constructor(
+    private readonly identityAppService: IdentityApplicationService
+  ) {}
+
+  @Get(':id')
+  public async getIdentity(@Param('id') id: string): Promise<any> {
+    const result = await this.identityAppService.getIdentityById(id);
+    if (!result) {
+      throw new NotFoundException(\`Identity not found\`);
+    }
+    return result;
+  }
+}`
+  },
+  {
+    name: 'create-identity-request.dto.ts',
+    path: 'backend/api/src/modules/identity/presentation/rest/dto/create-identity-request.dto.ts',
+    language: 'typescript',
+    role: 'REST Request Payload',
+    description: 'Provides input structures for validating outbound REST request credentials parameters.',
+    content: `export class CreateIdentityRequestDto {
+  email!: string;
+  password!: string;
+}`
+  },
+  {
+    name: 'identity.resolver.ts',
+    path: 'backend/api/src/modules/identity/presentation/graphql/identity.resolver.ts',
+    language: 'typescript',
+    role: 'GraphQL Resolver',
+    description: 'GraphQL entry bindings placeholder for future platform APIs federation.',
+    content: `import { Injectable } from '@nestjs/common';
+
+@Injectable()
+export class IdentityResolver {
+  constructor() {
+    // Placeholder for GraphQL integration in future iterations
+  }
+}`
+  },
+  {
+    name: 'identity-module.spec.ts',
+    path: 'backend/api/src/modules/identity/tests/identity-module.spec.ts',
+    language: 'typescript',
+    role: 'Unit Test Suite',
+    description: 'Provides validation of identity establishment, value objects invariants checks, and events lifecycle.',
+    content: `import { IdentityApplicationService } from '../application/services/identity-application.service';
+import { PrismaIdentityRepository } from '../infrastructure/persistence/prisma/repositories/prisma-identity.repository';
+import { Identity } from '../domain/entities/identity-root.entity';
+import { IdentityId } from '../domain/value-objects/identity-id.value-object';
+import { EmailAddress } from '../domain/value-objects/email-address.value-object';
+
+describe('IdentityModule (Skeleton)', () => {
+  let service: IdentityApplicationService;
+  let repository: PrismaIdentityRepository;
+
+  beforeEach(() => {
+    repository = new PrismaIdentityRepository();
+    service = new IdentityApplicationService(repository);
+  });
+
+  it('should be defined', () => {
+    expect(service).toBeDefined();
+  });
+
+  it('should save and find entity skeleton correctly', async () => {
+    const id = new IdentityId('test-id-123');
+    const email = new EmailAddress('test@example.com');
+    const identity = Identity.create(id, email, 'hashed-password');
+
+    await repository.save(identity);
+    const result = await service.getIdentityById('test-id-123');
+
+    expect(result).not.toBeNull();
+    expect(result.email).toBe('test@example.com');
+  });
+});
+
+declare const describe: any;
+declare const beforeEach: any;
+declare const it: any;
+declare const expect: any;`
+  }
+];
+
+export const oldFileList: FileNode[] = [
+  {
+    name: 'README.md',
+    path: 'backend/api/src/modules/identity/README.md',
+    language: 'markdown',
+    role: 'Documentation',
     description: 'Full architectural documentation, responsibilities index, and planned REST endpoints roadmap.',
     content: `# Identity Module Foundation
 
