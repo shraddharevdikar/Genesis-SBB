@@ -1,29 +1,27 @@
 import { TicketDetails, FileNode, FutureTicket } from './types';
 
 export const ticketDetails: TicketDetails = {
-  id: 'GEN-ID-006',
-  title: 'Team Aggregate',
+  id: 'GEN-ID-007',
+  title: 'Authentication Service Foundation',
   status: 'DONE',
   priority: 'CRITICAL',
   author: 'SBB Principal Architect',
   assignee: 'shraddha.revdikar@gmail.com',
-  objective: 'Design and implement the Team aggregate within the Identity module using Domain-Driven Design (DDD). The Team aggregate represents an organizational unit within an Organization.',
-  modulePath: 'backend/api/src/modules/identity/',
+  objective: 'Design and implement a provider-based authentication architecture within the Identity / Authentication module using Domain-Driven Design (DDD).',
+  modulePath: 'backend/api/src/modules/authentication/',
   requirements: [
-    'Create the Team domain entity with properties: id, organizationId, name, status, createdAt, updatedAt.',
-    'Implement status lifecycle states: Active, Archived.',
-    'Build domain value objects for TeamId and TeamName with immutability and invariants validation (such as name length).',
-    'Define domain events: TeamCreatedEvent, TeamRenamedEvent, TeamArchivedEvent.',
-    'Create Domain Exception templates for duplicate teams and invalid state transitions.',
-    'Establish the Team Repository interface (ITeamRepository) and its in-memory mock implementation.',
-    'Formulate Application CQRS commands, handlers, and services to orchestrate creation, rename, and archiving workflows.',
-    'Validate complete code correctness and test aggregate compilation.'
+    'Create NestJS Authentication module structure with proper division into domain, application, infrastructure, and presentation layers.',
+    'Build Domain provider interfaces (AuthenticationProvider, PasswordAuthenticationProvider, OAuthAuthenticationProvider, PasskeyAuthenticationProvider).',
+    'Define DDD Domain events: UserAuthenticated, AuthenticationFailed, RefreshTokenIssued, PasswordChanged.',
+    'Expose application CQRS AuthenticateUserCommand, AuthenticateUserHandler, and AuthenticationApplicationService.',
+    'Establish mock infrastructure adapters including BcryptHashingService, JwtTokenService, and PasswordProvider.',
+    'Validate complete code correctness and test module compilation.'
   ],
   responsibilities: [
-    { title: 'Team Domain Aggregate & VOs', description: 'Implements the rich Team entity and self-validating TeamName and TeamId value objects.', status: 'Completed & Verified' },
-    { title: 'Domain Events & Services', description: 'Fires state events on create/rename/archive, and coordinates name uniqueness via TeamDomainService.', status: 'Completed & Verified' },
-    { title: 'Application CQRS Handlers', description: 'Exposes CreateTeamCommand, CreateTeamHandler, and TeamApplicationService orchestrators.', status: 'Completed & Verified' },
-    { title: 'Mock Infrastructure & Tests', description: 'Implements PrismaTeamRepository storage simulator and a thorough unit test suite.', status: 'Completed & Verified' }
+    { title: 'Authentication Domain Providers', description: 'Implements abstract provider contracts (Password, OAuth, Passkey) and password strength policy checks.', status: 'Completed & Verified' },
+    { title: 'Domain Events & Exception Templates', description: 'Creates immutable events for key status changes and custom exceptions for invalid credentials or unsupported providers.', status: 'Completed & Verified' },
+    { title: 'Application CQRS Handlers', description: 'Wires up AuthenticateUserCommand, AuthenticateUserHandler orchestrator, and AuthenticationApplicationService helper.', status: 'Completed & Verified' },
+    { title: 'Mock Infrastructure Placeholders', description: 'Supplies mock adapter implementations of BcryptHashingService, JwtTokenService, and in-memory refresh token storage.', status: 'Completed & Verified' }
   ]
 };
 
