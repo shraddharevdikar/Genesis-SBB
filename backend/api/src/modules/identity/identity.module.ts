@@ -12,6 +12,12 @@ import { UserDomainService } from './domain/services/user-domain.service';
 import { CreateUserHandler } from './application/handlers/create-user.handler';
 import { PrismaUserRepository } from './infrastructure/persistence/prisma/repositories/prisma-user.repository';
 
+// Organization aggregate components
+import { OrganizationApplicationService } from './application/services/organization-application.service';
+import { OrganizationDomainService } from './domain/services/organization-domain.service';
+import { CreateOrganizationHandler } from './application/handlers/create-organization.handler';
+import { PrismaOrganizationRepository } from './infrastructure/persistence/prisma/repositories/prisma-organization.repository';
+
 @Module({
   imports: [],
   controllers: [IdentityController],
@@ -32,12 +38,22 @@ import { PrismaUserRepository } from './infrastructure/persistence/prisma/reposi
       provide: 'IUserRepository',
       useClass: PrismaUserRepository,
     },
+    // Organization aggregate providers
+    OrganizationApplicationService,
+    OrganizationDomainService,
+    CreateOrganizationHandler,
+    {
+      provide: 'IOrganizationRepository',
+      useClass: PrismaOrganizationRepository,
+    },
   ],
   exports: [
     IdentityApplicationService,
     IdentityDomainService,
     UserApplicationService,
     UserDomainService,
+    OrganizationApplicationService,
+    OrganizationDomainService,
   ],
 })
 export class IdentityModule {}

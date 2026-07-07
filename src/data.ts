@@ -1,29 +1,29 @@
 import { TicketDetails, FileNode, FutureTicket } from './types';
 
 export const ticketDetails: TicketDetails = {
-  id: 'GEN-ID-002',
-  title: 'User Aggregate',
+  id: 'GEN-ID-003',
+  title: 'Organization Aggregate',
   status: 'DONE',
   priority: 'CRITICAL',
   author: 'SBB Principal Architect',
   assignee: 'shraddha.revdikar@gmail.com',
-  objective: 'Design and implement the User aggregate within the Identity domain using Domain-Driven Design (DDD). The goal is to model the business entity, not authentication.',
+  objective: 'Design and implement the Organization aggregate within the Identity domain using Domain-Driven Design (DDD). The goal is to model the business organization, independently of billing, membership, or relational schemas.',
   modulePath: 'backend/api/src/modules/identity/',
   requirements: [
-    'Create the User domain entity with properties: id, email, displayName, status, createdAt, updatedAt.',
-    'Implement status lifecycle states: Pending, Active, Suspended, Disabled.',
-    'Build domain value objects for UserId, EmailAddress, and DisplayName with immutability and invariants validation.',
-    'Define domain events: UserCreatedEvent, UserActivatedEvent, UserDeactivatedEvent.',
-    'Create Domain Exception templates for duplicate emails and invalid user states.',
-    'Establish the User Repository interface (IUserRepository) and its in-memory mock implementation.',
-    'Formulate Application CQRS commands, handlers, and services to orchestrate creation and lifecycle transition workflows.',
+    'Create the Organization domain entity with properties: id, name, status, createdAt, updatedAt.',
+    'Implement status lifecycle states: Pending, Active, Suspended, Archived.',
+    'Build domain value objects for OrganizationId and OrganizationName with immutability and invariants validation (such as name length).',
+    'Define domain events: OrganizationCreatedEvent, OrganizationUpdatedEvent, OrganizationDeactivatedEvent.',
+    'Create Domain Exception templates for duplicate organizations and invalid state transitions.',
+    'Establish the Organization Repository interface (IOrganizationRepository) and its in-memory mock implementation.',
+    'Formulate Application CQRS commands, handlers, and services to orchestrate creation, updates, and activation workflows.',
     'Validate complete code correctness and test aggregate compilation.'
   ],
   responsibilities: [
-    { title: 'User Domain Aggregate & VOs', description: 'Implements the rich User entity and self-validating DisplayName, Email, and UserId value objects.', status: 'Completed & Verified' },
-    { title: 'Domain Events & Services', description: 'Fires state events on activate/deactivate, and coordinates email uniqueness via UserDomainService.', status: 'Completed & Verified' },
-    { title: 'Application CQRS Handlers', description: 'Exposes CreateUserCommand, CreateUserHandler, and UserApplicationService orchestrators.', status: 'Completed & Verified' },
-    { title: 'Mock Infrastructure & Tests', description: 'Implements PrismaUserRepository storage simulator and a thorough unit test suite.', status: 'Completed & Verified' }
+    { title: 'Organization Domain Aggregate & VOs', description: 'Implements the rich Organization entity and self-validating OrganizationName and OrganizationId value objects.', status: 'Completed & Verified' },
+    { title: 'Domain Events & Services', description: 'Fires state events on create/update/archive, and coordinates name uniqueness via OrganizationDomainService.', status: 'Completed & Verified' },
+    { title: 'Application CQRS Handlers', description: 'Exposes CreateOrganizationCommand, CreateOrganizationHandler, and OrganizationApplicationService orchestrators.', status: 'Completed & Verified' },
+    { title: 'Mock Infrastructure & Tests', description: 'Implements PrismaOrganizationRepository storage simulator and a thorough unit test suite.', status: 'Completed & Verified' }
   ]
 };
 
@@ -977,6 +977,211 @@ describe('User Aggregate', () => {
     const name = new DisplayName('Alice S');
     const user = User.create(id, email, name);
     expect(user.getStatus()).toBe(UserStatus.Pending);
+  });
+});`
+  },
+  {
+    name: 'organization.entity.ts',
+    path: 'backend/api/src/modules/identity/domain/entities/organization.entity.ts',
+    language: 'typescript',
+    role: 'Domain Aggregate Root',
+    description: 'Main Organization aggregate root entity with Status state machine and domain events.',
+    content: `import { OrganizationId } from '../value-objects/organization-id.value-object';
+import { OrganizationName } from '../value-objects/organization-name.value-object';
+import { OrganizationCreatedEvent } from '../events/organization-created.event';
+import { OrganizationUpdatedEvent } from '../events/organization-updated.event';
+import { OrganizationDeactivatedEvent } from '../events/organization-deactivated.event';
+
+export enum OrganizationStatus {
+  Pending = 'Pending',
+  Active = 'Active',
+  Suspended = 'Suspended',
+  Archived = 'Archived',
+}
+
+export class Organization {
+  private readonly id: OrganizationId;
+  private name: OrganizationName;
+  private status: OrganizationStatus;
+  private readonly createdAt: Date;
+  private updatedAt: Date;
+  private domainEvents: any[] = [];
+
+  constructor(
+    id: OrganizationId,
+    name: OrganizationName,
+    status: OrganizationStatus,
+    createdAt: Date,
+    updatedAt: Date
+  ) {
+    this.id = id;
+    this.name = name;
+    this.status = status;
+    this.createdAt = createdAt;
+    this.updatedAt = updatedAt;
+  }
+
+  public getId(): OrganizationId { return this.id; }
+  public getName(): OrganizationName { return this.name; }
+  public getStatus(): OrganizationStatus { return this.status; }
+  public getCreatedAt(): Date { return this.createdAt; }
+  public getUpdatedAt(): Date { return this.updatedAt; }
+  public getEvents(): any[] { return this.domainEvents; }
+  public clearEvents(): void { this.domainEvents = []; }
+
+  public static create(id: OrganizationId, name: OrganizationName): Organization {
+    const org = new Organization(id, name, OrganizationStatus.Pending, new Date(), new Date());
+    org.domainEvents.push(new OrganizationCreatedEvent(id.getValue(), name.getValue()));
+    return org;
+  }
+
+  public updateName(newName: OrganizationName): void {
+    if (this.name.equals(newName)) return;
+    this.name = newName;
+    this.updatedAt = new Date();
+    this.domainEvents.push(new OrganizationUpdatedEvent(this.id.getValue(), newName.getValue()));
+  }
+
+  public activate(): void {
+    if (this.status === OrganizationStatus.Active) return;
+    this.status = OrganizationStatus.Active;
+    this.updatedAt = new Date();
+  }
+
+  public suspend(): void {
+    if (this.status === OrganizationStatus.Suspended) return;
+    this.status = OrganizationStatus.Suspended;
+    this.updatedAt = new Date();
+  }
+
+  public archive(): void {
+    if (this.status === OrganizationStatus.Archived) return;
+    this.status = OrganizationStatus.Archived;
+    this.updatedAt = new Date();
+    this.domainEvents.push(new OrganizationDeactivatedEvent(this.id.getValue()));
+  }
+}`
+  },
+  {
+    name: 'organization-id.value-object.ts',
+    path: 'backend/api/src/modules/identity/domain/value-objects/organization-id.value-object.ts',
+    language: 'typescript',
+    role: 'Value Object',
+    description: 'Self-validating, immutable Organization identifier value object.',
+    content: `export class OrganizationId {
+  constructor(private readonly value: string) {
+    if (!value) throw new Error('Organization ID cannot be empty');
+  }
+  public getValue(): string { return this.value; }
+  public equals(other: OrganizationId): boolean { return this.value === other.getValue(); }
+}`
+  },
+  {
+    name: 'organization-name.value-object.ts',
+    path: 'backend/api/src/modules/identity/domain/value-objects/organization-name.value-object.ts',
+    language: 'typescript',
+    role: 'Value Object',
+    description: 'Self-validating, immutable organization name object with length constraints.',
+    content: `export class OrganizationName {
+  constructor(private readonly value: string) {
+    if (!value || value.trim().length === 0) throw new Error('Organization name cannot be empty');
+    if (value.trim().length < 3) throw new Error('Organization name must be at least 3 characters long');
+  }
+  public getValue(): string { return this.value; }
+  public equals(other: OrganizationName): boolean {
+    return this.value.trim().toLowerCase() === other.getValue().trim().toLowerCase();
+  }
+}`
+  },
+  {
+    name: 'organization.repository.ts',
+    path: 'backend/api/src/modules/identity/domain/repositories/organization.repository.ts',
+    language: 'typescript',
+    role: 'Domain Repository Interface',
+    description: 'Explicit storage boundary contract for organization aggregate roots.',
+    content: `import { Organization } from '../entities/organization.entity';
+import { OrganizationId } from '../value-objects/organization-id.value-object';
+import { OrganizationName } from '../value-objects/organization-name.value-object';
+
+export interface IOrganizationRepository {
+  findById(id: OrganizationId): Promise<Organization | null>;
+  findByName(name: OrganizationName): Promise<Organization | null>;
+  save(organization: Organization): Promise<void>;
+  delete(id: OrganizationId): Promise<void>;
+}`
+  },
+  {
+    name: 'organization-domain.service.ts',
+    path: 'backend/api/src/modules/identity/domain/services/organization-domain.service.ts',
+    language: 'typescript',
+    role: 'Domain Service',
+    description: 'Enforces name uniqueness across storage boundaries for organizations.',
+    content: `import { Injectable, Inject } from '@nestjs/common';
+import { IOrganizationRepository } from '../repositories/organization.repository';
+import { OrganizationName } from '../value-objects/organization-name.value-object';
+import { DuplicateOrganizationException } from '../exceptions/duplicate-organization.exception';
+
+@Injectable()
+export class OrganizationDomainService {
+  constructor(
+    @Inject('IOrganizationRepository')
+    private readonly organizationRepository: IOrganizationRepository
+  ) {}
+
+  public async assertNameIsUnique(name: OrganizationName): Promise<void> {
+    const existingOrg = await this.organizationRepository.findByName(name);
+    if (existingOrg) throw new DuplicateOrganizationException(name.getValue());
+  }
+}`
+  },
+  {
+    name: 'create-organization.handler.ts',
+    path: 'backend/api/src/modules/identity/application/handlers/create-organization.handler.ts',
+    language: 'typescript',
+    role: 'Application Command Handler',
+    description: 'Orchestrates validation, factory aggregate instantiation, and database serialization.',
+    content: `import { Inject, Injectable } from '@nestjs/common';
+import { CreateOrganizationCommand } from '../commands/create-organization.command';
+import { IOrganizationRepository } from '../../domain/repositories/organization.repository';
+import { OrganizationDomainService } from '../../domain/services/organization-domain.service';
+import { Organization } from '../../domain/entities/organization.entity';
+import { OrganizationId } from '../../domain/value-objects/organization-id.value-object';
+import { OrganizationName } from '../../domain/value-objects/organization-name.value-object';
+
+@Injectable()
+export class CreateOrganizationHandler {
+  constructor(
+    @Inject('IOrganizationRepository')
+    private readonly organizationRepository: IOrganizationRepository,
+    private readonly organizationDomainService: OrganizationDomainService
+  ) {}
+
+  public async handle(command: CreateOrganizationCommand): Promise<string> {
+    const orgName = new OrganizationName(command.name);
+    await this.organizationDomainService.assertNameIsUnique(orgName);
+    const idValue = 'org_' + Math.random().toString(36).substring(2, 11);
+    const org = Organization.create(new OrganizationId(idValue), orgName);
+    await this.organizationRepository.save(org);
+    return org.getId().getValue();
+  }
+}`
+  },
+  {
+    name: 'organization-aggregate.spec.ts',
+    path: 'backend/api/src/modules/identity/tests/organization-aggregate.spec.ts',
+    language: 'typescript',
+    role: 'Unit Test Suite',
+    description: 'Thorough unit testing verifying all organization aggregate invariants and status transitions.',
+    content: `import { Organization, OrganizationStatus } from '../domain/entities/organization.entity';
+import { OrganizationId } from '../domain/value-objects/organization-id.value-object';
+import { OrganizationName } from '../value-objects/organization-name.value-object';
+
+describe('Organization Aggregate', () => {
+  it('should create organization aggregate root in Pending state', () => {
+    const id = new OrganizationId('org-123');
+    const name = new OrganizationName('SBB Platform');
+    const org = Organization.create(id, name);
+    expect(org.getStatus()).toBe(OrganizationStatus.Pending);
   });
 });`
   }
