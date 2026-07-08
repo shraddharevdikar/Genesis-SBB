@@ -31,6 +31,26 @@ export * from './lifecycle/executive-status.js';
 export * from './governance/authority-level.js';
 export * from './governance/approval-policy.js';
 
+// CEO Brain & Strategic Models
+export * from './ceo/ceo-brain.js';
+export * from './ceo/analysis/strategic-context.js';
+export * from './ceo/analysis/business-analysis.js';
+export * from './ceo/analysis/executive-summary.js';
+export * from './ceo/planning/strategic-goal.js';
+export * from './ceo/planning/company-objective.js';
+export * from './ceo/planning/initiative.js';
+export * from './ceo/delegation/executive-assignment.js';
+export * from './ceo/delegation/delegation-request.js';
+export * from './ceo/delegation/delegation-plan.js';
+export * from './ceo/prioritization/priority-framework.js';
+export * from './ceo/prioritization/opportunity-score.js';
+export * from './ceo/coordination/executive-council-request.js';
+export * from './ceo/coordination/executive-consensus.js';
+export * from './ceo/governance/strategic-policy.js';
+export * from './ceo/events/strategy-created.event.js';
+export * from './ceo/events/delegation-issued.event.js';
+export * from './ceo/events/executive-council-requested.event.js';
+
 // Events
 export * from './events/executive-activated.event.js';
 export * from './events/executive-decision.event.js';

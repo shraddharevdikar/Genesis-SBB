@@ -1,27 +1,27 @@
 import { TicketDetails, FileNode, FutureTicket } from './types';
 
 export const ticketDetails: TicketDetails = {
-  id: 'BRAIN-001',
-  title: 'Executive Brain Framework',
+  id: 'BRAIN-002',
+  title: 'CEO Brain Foundation',
   status: 'DONE',
   priority: 'CRITICAL',
   author: 'SBB Principal Architect',
   assignee: 'shraddha.revdikar@gmail.com',
-  objective: 'Build the foundational Executive Brain Framework establishing common contracts, lifecycle state models, memory references, decision abstractions, collaboration interfaces, and governance mechanisms for C-Suite agents.',
-  modulePath: 'packages/business-brain/src/index.ts',
+  objective: 'Build the foundational CEO Brain responsible for strategic thinking, prioritization, delegation, and executive coordination without specialist execution or LLM prompts.',
+  modulePath: 'packages/business-brain/src/ceo/ceo-brain.ts',
   requirements: [
-    'Implement AIGatewayAPI / Executive Brain contracts (analyze, advise, collaborate, delegate, review).',
-    'Establish supported C-Suite executive roles (CEO, CFO, COO, CTO, CMO, CHRO, CRO, Legal, Operations).',
-    'Structure identity and persona details including KPIs, objective goals, and communication styles.',
-    'Model executive memory layers (Working, Long-term reference, Organizational reference).',
-    'Formulate secure decision abstractions (DecisionRequest, DecisionResponse, DecisionContext).',
-    'Establish governance models covering AuthorityLevels and ApprovalPolicies.'
+    'Establish the CEOBrain contract extending ExecutiveBrain with strategic oversight capability.',
+    'Model strategic goals for Growth, Profitability, Innovation, Customer Success, Operational Excellence, Market Expansion, Digital Transformation, and Risk Reduction.',
+    'Expose Initiative and corporate Objectives schemas including timeline, owner, priority, and dependencies.',
+    'Design delegation contracts restricting executive assignments strictly to CFO, COO, CTO, CMO, CRO, and CHRO.',
+    'Establish Executive Council coordination requesting reviews, voting parameters, consensus, and dissenting opinions.',
+    'Provide PriorityFramework schemas based on Business Impact, Strategic Alignment, Cost, Risk, and Time to Value.'
   ],
   responsibilities: [
-    { title: 'Executive Brain Contracts', description: 'Deploys abstract brain behaviors with analyze, advise, collaborate, delegate, and review capabilities.', status: 'Completed & Verified' },
-    { title: 'C-Suite Role & Identity Matrix', description: 'Defines roles, profiles, and customizable communication style metadata.', status: 'Completed & Verified' },
-    { title: 'Memory & Decision Schema', description: 'Builds strict contracts for active working memory buffers and structured decision context models.', status: 'Completed & Verified' },
-    { title: 'Governance & Collaboration Protocols', description: 'Coordinates authority levels, approvals, and peer-to-peer alignment events.', status: 'Completed & Verified' }
+    { title: 'CEO Brain & Planning models', description: 'Deploys CEOBrain contract, StrategicGoal categories, CompanyObjectives, and Initiative models.', status: 'Completed & Verified' },
+    { title: 'Delegation Framework', description: 'Establishes secure, role-restricted DelegationPlan and ExecutiveAssignment structures.', status: 'Completed & Verified' },
+    { title: 'Executive Council & Consensus', description: 'Models council assembly requests, voting parameters, and formal dissenting opinion capture.', status: 'Completed & Verified' },
+    { title: 'Weighted Prioritization Framework', description: 'Sets up scoring criteria for Roadmaps (Impact, Alignment, Cost, Risk, Time to Value).', status: 'Completed & Verified' }
   ]
 };
 
