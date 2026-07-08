@@ -31,7 +31,9 @@ import {
   DefaultModerationEngine,
   DefaultPromptValidator,
   DefaultInputValidator,
-  DefaultOutputValidator
+  DefaultOutputValidator,
+  DefaultAccountingEngine,
+  DefaultUsageTracker
 } from '@sbb/ai-sdk';
 
 describe('SBB AI Gateway & Provider Registry (GEN-AI-001 & GEN-AI-002)', () => {
@@ -428,6 +430,94 @@ describe('SBB AI Gateway & Provider Registry (GEN-AI-001 & GEN-AI-002)', () => {
       expect(result.safe).toBe(false);
       expect(result.flaggedCategories).toContain(SafetyCategory.HATE);
       expect(result.actionTaken).toBe('block');
+    });
+  });
+
+  describe('AI Cost & Token Accounting Foundation (GEN-AI-006)', () => {
+    it('should correctly support TokenUsage interface definition', () => {
+      const usage = {
+        inputTokens: 150,
+        outputTokens: 250,
+        cachedTokens: 50,
+        totalTokens: 450,
+      };
+
+      expect(usage.inputTokens).toBe(150);
+      expect(usage.outputTokens).toBe(250);
+      expect(usage.cachedTokens).toBe(50);
+      expect(usage.totalTokens).toBe(450);
+    });
+
+    it('should calculate cost estimations via DefaultUsageTracker', async () => {
+      const tracker = new DefaultUsageTracker();
+      const record = await tracker.trackUsage(
+        {
+          tenantId: 'sbb-tenant',
+          organizationId: 'sbb-org',
+          userId: 'user-123',
+          module: 'search',
+          provider: 'google-gemini',
+          model: 'gemini-1.5-flash',
+          capability: 'chat',
+          currency: 'USD',
+        },
+        {
+          inputTokens: 1000,
+          outputTokens: 2000,
+          totalTokens: 3000,
+        }
+      );
+
+      expect(record.recordId).toBeDefined();
+      expect(record.estimatedCost).toBe((1000 * 0.000002) + (2000 * 0.000006));
+      expect(record.actualCost).toBe(record.estimatedCost);
+    });
+
+    it('should record consumption and query summary report via DefaultAccountingEngine', async () => {
+      const engine = new DefaultAccountingEngine();
+      
+      const record1 = await engine.recordUsage({
+        tenantId: 'sbb-tenant',
+        organizationId: 'sbb-org',
+        userId: 'user-123',
+        module: 'chatbot',
+        provider: 'google-gemini',
+        model: 'gemini-1.5-flash',
+        capability: 'chat',
+        estimatedCost: 0.05,
+        actualCost: 0.05,
+        currency: 'USD',
+      });
+
+      const record2 = await engine.recordUsage({
+        tenantId: 'sbb-tenant',
+        organizationId: 'sbb-org',
+        userId: 'user-456',
+        module: 'coder',
+        provider: 'google-gemini',
+        model: 'gemini-1.5-pro',
+        capability: 'coding',
+        estimatedCost: 0.15,
+        actualCost: 0.15,
+        currency: 'USD',
+      });
+
+      expect(record1.recordId).toBeDefined();
+      expect(record2.recordId).toBeDefined();
+
+      const startDate = new Date();
+      startDate.setDate(startDate.getDate() - 1);
+      const endDate = new Date();
+      endDate.setDate(endDate.getDate() + 1);
+
+      const summary = await engine.getSummary('sbb-tenant', startDate, endDate);
+
+      expect(summary.totalRequests).toBe(2);
+      expect(summary.totalCostUSD).toBeCloseTo(0.20);
+      expect(summary.providers.find(p => p.providerId === 'google-gemini')).toBeDefined();
+      expect(summary.models.find(m => m.modelId === 'gemini-1.5-flash')).toBeDefined();
+      expect(summary.modules.find(mo => mo.module === 'chatbot')?.totalCostUSD).toBeCloseTo(0.05);
+      expect(summary.capabilities.find(c => c.capability === 'coding')?.requestCount).toBe(1);
     });
   });
 });

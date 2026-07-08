@@ -1,28 +1,28 @@
 import { TicketDetails, FileNode, FutureTicket } from './types';
 
 export const ticketDetails: TicketDetails = {
-  id: 'GEN-AI-005',
-  title: 'AI Safety & Moderation Framework',
+  id: 'GEN-AI-006',
+  title: 'AI Cost & Token Accounting Foundation',
   status: 'DONE',
   priority: 'CRITICAL',
   author: 'SBB Principal Architect',
   assignee: 'shraddha.revdikar@gmail.com',
-  objective: 'Build the enterprise AI Safety & Moderation framework to govern every AI request and response across the SBB Platform.',
-  modulePath: 'packages/ai-sdk/src/safety/moderation/moderation-engine.ts',
+  objective: 'Build the enterprise AI Cost & Token Accounting subsystem to track consumption across providers, tenants, modules, and users.',
+  modulePath: 'packages/ai-sdk/src/accounting/tracking/accounting-engine.ts',
   requirements: [
-    'Create contracts for Input Policy, Output Policy, Prompt Policy, Tenant Policy, and Compliance Policy.',
-    'Build the central ModerationEngine coordinating validation, policy lookup, risk classification, and action resolution.',
-    'Define strongly typed risk levels (None, Low, Medium, High, Critical) and safety categories (Hate, Violence, Self-Harm, PII, etc.).',
-    'Establish extensible Prompt, Input, and Output validators.',
-    'Formulate human approval policy contracts tracking required reviewers, reasons, and escalations.',
-    'Establish PII, Secret, and Sensitive business data redaction/masking abstractions.',
-    'Construct Event Schemas for ModerationPassed, ModerationBlocked, and HumanReviewRequired transitions.'
+    'Define strongly typed TokenUsage properties tracking input, output, cached, and total tokens.',
+    'Build CostRecord stubs capturing tenant, organization, user, module, provider, model, capability, and costs.',
+    'Formulate provider-agnostic PricingPolicy contracts to retrieve pricing matrices per model.',
+    'Define AIBudget trackers supporting tenant, organization, department, and project limits.',
+    'Establish UsageQuotas modeling daily, weekly, and monthly limit thresholds.',
+    'Create granular summary analytics reporting aggregates by provider, model, capability, and module.',
+    'Construct Event Schemas for TokenUsageRecorded, BudgetExceeded, and QuotaReached transitions.'
   ],
   responsibilities: [
-    { title: 'Core Moderation Engine', description: 'Handles request validation, risk classification, and mitigation action determination.', status: 'Completed & Verified' },
-    { title: 'Modular Safety Policies', description: 'Structures safety thresholds, input/output limits, tenant constraints, and compliance properties.', status: 'Completed & Verified' },
-    { title: 'Redaction & Validator APIs', description: 'Provides extensible redaction of secrets, masking of PII, and custom content validation stubs.', status: 'Completed & Verified' },
-    { title: 'Governance & Event Schemas', description: 'Tracks human approval policies, reviewer decisions, and lifecycle event records.', status: 'Completed & Verified' }
+    { title: 'Accounting & Tracking Engine', description: 'Supports registering usage records, estimating costs, and aggregating summary analytics.', status: 'Completed & Verified' },
+    { title: 'Token & Cost Structures', description: 'Structures immutable consumption records, currency definitions, and fine-grained token breakdowns.', status: 'Completed & Verified' },
+    { title: 'Quotas & Budget Policies', description: 'Provides granular contracts for budget thresholds, reset windows, and quota policies.', status: 'Completed & Verified' },
+    { title: 'Subsystem Event Models', description: 'Defines robust schema stubs for consumption tracking, budget alerts, and quota limit notifications.', status: 'Completed & Verified' }
   ]
 };
 
