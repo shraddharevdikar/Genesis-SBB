@@ -1,27 +1,28 @@
 import { TicketDetails, FileNode, FutureTicket } from './types';
 
 export const ticketDetails: TicketDetails = {
-  id: 'BRAIN-003',
-  title: 'Executive Council Foundation',
+  id: 'BRAIN-004',
+  title: 'Executive Decision Engine Foundation',
   status: 'DONE',
   priority: 'CRITICAL',
   author: 'SBB Principal Architect',
   assignee: 'shraddha.revdikar@gmail.com',
-  objective: 'Build the Executive Council Framework responsible for coordinating structured executive deliberation, consensus, dissent, escalation, and recommendations without AI reasoning or execution.',
-  modulePath: 'packages/business-brain/src/council/core/executive-council.ts',
+  objective: 'Build the shared Executive Decision Engine that every executive brain will use for structured decision-making, including alternative evaluations, tradeoffs, confidence scores, risks, and recommendations without AI reasoning.',
+  modulePath: 'packages/business-brain/src/decision-engine/core/decision-engine.ts',
   requirements: [
-    'Establish the ExecutiveCouncil contract supporting session control, inviting, opinions, consensus, escalation, and recommendations.',
-    'Establish supported C-Suite roles (CEO, CFO, COO, CTO, CMO, CRO, CHRO, Legal, Operations).',
-    'Model structural discussions capturing Agenda, Opinions, Counterarguments, Questions, and Recommendations.',
-    'Model consensus tracking including Agreement %, Confidence score, Supporting and Dissenting rosters.',
-    'Enforce escalation policies covering Human intervention, Missing expertise, Insufficient confidence, and Deadlocks.',
-    'Generate structured Meeting Summaries logging participants, decisions, open questions, risks, and follow-ups.'
+    'Establish the ExecutiveDecisionEngine contract supporting evaluation, comparisons, risk profiles, confidence scoring, and recommendations.',
+    'Model alternative options capturing cost, time, and strategic alignment parameters.',
+    'Model multi-dimensional evaluation dimensions covering strategic, financial, technical, customer, operational complexity, risk, and time to value.',
+    'Formulate unified confidence tracking metrics based on supporting evidence indexes and uncertainty models.',
+    'Define comprehensive multi-category risk assessments (business, financial, operational, technical, legal) with mitigation plans.',
+    'Design provider-independent recommendation summaries and governance policies (budget limits, escalation caps).',
+    'Broadcast core decision engine lifecycle events (DecisionStarted, RecommendationGenerated, EscalationRequired).'
   ],
   responsibilities: [
-    { title: 'Council Contracts & Sessions', description: 'Deploys ExecutiveCouncil, CouncilSession, and CouncilContext structures.', status: 'Completed & Verified' },
-    { title: 'Discussions & Opinion Models', description: 'Models AgendaItem, DiscussionThread, and multifaceted ExecutiveOpinion types.', status: 'Completed & Verified' },
-    { title: 'Consensus & Balloting Engine', description: 'Builds ConsensusModel, VotingResult, and CouncilDissentingOpinion records.', status: 'Completed & Verified' },
-    { title: 'Escalation & Facilitation Governance', description: 'Deploys EscalationPolicy and EscalationRule for deadlock mitigation and records MeetingSummary logs.', status: 'Completed & Verified' }
+    { title: 'Decision Core & Options', description: 'Deploys ExecutiveDecisionEngine interface, DecisionEngineContext, and DecisionOption alternative comparisons.', status: 'Completed & Verified' },
+    { title: 'Evaluation & Tradeoffs', description: 'Models EvaluationCriteria, EvaluationScore structures, and TradeoffAnalysis matrices.', status: 'Completed & Verified' },
+    { title: 'Confidence & Risk Assessment', description: 'Implements EvidenceReference reliability, Uncertainty levels, and multi-category RiskAssessment models.', status: 'Completed & Verified' },
+    { title: 'Governance & Event Broadcasts', description: 'Establishes DecisionPolicy threshold structures and publishes lifecycle Event schemas.', status: 'Completed & Verified' }
   ]
 };
 

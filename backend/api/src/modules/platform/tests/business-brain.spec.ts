@@ -53,7 +53,31 @@ import {
   MeetingSummary,
   CouncilStartedEvent,
   ConsensusReachedEvent,
-  EscalationTriggeredEvent
+  EscalationTriggeredEvent,
+  ExecutiveDecisionEngine,
+  DecisionSession as EngineDecisionSession,
+  DecisionEngineContext as EngineDecisionContext,
+  DecisionSessionStatus as EngineDecisionSessionStatus,
+  DecisionOption,
+  OptionComparison,
+  EvaluationCriteria,
+  EvaluationDimension,
+  EvaluationScore,
+  TradeoffAnalysis,
+  EvidenceReference,
+  UncertaintyModel,
+  ConfidenceModel,
+  MitigationPlan,
+  AssessedRisk,
+  RiskAssessment,
+  RiskCategory,
+  Recommendation,
+  RecommendationSummary,
+  ApprovalThreshold,
+  DecisionPolicy,
+  DecisionStartedEvent,
+  RecommendationGeneratedEvent,
+  EscalationRequiredEvent
 } from '@sbb/business-brain';
 
 class MockWorkingMemory implements WorkingMemory {
@@ -447,6 +471,151 @@ class MockExecutiveCouncilImpl implements ExecutiveCouncil {
       openQuestions: [],
       risksIdentified: [],
       followUpActions: [],
+    };
+  }
+}
+
+class MockExecutiveDecisionEngineImpl implements ExecutiveDecisionEngine {
+  public readonly engineId = 'engine-001';
+  public readonly name = 'Strategic C-Suite Decision Core';
+
+  public async evaluate(
+    session: EngineDecisionSession,
+    options: DecisionOption[],
+    criteria: EvaluationCriteria[]
+  ): Promise<EvaluationScore[]> {
+    return options.map(opt => ({
+      optionId: opt.id,
+      dimensionScores: criteria.map(crit => ({
+        dimension: crit.dimension,
+        score: opt.strategicAlignmentScore,
+        rationale: `Highly aligned with criteria weight ${crit.weight}`
+      })),
+      overallWeightedScore: opt.strategicAlignmentScore,
+    }));
+  }
+
+  public async compareOptions(
+    session: EngineDecisionSession,
+    options: DecisionOption[]
+  ): Promise<OptionComparison> {
+    return {
+      comparisonId: 'comp-101',
+      options,
+      bestPerformerByCostId: options[0]?.id,
+      bestPerformerByTimeId: options[0]?.id,
+      bestPerformerByAlignmentId: options[1]?.id,
+      comparisonSummary: 'Option B offers higher strategic value, but Option A is more cost-effective.'
+    };
+  }
+
+  public async analyzeTradeoffs(
+    session: EngineDecisionSession,
+    comparison: OptionComparison,
+    scores: EvaluationScore[]
+  ): Promise<TradeoffAnalysis> {
+    return {
+      analysisId: 'tradeoff-001',
+      comparisonId: comparison.comparisonId,
+      evaluationScores: scores,
+      primaryTradeoffs: [
+        {
+          winningOptionId: 'opt-b',
+          losingOptionId: 'opt-a',
+          tradeOffDescription: 'Higher alignment versus higher implementation cost.'
+        }
+      ],
+      riskImpactTradeoffText: 'Accepting Option B trades budget room for critical operational confidence.'
+    };
+  }
+
+  public async assessRisk(
+    session: EngineDecisionSession,
+    options: DecisionOption[]
+  ): Promise<RiskAssessment[]> {
+    return options.map(opt => ({
+      assessmentId: `risk-assess-${opt.id}`,
+      optionId: opt.id,
+      risks: [
+        {
+          id: `risk-1-${opt.id}`,
+          category: 'TECHNICAL',
+          description: 'Complexity integration delays',
+          probability: 2,
+          severity: 3,
+          currentMitigationPlans: [
+            {
+              mitigationId: 'mit-1',
+              stepDescription: 'Pre-allocate staff training weeks',
+              estimatedMitigationCostUSD: 15000,
+              residualRiskScore: 2
+            }
+          ]
+        }
+      ],
+      totalWeightedRiskScore: 6,
+    }));
+  }
+
+  public async calculateConfidence(
+    session: EngineDecisionSession,
+    optionId: string
+  ): Promise<ConfidenceModel> {
+    return {
+      confidenceScore: 0.88,
+      supportingEvidence: [
+        {
+          id: 'ev-1',
+          sourceUri: 'https://docs.enterprise-standard.org/spanner',
+          sourceTitle: 'Cloud Spanner Cost and Scale Benchmark',
+          reliabilityIndex: 0.95,
+          ageDays: 14
+        }
+      ],
+      criticalUncertainties: [
+        {
+          id: 'unc-1',
+          description: 'Spanner spot prices regional fluctuations',
+          level: 'LOW',
+          sourceOfUncertainty: 'Uncapped ingress cloud costs'
+        }
+      ],
+      keyAssumptions: ['Traffic spikes do not exceed 500% baseline'],
+      missingInformation: ['Vendor special tier discounts list']
+    };
+  }
+
+  public async generateRecommendation(
+    session: EngineDecisionSession,
+    policy: DecisionPolicy,
+    scores: EvaluationScore[],
+    comparisons: OptionComparison,
+    risks: RiskAssessment[]
+  ): Promise<RecommendationSummary> {
+    return {
+      summaryId: 'rec-sum-888',
+      sessionId: session.sessionId,
+      preferredOptionId: 'opt-b',
+      preferredOptionName: 'Option B (Distributed Cloud)',
+      alternativesConsideredIds: ['opt-a'],
+      executiveSummaryText: 'Based on high strategic weights and managed risk profiles, Option B is recommended.',
+      recommendationsList: [
+        {
+          recommendationId: 'rec-1',
+          preferredOptionId: 'opt-b',
+          rationale: 'Best-in-class multi-regional reliability and strategic capability.',
+          confidence: {
+            confidenceScore: 0.88,
+            supportingEvidence: [],
+            criticalUncertainties: [],
+            keyAssumptions: [],
+            missingInformation: []
+          },
+          associatedRiskAssessment: risks[1] || risks[0],
+          criticalFollowUpActions: ['Acquire budget clearance', 'Prepare engineering training paths']
+        }
+      ],
+      compiledAt: new Date()
     };
   }
 }
@@ -873,6 +1042,241 @@ describe('Executive Council Foundation (BRAIN-003)', () => {
       timestamp: new Date(),
     };
     expect(escalationTriggeredEvent.targetRecipient).toBe('HUMAN_OPERATOR');
+  });
+});
+
+describe('Executive Decision Engine Foundation (BRAIN-004)', () => {
+  it('should successfully evaluate options against multi-dimensional dimensions', async () => {
+    const engine = new MockExecutiveDecisionEngineImpl();
+    expect(engine.engineId).toBe('engine-001');
+    expect(engine.name).toBe('Strategic C-Suite Decision Core');
+
+    const context: EngineDecisionContext = {
+      tenantId: 'tenant-999',
+      correlationId: 'corr-xyz',
+      initiatedBy: ExecutiveRole.CTO,
+      category: 'DATABASE_MIGRATION',
+      timestamp: new Date()
+    };
+
+    const session: EngineDecisionSession = {
+      sessionId: 'session-dec-01',
+      context,
+      status: EngineDecisionSessionStatus.STARTED,
+      targetDate: new Date(),
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
+
+    const optionA: DecisionOption = {
+      id: 'opt-a',
+      name: 'Option A (Local CloudSQL)',
+      description: 'Single-node Cloud SQL DB with failover replica',
+      benefits: ['Low cost', 'Simple architecture'],
+      risks: ['Scaling overhead under peak spikes'],
+      costUSD: 45000,
+      timeDays: 14,
+      strategicAlignmentScore: 75
+    };
+
+    const optionB: DecisionOption = {
+      id: 'opt-b',
+      name: 'Option B (Distributed Spanner)',
+      description: 'Multi-region horizontally scalable transactional database',
+      benefits: ['Uncapped performance scale', 'Multi-region transactional integrity'],
+      risks: ['Higher initial operational complexity', 'Higher cost basis'],
+      costUSD: 145000,
+      timeDays: 30,
+      strategicAlignmentScore: 95
+    };
+
+    const criteria: EvaluationCriteria[] = [
+      { criteriaId: 'crit-1', dimension: EvaluationDimension.STRATEGIC_VALUE, weight: 0.4, description: 'Core long term value' },
+      { criteriaId: 'crit-2', dimension: EvaluationDimension.FINANCIAL_IMPACT, weight: 0.3, description: 'Cost efficiency limits' }
+    ];
+
+    // Evaluate
+    const evaluationScores = await engine.evaluate(session, [optionA, optionB], criteria);
+    expect(evaluationScores.length).toBe(2);
+    expect(evaluationScores[0].optionId).toBe('opt-a');
+    expect(evaluationScores[0].overallWeightedScore).toBe(75);
+    expect(evaluationScores[1].optionId).toBe('opt-b');
+    expect(evaluationScores[1].overallWeightedScore).toBe(95);
+
+    // Compare Options
+    const comparison = await engine.compareOptions(session, [optionA, optionB]);
+    expect(comparison.comparisonId).toBe('comp-101');
+    expect(comparison.bestPerformerByCostId).toBe('opt-a');
+    expect(comparison.bestPerformerByAlignmentId).toBe('opt-b');
+
+    // Analyze Tradeoffs
+    const tradeoff = await engine.analyzeTradeoffs(session, comparison, evaluationScores);
+    expect(tradeoff.analysisId).toBe('tradeoff-001');
+    expect(tradeoff.primaryTradeoffs[0].winningOptionId).toBe('opt-b');
+    expect(tradeoff.primaryTradeoffs[0].losingOptionId).toBe('opt-a');
+    expect(tradeoff.riskImpactTradeoffText).toContain('Option B');
+  });
+
+  it('should evaluate risk profiles and compute confidence intervals', async () => {
+    const engine = new MockExecutiveDecisionEngineImpl();
+
+    const context: EngineDecisionContext = {
+      tenantId: 'tenant-999',
+      correlationId: 'corr-xyz',
+      initiatedBy: ExecutiveRole.CFO,
+      category: 'CAPEX_INVESTMENT',
+      timestamp: new Date()
+    };
+
+    const session: EngineDecisionSession = {
+      sessionId: 'session-dec-01',
+      context,
+      status: EngineDecisionSessionStatus.EVALUATING,
+      targetDate: new Date(),
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
+
+    const optionA: DecisionOption = {
+      id: 'opt-a',
+      name: 'Option A (Local CloudSQL)',
+      description: 'Single-node Cloud SQL DB with failover replica',
+      benefits: [],
+      risks: [],
+      costUSD: 45000,
+      timeDays: 14,
+      strategicAlignmentScore: 75
+    };
+
+    const optionB: DecisionOption = {
+      id: 'opt-b',
+      name: 'Option B (Distributed Spanner)',
+      description: 'Multi-region database',
+      benefits: [],
+      risks: [],
+      costUSD: 145000,
+      timeDays: 30,
+      strategicAlignmentScore: 95
+    };
+
+    const risks = await engine.assessRisk(session, [optionA, optionB]);
+    expect(risks.length).toBe(2);
+    expect(risks[0].optionId).toBe('opt-a');
+    expect(risks[0].totalWeightedRiskScore).toBe(6);
+    expect(risks[0].risks[0].category).toBe('TECHNICAL');
+    expect(risks[0].risks[0].currentMitigationPlans[0].estimatedMitigationCostUSD).toBe(15000);
+
+    const confidence = await engine.calculateConfidence(session, 'opt-b');
+    expect(confidence.confidenceScore).toBe(0.88);
+    expect(confidence.supportingEvidence[0].sourceTitle).toContain('Spanner');
+    expect(confidence.criticalUncertainties[0].level).toBe('LOW');
+  });
+
+  it('should formulate provider-independent recommendations under governance policies', async () => {
+    const engine = new MockExecutiveDecisionEngineImpl();
+
+    const context: EngineDecisionContext = {
+      tenantId: 'tenant-999',
+      correlationId: 'corr-xyz',
+      initiatedBy: ExecutiveRole.CEO,
+      category: 'GENERAL',
+      timestamp: new Date()
+    };
+
+    const session: EngineDecisionSession = {
+      sessionId: 'session-dec-01',
+      context,
+      status: EngineDecisionSessionStatus.RECOMMENDED,
+      targetDate: new Date(),
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
+
+    const threshold: ApprovalThreshold = {
+      thresholdId: 'thresh-1',
+      name: 'Tier-1 Investment Limit',
+      minAuthorityLevelRequired: AuthorityLevel.L4_EXECUTIVE,
+      budgetCapUSD: 250000,
+      riskLevelCap: 'HIGH'
+    };
+
+    const policy: DecisionPolicy = {
+      policyId: 'policy-001',
+      tenantId: 'tenant-999',
+      name: 'Global Cloud Architecture Strategy',
+      approvalThresholds: [threshold],
+      forceHumanEscalationIfRiskAbove: 'CRITICAL',
+      isActive: true
+    };
+
+    const scores: EvaluationScore[] = [
+      { optionId: 'opt-b', dimensionScores: [], overallWeightedScore: 95 }
+    ];
+
+    const comparison: OptionComparison = {
+      comparisonId: 'comp-101',
+      options: [],
+      comparisonSummary: 'Summary of comparisons.'
+    };
+
+    const risks: RiskAssessment[] = [
+      { assessmentId: 'ra-b', optionId: 'opt-b', risks: [], totalWeightedRiskScore: 6 }
+    ];
+
+    const recSummary = await engine.generateRecommendation(session, policy, scores, comparison, risks);
+    expect(recSummary.summaryId).toBe('rec-sum-888');
+    expect(recSummary.preferredOptionId).toBe('opt-b');
+    expect(recSummary.recommendationsList[0].rationale).toContain('multi-regional');
+  });
+
+  it('should construct and validate core Decision Engine Event types', () => {
+    const context: EngineDecisionContext = {
+      tenantId: 'tenant-omega',
+      correlationId: 'corr-12345',
+      initiatedBy: ExecutiveRole.CFO,
+      category: 'COMPLIANCE',
+      timestamp: new Date()
+    };
+
+    const startEvent: DecisionStartedEvent = {
+      eventId: 'evt-started-001',
+      tenantId: 'tenant-omega',
+      sessionId: 'sess-omega',
+      context,
+      timestamp: new Date()
+    };
+    expect(startEvent.sessionId).toBe('sess-omega');
+
+    const summary: RecommendationSummary = {
+      summaryId: 'sum-omega',
+      sessionId: 'sess-omega',
+      preferredOptionId: 'opt-b',
+      preferredOptionName: 'Option B',
+      alternativesConsideredIds: [],
+      executiveSummaryText: 'Recommended.',
+      recommendationsList: [],
+      compiledAt: new Date()
+    };
+
+    const genEvent: RecommendationGeneratedEvent = {
+      eventId: 'evt-generated-001',
+      tenantId: 'tenant-omega',
+      sessionId: 'sess-omega',
+      summary,
+      timestamp: new Date()
+    };
+    expect(genEvent.summary.summaryId).toBe('sum-omega');
+
+    const escEvent: EscalationRequiredEvent = {
+      eventId: 'evt-esc-001',
+      tenantId: 'tenant-omega',
+      sessionId: 'sess-omega',
+      context,
+      reason: 'Budget exceeded cap rule',
+      minAuthorityLevelRequired: 'L5_BOARD',
+      timestamp: new Date()
+    };
+    expect(escEvent.reason).toBe('Budget exceeded cap rule');
   });
 });
 

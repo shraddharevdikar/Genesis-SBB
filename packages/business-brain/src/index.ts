@@ -87,3 +87,39 @@ export * from './council/facilitation/meeting-summary.js';
 export * from './council/events/council-started.event.js';
 export * from './council/events/consensus-reached.event.js';
 export * from './council/events/escalation-triggered.event.js';
+
+// Decision Engine Core
+export * from './decision-engine/core/decision-engine.js';
+export * from './decision-engine/core/decision-session.js';
+export * from './decision-engine/core/decision-engine-context.js';
+
+// Decision Engine Alternatives
+export * from './decision-engine/alternatives/decision-option.js';
+export * from './decision-engine/alternatives/option-comparison.js';
+
+// Decision Engine Evaluation
+export * from './decision-engine/evaluation/evaluation-criteria.js';
+export * from './decision-engine/evaluation/evaluation-score.js';
+export * from './decision-engine/evaluation/tradeoff-analysis.js';
+
+// Decision Engine Confidence
+export * from './decision-engine/confidence/confidence-model.js';
+export * from './decision-engine/confidence/evidence-reference.js';
+export * from './decision-engine/confidence/uncertainty-model.js';
+
+// Decision Engine Risk
+export * from './decision-engine/risk/risk-assessment.js';
+export * from './decision-engine/risk/mitigation-plan.js';
+
+// Decision Engine Recommendation
+export * from './decision-engine/recommendation/recommendation.js';
+export * from './decision-engine/recommendation/recommendation-summary.js';
+
+// Decision Engine Governance
+export * from './decision-engine/governance/decision-policy.js';
+export * from './decision-engine/governance/approval-threshold.js';
+
+// Decision Engine Events
+export * from './decision-engine/events/decision-started.event.js';
+export * from './decision-engine/events/recommendation-generated.event.js';
+export * from './decision-engine/events/escalation-required.event.js';
