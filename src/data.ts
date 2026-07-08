@@ -1,26 +1,27 @@
 import { TicketDetails, FileNode, FutureTicket } from './types';
 
 export const ticketDetails: TicketDetails = {
-  id: 'GEN-AI-010',
-  title: 'Unified AI Gateway API',
+  id: 'BRAIN-001',
+  title: 'Executive Brain Framework',
   status: 'DONE',
   priority: 'CRITICAL',
   author: 'SBB Principal Architect',
   assignee: 'shraddha.revdikar@gmail.com',
-  objective: 'Expose the complete AI Gateway through a single, provider-independent API, unifying all previously built AI Gateway subsystems into one orchestration pipeline.',
-  modulePath: 'packages/ai-sdk/src/gateway/index.ts',
+  objective: 'Build the foundational Executive Brain Framework establishing common contracts, lifecycle state models, memory references, decision abstractions, collaboration interfaces, and governance mechanisms for C-Suite agents.',
+  modulePath: 'packages/business-brain/src/index.ts',
   requirements: [
-    'Implement AIGatewayAPI with execute, stream, estimateCost, validate, and getCapabilities methods.',
-    'Formulate provider-independent response model covering Content, Metadata, Usage, Safety, Cost, and Telemetry.',
-    'Build a 10-stage sequential Execution Pipeline orchestrating request validation, safety evaluation, routing selection, token accounting, and metric telemetry.',
-    'Deploy a complete health abstraction monitor representing available providers, registry health, routing engines, safety checkers, and telemetry components.',
-    'Write mocked BDD integration tests verifying successful executions, streaming, safety policy blocks, unregistered providers, routing fallbacks, and cost ledgers.'
+    'Implement AIGatewayAPI / Executive Brain contracts (analyze, advise, collaborate, delegate, review).',
+    'Establish supported C-Suite executive roles (CEO, CFO, COO, CTO, CMO, CHRO, CRO, Legal, Operations).',
+    'Structure identity and persona details including KPIs, objective goals, and communication styles.',
+    'Model executive memory layers (Working, Long-term reference, Organizational reference).',
+    'Formulate secure decision abstractions (DecisionRequest, DecisionResponse, DecisionContext).',
+    'Establish governance models covering AuthorityLevels and ApprovalPolicies.'
   ],
   responsibilities: [
-    { title: 'Unified Gateway Facade & API', description: 'Deploys a robust, provider-agnostic facade coordinating the execute and stream workflows.', status: 'Completed & Verified' },
-    { title: '10-Stage Execution Pipeline', description: 'Sequentially tracks context from request validation and safety checks through provider routing, accounting ledger updates, and telemetry logs.', status: 'Completed & Verified' },
-    { title: 'Component Health Monitor', description: 'Structures system-wide active states, registry indicators, and telemetry monitors.', status: 'Completed & Verified' },
-    { title: 'BDD Integration Test Suite', description: 'Validates all core operational paths including stream rendering, safety block rejection, and routing failover.', status: 'Completed & Verified' }
+    { title: 'Executive Brain Contracts', description: 'Deploys abstract brain behaviors with analyze, advise, collaborate, delegate, and review capabilities.', status: 'Completed & Verified' },
+    { title: 'C-Suite Role & Identity Matrix', description: 'Defines roles, profiles, and customizable communication style metadata.', status: 'Completed & Verified' },
+    { title: 'Memory & Decision Schema', description: 'Builds strict contracts for active working memory buffers and structured decision context models.', status: 'Completed & Verified' },
+    { title: 'Governance & Collaboration Protocols', description: 'Coordinates authority levels, approvals, and peer-to-peer alignment events.', status: 'Completed & Verified' }
   ]
 };
 

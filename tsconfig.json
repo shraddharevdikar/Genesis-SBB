@@ -45,6 +45,9 @@
       ],
       "@sbb/ai-sdk": [
         "./packages/ai-sdk/src/index.ts"
+      ],
+      "@sbb/business-brain": [
+        "./packages/business-brain/src/index.ts"
       ]
     },
     "allowImportingTsExtensions": true,

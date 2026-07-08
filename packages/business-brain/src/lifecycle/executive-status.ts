@@ -1,0 +1,7 @@
+export enum ExecutiveStatus {
+  INITIALIZING = 'INITIALIZING',
+  ACTIVE = 'ACTIVE',
+  PAUSED = 'PAUSED',
+  DEGRADED = 'DEGRADED',
+  SHUTDOWN = 'SHUTDOWN'
+}

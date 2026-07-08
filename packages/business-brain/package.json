@@ -1,0 +1,20 @@
+{
+  "name": "@sbb/business-brain",
+  "version": "1.0.0",
+  "description": "Foundational contracts, lifecycle states, memory interfaces, and collaboration protocols for SBB Executive Brains",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@sbb/shared": "^1.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.5",
+    "@types/node": "^20.12.12"
+  },
+  "publishConfig": {
+    "access": "restricted"
+  }
+}
