@@ -123,3 +123,49 @@ export * from './decision-engine/governance/approval-threshold.js';
 export * from './decision-engine/events/decision-started.event.js';
 export * from './decision-engine/events/recommendation-generated.event.js';
 export * from './decision-engine/events/escalation-required.event.js';
+
+// CFO Brain Core
+export * from './cfo/cfo-brain.js';
+
+// CFO Financial Health
+export * from './cfo/financial-health/financial-health.js';
+export * from './cfo/financial-health/liquidity-status.js';
+export * from './cfo/financial-health/profitability-status.js';
+export * from './cfo/financial-health/cashflow-status.js';
+
+// CFO Budget
+export * from './cfo/budget/budget-plan.js';
+export * from './cfo/budget/budget-allocation.js';
+export * from './cfo/budget/spending-priority.js';
+
+// CFO Investment
+export * from './cfo/investment/investment-opportunity.js';
+export * from './cfo/investment/roi-analysis.js';
+export * from './cfo/investment/payback-analysis.js';
+export * from './cfo/investment/capital-allocation.js';
+
+// CFO Forecast
+export * from './cfo/forecast/financial-forecast.js';
+export * from './cfo/forecast/scenario-analysis.js';
+
+// CFO Risk
+export * from './cfo/risk/financial-risk.js';
+export * from './cfo/risk/financial-mitigation.js';
+
+// CFO Metrics
+export * from './cfo/metrics/financial-kpi.js';
+export * from './cfo/metrics/business-metric.js';
+
+// CFO Advisory
+export * from './cfo/advisory/financial-recommendation.js';
+export * from './cfo/advisory/executive-financial-summary.js';
+
+// CFO Governance
+export * from './cfo/governance/approval-limit.js';
+export * from './cfo/governance/financial-policy.js';
+
+// CFO Events
+export * from './cfo/events/budget-reviewed.event.js';
+export * from './cfo/events/investment-evaluated.event.js';
+export * from './cfo/events/financial-risk-detected.event.js';
+
