@@ -24,3 +24,29 @@ export * from './health/provider-health-monitor.js';
 export * from './events/provider-registered.event.js';
 export * from './events/provider-unregistered.event.js';
 export * from './events/provider-unhealthy.event.js';
+
+// Google Gemini Provider
+export * from './google/gemini-provider.js';
+export * from './google/gemini-chat.js';
+export * from './google/gemini-reasoning.js';
+export * from './google/gemini-embeddings.js';
+export * from './google/gemini-vision.js';
+export * from './google/gemini-mapper.js';
+
+// OpenAI Provider
+export * from './openai/openai-provider.js';
+export * from './openai/openai-chat.js';
+export * from './openai/openai-reasoning.js';
+export * from './openai/openai-embeddings.js';
+export * from './openai/openai-vision.js';
+export * from './openai/openai-mapper.js';
+
+// Shared Provider Contracts
+export * from './shared/provider-errors.js';
+export * from './shared/provider-options.js';
+export * from './shared/provider-result.js';
+
+// Configuration Contracts
+export * from './configuration/provider-config.js';
+export * from './configuration/provider-credentials.js';
+

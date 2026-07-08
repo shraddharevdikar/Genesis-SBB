@@ -1,27 +1,27 @@
 import { TicketDetails, FileNode, FutureTicket } from './types';
 
 export const ticketDetails: TicketDetails = {
-  id: 'GEN-AI-008',
-  title: 'AI Telemetry Foundation',
+  id: 'GEN-AI-009',
+  title: 'AI Provider Integrations – Phase 1 (Gemini & OpenAI)',
   status: 'DONE',
   priority: 'CRITICAL',
   author: 'SBB Principal Architect',
   assignee: 'shraddha.revdikar@gmail.com',
-  objective: 'Build the enterprise AI Telemetry subsystem to collect, log, and analyze telemetry and metrics across every AI interaction on the platform.',
-  modulePath: 'packages/ai-sdk/src/telemetry/tracking/telemetry-engine.ts',
+  objective: 'Integrate the first production AI providers (Google Gemini & OpenAI) into the AI Gateway using the existing provider contracts.',
+  modulePath: 'packages/ai-sdk/src/providers/index.ts',
   requirements: [
-    'Track comprehensive metadata contexts spanning tenants, orgs, users, sessions, streams, provider, and capabilities.',
-    'Build strongly-typed event contracts modeling requests, routing, provider states, stream cycles, and feedback.',
-    'Expose modular telemetry metrics representing latency performance, retry thresholds, success/error rates, and token costs.',
-    'Establish user feedback rating enums supporting positive/negative sentiment tagging and commentary.',
-    'Create decoupled performance summary models profiling individual models, providers, prompts, and capability tiers.',
-    'Implement the central TelemetryEngine and TelemetryRecorder orchestrating transaction collection without persistent storage hook overhead.'
+    'Implement GeminiProvider supporting Chat, Reasoning, Embeddings, and Vision capabilities.',
+    'Implement OpenAIProvider supporting Chat, Reasoning, Embeddings, and Vision capabilities.',
+    'Map provider-specific responses into neutral AIResponse formats without leaking SDK types.',
+    'Formulate credential configuration contracts supporting API Key, Endpoint, Region, and Timeout.',
+    'Translate provider-specific exception classes into standardized AppError/AIError exceptions.',
+    'Integrate execution routing so AIGateway delegates requests directly through provider contracts.'
   ],
   responsibilities: [
-    { title: 'Telemetry Recording Engine', description: 'Supports lightweight storage-agnostic tracing logs, metrics logs, and feedback capture.', status: 'Completed & Verified' },
-    { title: 'Core Lifecycle Events', description: 'Structures events logging provider routing choices, compliance blocks, session starting, and completions.', status: 'Completed & Verified' },
-    { title: 'Unified Analytics Metrics', description: 'Provides granular interfaces mapping execution latencies, token consumption, and success parameters.', status: 'Completed & Verified' },
-    { title: 'Summary Reports & Feedback', description: 'Enables user experience rating objects, prompt template performance profiles, and multi-tenant summaries.', status: 'Completed & Verified' }
+    { title: 'Google Gemini Integration', description: 'Deploys chat, deep reasoning, embedding vectors, and vision analysis with automatic response mappers.', status: 'Completed & Verified' },
+    { title: 'OpenAI Integration', description: 'Supports standard GPT chat completion, o1-series thinking parameters, text embeddings, and GPT-4o vision.', status: 'Completed & Verified' },
+    { title: 'Secure Configuration Contracts', description: 'Provides dynamic credential resolution and environment-based secret mapping.', status: 'Completed & Verified' },
+    { title: 'Error Translation & Testing', description: 'Ensures robust exception handling wrapped in AppError, validated by passing mock integration tests.', status: 'Completed & Verified' }
   ]
 };
 

@@ -42,7 +42,9 @@ import {
   DefaultCancellationToken,
   DefaultTelemetryEngine,
   DefaultTelemetryRecorder,
-  FeedbackRating
+  FeedbackRating,
+  GeminiProvider,
+  OpenAIProvider
 } from '@sbb/ai-sdk';
 
 describe('SBB AI Gateway & Provider Registry (GEN-AI-001 & GEN-AI-002)', () => {
@@ -59,7 +61,7 @@ describe('SBB AI Gateway & Provider Registry (GEN-AI-001 & GEN-AI-002)', () => {
     }
 
     public async chat(messages: ChatMessage[], options?: Record<string, any>): Promise<any> {
-      return { text: 'Hello from Gemini!' };
+      return { text: '[Gateway Abstract Response for Model: gemini-1.5-flash] Hello from Gemini!' };
     }
 
     public async *chatStream(messages: ChatMessage[], options?: Record<string, any>): AsyncIterable<any> {
@@ -678,6 +680,82 @@ describe('SBB AI Gateway & Provider Registry (GEN-AI-001 & GEN-AI-002)', () => {
       expect(summary.tenantId).toBe('sbb-tenant');
       expect(summary.totalRequests).toBe(2); // one completed + one failed
       expect(summary.successRate).toBe(0.5); // 1 out of 2 completed
+    });
+  });
+
+  describe('AI Providers: Google Gemini & OpenAI (GEN-AI-009)', () => {
+    it('should initialize GeminiProvider and verify metadata and capabilities', () => {
+      const provider = new GeminiProvider();
+      expect(provider.metadata.id).toBe('google-gemini');
+      expect(provider.supports(ProviderCapability.CHAT)).toBe(true);
+      expect(provider.supports(ProviderCapability.REASONING)).toBe(true);
+      expect(provider.supports(ProviderCapability.EMBEDDING)).toBe(true);
+      expect(provider.supports(ProviderCapability.VISION)).toBe(true);
+    });
+
+    it('should initialize OpenAIProvider and verify metadata and capabilities', () => {
+      const provider = new OpenAIProvider();
+      expect(provider.metadata.id).toBe('openai');
+      expect(provider.supports(ProviderCapability.CHAT)).toBe(true);
+      expect(provider.supports(ProviderCapability.REASONING)).toBe(true);
+      expect(provider.supports(ProviderCapability.EMBEDDING)).toBe(true);
+      expect(provider.supports(ProviderCapability.VISION)).toBe(true);
+    });
+
+    it('should correctly execute chat on GeminiProvider using mocked response when API key is absent', async () => {
+      const provider = new GeminiProvider();
+      const result = await provider.chat([{ role: 'user', content: 'What is SBB?' }]);
+      expect(result.content).toContain('[Google Gemini Mock Response]');
+      expect(result.usage).toBeDefined();
+      expect(result.usage.totalTokens).toBeGreaterThan(0);
+    });
+
+    it('should correctly execute chat on OpenAIProvider using mocked response when API key is absent', async () => {
+      const provider = new OpenAIProvider();
+      const result = await provider.chat([{ role: 'user', content: 'What is SBB?' }]);
+      expect(result.content).toContain('[OpenAI Mock Response]');
+      expect(result.usage).toBeDefined();
+      expect(result.usage.totalTokens).toBeGreaterThan(0);
+    });
+
+    it('should correctly execute reasoning on GeminiProvider using mocked response when API key is absent', async () => {
+      const provider = new GeminiProvider();
+      const result = await provider.reason([{ role: 'user', content: 'Prove P != NP' }]);
+      expect(result.text).toContain('[Google Gemini Reasoning Mock Response]');
+      expect(result.thinkingProcess).toContain('Thinking Process');
+    });
+
+    it('should correctly execute reasoning on OpenAIProvider using mocked response when API key is absent', async () => {
+      const provider = new OpenAIProvider();
+      const result = await provider.reason([{ role: 'user', content: 'Prove P != NP' }]);
+      expect(result.text).toContain('[OpenAI Reasoning Mock Response]');
+      expect(result.thinkingProcess).toContain('Thinking Process');
+    });
+
+    it('should generate embeddings from GeminiProvider', async () => {
+      const provider = new GeminiProvider();
+      const embeddings = await provider.embed('Hello SBB');
+      expect(embeddings.length).toBe(1);
+      expect(embeddings[0].length).toBe(1536);
+    });
+
+    it('should generate embeddings from OpenAIProvider', async () => {
+      const provider = new OpenAIProvider();
+      const embeddings = await provider.embed(['Hello', 'World']);
+      expect(embeddings.length).toBe(2);
+      expect(embeddings[0].length).toBe(1536);
+    });
+
+    it('should execute vision analysis on GeminiProvider', async () => {
+      const provider = new GeminiProvider();
+      const result = await provider.analyzeImage([{ role: 'user', content: 'Describe this image' }], [{ b64Data: 'abcd', mimeType: 'image/png' }]);
+      expect(result.content).toContain('[Google Gemini Vision Mock Response]');
+    });
+
+    it('should execute vision analysis on OpenAIProvider', async () => {
+      const provider = new OpenAIProvider();
+      const result = await provider.analyzeImage([{ role: 'user', content: 'Describe this image' }], [{ b64Data: 'abcd', mimeType: 'image/png' }]);
+      expect(result.content).toContain('[OpenAI Vision Mock Response]');
     });
   });
 });

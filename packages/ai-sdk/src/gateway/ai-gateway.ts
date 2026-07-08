@@ -35,21 +35,72 @@ export class AIGateway {
       return cachedResponse;
     }
 
-    // 3. Route request to resolve provider and model
+        // 4. Route request to resolve provider and model
     const route = await this.modelRouter.route(request);
     
     // 4. Resolve the actual provider interface (validates provider exists)
     const provider = this.providerRegistry.get(route.providerId);
+    if (!provider) {
+      throw new Error(`Required provider with ID "${route.providerId}" is not registered.`);
+    }
     
-    // Simulate API Response generation as "No implementation/execution"
-    const durationMs = Date.now() - startTime;
-    const usage = {
+    let responseContent = '';
+    let usage = {
       promptTokens: request.prompt ? Math.ceil(request.prompt.length / 4) : 10,
       completionTokens: 25,
       totalTokens: (request.prompt ? Math.ceil(request.prompt.length / 4) : 10) + 25,
     };
+    let choices: any[] = [];
+    const durationMs = Date.now() - startTime;
 
-    const responseContent = `[Gateway Abstract Response for Model: ${route.modelId}] Processed input successfully.`;
+    try {
+      const messages = request.messages || (request.prompt ? [{ role: 'user', content: request.prompt }] : []);
+      const capability = request.options?.capability || 'chat';
+
+      if (capability === 'embedding' && 'embed' in provider && typeof (provider as any).embed === 'function') {
+        const texts = request.options?.text || request.prompt || '';
+        const embeddings = await (provider as any).embed(texts, request.options);
+        responseContent = JSON.stringify(embeddings);
+      } else if (capability === 'reasoning' && 'reason' in provider && typeof (provider as any).reason === 'function') {
+        const result = await (provider as any).reason(messages, request.options);
+        responseContent = result.text;
+        if (result.thinkingProcess) {
+          choices = [{ text: result.text, thinkingProcess: result.thinkingProcess }];
+        }
+      } else if (capability === 'vision' && 'analyzeImage' in provider && typeof (provider as any).analyzeImage === 'function') {
+        const images = request.options?.images || [];
+        const result = await (provider as any).analyzeImage(messages, images, request.options);
+        responseContent = result.content || result.text || (typeof result === 'string' ? result : JSON.stringify(result));
+        if (result.usage) {
+          usage = {
+            promptTokens: result.usage.promptTokens || result.usage.prompt_tokens || usage.promptTokens,
+            completionTokens: result.usage.completionTokens || result.usage.completion_tokens || usage.completionTokens,
+            totalTokens: result.usage.totalTokens || result.usage.total_tokens || usage.totalTokens,
+          };
+        }
+        if (result.choices) choices = result.choices;
+      } else if ('chat' in provider && typeof (provider as any).chat === 'function') {
+        const result = await (provider as any).chat(messages, {
+          temperature: request.temperature,
+          maxTokens: request.maxTokens,
+          ...request.options
+        });
+        responseContent = result.content || result.text || (typeof result === 'string' ? result : JSON.stringify(result));
+        if (result.usage) {
+          usage = {
+            promptTokens: result.usage.promptTokens || result.usage.prompt_tokens || usage.promptTokens,
+            completionTokens: result.usage.completionTokens || result.usage.completion_tokens || usage.completionTokens,
+            totalTokens: result.usage.totalTokens || result.usage.total_tokens || usage.totalTokens,
+          };
+        }
+        if (result.choices) choices = result.choices;
+      } else {
+        responseContent = `[Gateway Abstract Response for Model: ${route.modelId}] Processed input successfully.`;
+      }
+    } catch (err: any) {
+      this.telemetry.trackFailure(request, route.providerId, route.modelId, Date.now() - startTime, err);
+      throw err;
+    }
 
     const response: AIResponse = {
       id: Math.random().toString(36).substring(7),
@@ -61,6 +112,7 @@ export class AIGateway {
         durationMs,
         timestamp: new Date().toISOString(),
       },
+      choices,
     };
 
     // 5. Evaluate safety on output if configured
