@@ -32,7 +32,28 @@ import {
   StrategicPolicy,
   StrategyCreatedEvent,
   DelegationIssuedEvent,
-  ExecutiveCouncilRequestedEvent
+  ExecutiveCouncilRequestedEvent,
+  ExecutiveCouncil,
+  CouncilSession,
+  CouncilContext,
+  CouncilSessionStatus,
+  CouncilRole,
+  CouncilMember,
+  AgendaItem,
+  ExecutiveOpinion,
+  DiscussionThread,
+  ConsensusModel,
+  VotingResult,
+  CouncilDissentingOpinion,
+  EscalationPolicy,
+  EscalationRule,
+  EscalationTriggerType,
+  EscalationRecipient,
+  CouncilFacilitator,
+  MeetingSummary,
+  CouncilStartedEvent,
+  ConsensusReachedEvent,
+  EscalationTriggeredEvent
 } from '@sbb/business-brain';
 
 class MockWorkingMemory implements WorkingMemory {
@@ -257,6 +278,175 @@ class MockCEOBrainImpl implements CEOBrain {
       decisionOutcome: 'PASSED',
       dissentingOpinions: [],
       resolvedAt: new Date(),
+    };
+  }
+}
+
+class MockCouncilFacilitatorImpl implements CouncilFacilitator {
+  public readonly facilitatorId = 'fac-001';
+  public readonly name = 'Executive Facilitator Bot';
+
+  public async facilitateSession(session: CouncilSession): Promise<MeetingSummary> {
+    return {
+      summaryId: 'meeting-sum-777',
+      sessionId: session.sessionId,
+      compiledAt: new Date(),
+      participants: session.activeMembers.map(m => m.role),
+      decisions: [
+        {
+          agendaItemId: 'agenda-item-1',
+          approvedProposal: 'Approved Cloud Expansion',
+          description: 'Expanding cloud regional deployment to EU West'
+        }
+      ],
+      openQuestions: ['How do we handle GDPR for localized servers?'],
+      risksIdentified: [
+        { description: 'Data regulatory compliance delays', impactLevel: 'HIGH' }
+      ],
+      followUpActions: [
+        { assignee: CouncilRole.LEGAL, action: 'GDPR audit of the cloud host', deadline: new Date() }
+      ],
+    };
+  }
+
+  public async recordOpinion(sessionId: string, opinion: ExecutiveOpinion): Promise<void> {
+    // No-op
+  }
+
+  public async evaluateConsensus(sessionId: string, agendaItemId: string): Promise<ConsensusModel> {
+    return {
+      consensusId: 'consensus-con-1',
+      sessionId,
+      agendaItemId,
+      agreementPercentage: 85,
+      confidenceScore: 0.92,
+      supportingExecutives: [CouncilRole.CEO, CouncilRole.CTO, CouncilRole.CFO],
+      dissentingExecutives: [CouncilRole.LEGAL],
+      dissentingOpinions: [
+        {
+          dissenter: CouncilRole.LEGAL,
+          coreObjection: 'Compliance risks with regional hosting',
+          suggestedMitigations: ['Add strict audit logging'],
+          riskImpactEstimate: 'Regulatory warning fine'
+        }
+      ],
+      resolvedProposal: 'Approved Cloud Expansion with strict audit logging',
+      achievedAt: new Date(),
+    };
+  }
+
+  public async triggerEscalation(sessionId: string, policy: EscalationPolicy, reason: string): Promise<{ escalationTriggered: boolean; resolutionPath: string }> {
+    return {
+      escalationTriggered: true,
+      resolutionPath: `Escalated to ${policy.targetRecipient} because of deadlock on ${reason}`,
+    };
+  }
+}
+
+class MockExecutiveCouncilImpl implements ExecutiveCouncil {
+  public readonly id = 'council-01';
+  public readonly name = 'Board Executive Council';
+
+  public async startSession(context: CouncilContext, invitedRoles: CouncilRole[]): Promise<CouncilSession> {
+    return {
+      sessionId: 'session-101',
+      context,
+      status: CouncilSessionStatus.ACTIVE,
+      invitedRoles,
+      activeMembers: [
+        { id: 'mem-ceo', name: 'John Doe', role: CouncilRole.CEO, department: 'Corporate', expertise: ['Strategy', 'Leadership'] }
+      ],
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+  }
+
+  public async inviteExecutives(sessionId: string, roles: CouncilRole[]): Promise<CouncilSession> {
+    return {
+      sessionId,
+      context: {
+        tenantId: 'tenant-1',
+        correlationId: 'corr-1',
+        initiatedAt: new Date(),
+        initiatorId: 'mem-ceo',
+        initiatorRole: CouncilRole.CEO,
+        sessionTopic: 'Budget Optimization'
+      },
+      status: CouncilSessionStatus.ACTIVE,
+      invitedRoles: roles,
+      activeMembers: [
+        { id: 'mem-ceo', name: 'John Doe', role: CouncilRole.CEO, department: 'Corporate', expertise: ['Strategy'] },
+        { id: 'mem-cto', name: 'Dev Lead', role: CouncilRole.CTO, department: 'Engineering', expertise: ['Cloud Architecture'] }
+      ],
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+  }
+
+  public async collectOpinions(sessionId: string, agendaItemId: string): Promise<ExecutiveOpinion[]> {
+    return [
+      {
+        opinionId: 'op-001',
+        author: CouncilRole.CTO,
+        type: 'OPINION',
+        content: 'We should transition to serverless database structures',
+        timestamp: new Date()
+      },
+      {
+        opinionId: 'op-002',
+        author: CouncilRole.CFO,
+        type: 'COUNTERARGUMENT',
+        content: 'Serverless cost patterns might be unpredictable at scale',
+        timestamp: new Date(),
+        referenceOpinionId: 'op-001'
+      }
+    ];
+  }
+
+  public async measureConsensus(sessionId: string, agendaItemId: string): Promise<ConsensusModel> {
+    return {
+      consensusId: 'consensus-01',
+      sessionId,
+      agendaItemId,
+      agreementPercentage: 75,
+      confidenceScore: 0.85,
+      supportingExecutives: [CouncilRole.CEO, CouncilRole.CTO],
+      dissentingExecutives: [CouncilRole.CFO],
+      dissentingOpinions: [
+        {
+          dissenter: CouncilRole.CFO,
+          coreObjection: 'Unpredictable scaling billing models',
+          suggestedMitigations: ['Set hard budget alerts'],
+        }
+      ],
+      resolvedProposal: 'Serverless architecture with strict budget alerts',
+      achievedAt: new Date(),
+    };
+  }
+
+  public async escalateDisagreement(sessionId: string, policyId: string, reason: string): Promise<{ escalationTriggered: boolean; targetRecipient: string }> {
+    return {
+      escalationTriggered: true,
+      targetRecipient: 'BOARD_OF_DIRECTORS',
+    };
+  }
+
+  public async produceRecommendation(sessionId: string): Promise<MeetingSummary> {
+    return {
+      summaryId: 'rec-sum-999',
+      sessionId,
+      compiledAt: new Date(),
+      participants: [CouncilRole.CEO, CouncilRole.CTO, CouncilRole.CFO],
+      decisions: [
+        {
+          agendaItemId: 'agenda-item-1',
+          approvedProposal: 'Serverless transition',
+          description: 'Transitioning application backend'
+        }
+      ],
+      openQuestions: [],
+      risksIdentified: [],
+      followUpActions: [],
     };
   }
 }
@@ -499,6 +689,190 @@ describe('Executive Brain Framework Architecture Tests (BRAIN-001 / BRAIN-002)',
     };
 
     expect(councilRequestedEvent.councilRequest.title).toBe('Emergency Board Alignment');
+  });
+});
+
+describe('Executive Council Foundation (BRAIN-003)', () => {
+  it('should successfully instantiate council and verify core session lifecycle', async () => {
+    const council = new MockExecutiveCouncilImpl();
+    expect(council.id).toBe('council-01');
+    expect(council.name).toBe('Board Executive Council');
+
+    const context: CouncilContext = {
+      tenantId: 'tenant-1',
+      correlationId: 'corr-101',
+      initiatedAt: new Date(),
+      initiatorId: 'exec-ceo',
+      initiatorRole: CouncilRole.CEO,
+      sessionTopic: 'Global Server Infrastructure Transition',
+    };
+
+    const session = await council.startSession(context, [CouncilRole.CEO, CouncilRole.CTO, CouncilRole.CFO]);
+    expect(session.sessionId).toBe('session-101');
+    expect(session.status).toBe(CouncilSessionStatus.ACTIVE);
+    expect(session.invitedRoles).toContain(CouncilRole.CTO);
+    expect(session.activeMembers[0].name).toBe('John Doe');
+
+    const updatedSession = await council.inviteExecutives(session.sessionId, [CouncilRole.CEO, CouncilRole.CTO]);
+    expect(updatedSession.activeMembers.length).toBe(2);
+    expect(updatedSession.activeMembers[1].role).toBe(CouncilRole.CTO);
+  });
+
+  it('should successfully structure agendas and collect multi-faceted opinions', async () => {
+    const council = new MockExecutiveCouncilImpl();
+    const agenda: AgendaItem = {
+      id: 'agenda-item-1',
+      title: 'Move Core Databases to Cloud Run Spanner',
+      description: 'Review cost vs scalability benefits',
+      proposedBy: CouncilRole.CTO,
+      allocatedMinutes: 30,
+      status: 'DISCUSSING',
+    };
+
+    expect(agenda.proposedBy).toBe(CouncilRole.CTO);
+    expect(agenda.status).toBe('DISCUSSING');
+
+    const opinions = await council.collectOpinions('session-101', agenda.id);
+    expect(opinions.length).toBe(2);
+    expect(opinions[0].author).toBe(CouncilRole.CTO);
+    expect(opinions[0].type).toBe('OPINION');
+    expect(opinions[1].author).toBe(CouncilRole.CFO);
+    expect(opinions[1].type).toBe('COUNTERARGUMENT');
+    expect(opinions[1].referenceOpinionId).toBe('op-001');
+
+    const discussionThread: DiscussionThread = {
+      threadId: 'th-1',
+      agendaItemId: agenda.id,
+      opinions,
+      isResolved: false,
+    };
+    expect(discussionThread.isResolved).toBe(false);
+  });
+
+  it('should track consensus levels, dissenting arguments, and ballot results', async () => {
+    const council = new MockExecutiveCouncilImpl();
+    const consensus = await council.measureConsensus('session-101', 'agenda-item-1');
+
+    expect(consensus.consensusId).toBe('consensus-01');
+    expect(consensus.agreementPercentage).toBe(75);
+    expect(consensus.confidenceScore).toBe(0.85);
+    expect(consensus.supportingExecutives).toContain(CouncilRole.CEO);
+    expect(consensus.dissentingExecutives).toContain(CouncilRole.CFO);
+    expect(consensus.dissentingOpinions[0].dissenter).toBe(CouncilRole.CFO);
+    expect(consensus.dissentingOpinions[0].coreObjection).toContain('scaling');
+
+    const votingResult: VotingResult = {
+      voteId: 'vote-001',
+      agendaItemId: 'agenda-item-1',
+      ballots: [
+        { voter: CouncilRole.CEO, option: 'APPROVE', timestamp: new Date() },
+        { voter: CouncilRole.CTO, option: 'APPROVE', timestamp: new Date() },
+        { voter: CouncilRole.CFO, option: 'REJECT', comment: 'Uncapped scaling risk', timestamp: new Date() }
+      ],
+      totalEligibleVoters: 3,
+      approveCount: 2,
+      rejectCount: 1,
+      abstainCount: 0,
+      isPassed: true,
+    };
+    expect(votingResult.isPassed).toBe(true);
+    expect(votingResult.approveCount).toBe(2);
+  });
+
+  it('should enforce escalation policies and custom rules for deadlocks', async () => {
+    const facilitator = new MockCouncilFacilitatorImpl();
+    
+    const rule1: EscalationRule = {
+      ruleId: 'er-1',
+      triggerType: 'DEADLOCK',
+      description: 'Trigger escalation if debate is locked for over 3 sessions',
+      isActive: true,
+    };
+
+    const rule2: EscalationRule = {
+      ruleId: 'er-2',
+      triggerType: 'MISSING_EXPERTISE',
+      description: 'Require Legal head for all regulatory transitions',
+      isActive: true,
+      missingExpertiseRequired: ['ComplianceAudit'],
+    };
+
+    const policy: EscalationPolicy = {
+      policyId: 'ep-01',
+      name: 'Stalemate Mitigation Strategy',
+      rules: [rule1, rule2],
+      targetRecipient: 'BOARD_OF_DIRECTORS',
+      fallbackProcedure: 'Hand over session management to board mediator',
+    };
+
+    expect(policy.rules.length).toBe(2);
+    expect(policy.rules[0].triggerType).toBe('DEADLOCK');
+    expect(policy.targetRecipient).toBe('BOARD_OF_DIRECTORS');
+
+    const escalationResult = await facilitator.triggerEscalation('session-101', policy, 'Legal head is missing');
+    expect(escalationResult.escalationTriggered).toBe(true);
+    expect(escalationResult.resolutionPath).toContain('BOARD_OF_DIRECTORS');
+  });
+
+  it('should compile highly structural meeting summary reports', async () => {
+    const council = new MockExecutiveCouncilImpl();
+    const summary = await council.produceRecommendation('session-101');
+
+    expect(summary.summaryId).toBe('rec-sum-999');
+    expect(summary.participants).toContain(CouncilRole.CTO);
+    expect(summary.decisions[0].approvedProposal).toBe('Serverless transition');
+  });
+
+  it('should construct and structuredly validate Council Events', () => {
+    const context: CouncilContext = {
+      tenantId: 'tenant-omega',
+      correlationId: 'corr-999',
+      initiatedAt: new Date(),
+      initiatorId: 'bot-ceo',
+      initiatorRole: CouncilRole.CEO,
+      sessionTopic: 'AI Security Standard Compliance',
+    };
+
+    const startEvent: CouncilStartedEvent = {
+      eventId: 'evt-started-01',
+      tenantId: 'tenant-omega',
+      sessionId: 'session-omega',
+      context,
+      timestamp: new Date(),
+    };
+    expect(startEvent.sessionId).toBe('session-omega');
+
+    const consensus: ConsensusModel = {
+      consensusId: 'con-omega',
+      sessionId: 'session-omega',
+      agendaItemId: 'agenda-item-99',
+      agreementPercentage: 100,
+      confidenceScore: 0.99,
+      supportingExecutives: [CouncilRole.CEO, CouncilRole.CTO],
+      dissentingExecutives: [],
+      dissentingOpinions: [],
+      resolvedProposal: 'Deploy enterprise firewalls',
+      achievedAt: new Date(),
+    };
+
+    const consensusReachedEvent: ConsensusReachedEvent = {
+      eventId: 'evt-reached-01',
+      tenantId: 'tenant-omega',
+      sessionId: 'session-omega',
+      consensus,
+      timestamp: new Date(),
+    };
+    expect(consensusReachedEvent.consensus.agreementPercentage).toBe(100);
+
+    const escalationTriggeredEvent: EscalationTriggeredEvent = {
+      eventId: 'evt-escalate-01',
+      tenantId: 'tenant-omega',
+      sessionId: 'session-omega',
+      reason: 'No CTO available to approve technical risk metrics',
+      targetRecipient: 'HUMAN_OPERATOR',
+      timestamp: new Date(),
+    };
+    expect(escalationTriggeredEvent.targetRecipient).toBe('HUMAN_OPERATOR');
   });
 });
 

@@ -55,3 +55,35 @@ export * from './ceo/events/executive-council-requested.event.js';
 export * from './events/executive-activated.event.js';
 export * from './events/executive-decision.event.js';
 export * from './events/executive-collaboration.event.js';
+
+// Council Core
+export * from './council/core/executive-council.js';
+export * from './council/core/council-session.js';
+export * from './council/core/council-context.js';
+
+// Council Participants
+export * from './council/participants/council-member.js';
+export * from './council/participants/council-role.js';
+
+// Council Discussion
+export * from './council/discussion/agenda-item.js';
+export * from './council/discussion/executive-opinion.js';
+export * from './council/discussion/discussion-thread.js';
+
+// Council Consensus
+export * from './council/consensus/consensus-model.js';
+export * from './council/consensus/voting-result.js';
+export * from './council/consensus/dissenting-opinion.js';
+
+// Council Escalation
+export * from './council/escalation/escalation-policy.js';
+export * from './council/escalation/escalation-rule.js';
+
+// Council Facilitation
+export * from './council/facilitation/council-facilitator.js';
+export * from './council/facilitation/meeting-summary.js';
+
+// Council Events
+export * from './council/events/council-started.event.js';
+export * from './council/events/consensus-reached.event.js';
+export * from './council/events/escalation-triggered.event.js';

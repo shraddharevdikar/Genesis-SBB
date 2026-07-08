@@ -1,27 +1,27 @@
 import { TicketDetails, FileNode, FutureTicket } from './types';
 
 export const ticketDetails: TicketDetails = {
-  id: 'BRAIN-002',
-  title: 'CEO Brain Foundation',
+  id: 'BRAIN-003',
+  title: 'Executive Council Foundation',
   status: 'DONE',
   priority: 'CRITICAL',
   author: 'SBB Principal Architect',
   assignee: 'shraddha.revdikar@gmail.com',
-  objective: 'Build the foundational CEO Brain responsible for strategic thinking, prioritization, delegation, and executive coordination without specialist execution or LLM prompts.',
-  modulePath: 'packages/business-brain/src/ceo/ceo-brain.ts',
+  objective: 'Build the Executive Council Framework responsible for coordinating structured executive deliberation, consensus, dissent, escalation, and recommendations without AI reasoning or execution.',
+  modulePath: 'packages/business-brain/src/council/core/executive-council.ts',
   requirements: [
-    'Establish the CEOBrain contract extending ExecutiveBrain with strategic oversight capability.',
-    'Model strategic goals for Growth, Profitability, Innovation, Customer Success, Operational Excellence, Market Expansion, Digital Transformation, and Risk Reduction.',
-    'Expose Initiative and corporate Objectives schemas including timeline, owner, priority, and dependencies.',
-    'Design delegation contracts restricting executive assignments strictly to CFO, COO, CTO, CMO, CRO, and CHRO.',
-    'Establish Executive Council coordination requesting reviews, voting parameters, consensus, and dissenting opinions.',
-    'Provide PriorityFramework schemas based on Business Impact, Strategic Alignment, Cost, Risk, and Time to Value.'
+    'Establish the ExecutiveCouncil contract supporting session control, inviting, opinions, consensus, escalation, and recommendations.',
+    'Establish supported C-Suite roles (CEO, CFO, COO, CTO, CMO, CRO, CHRO, Legal, Operations).',
+    'Model structural discussions capturing Agenda, Opinions, Counterarguments, Questions, and Recommendations.',
+    'Model consensus tracking including Agreement %, Confidence score, Supporting and Dissenting rosters.',
+    'Enforce escalation policies covering Human intervention, Missing expertise, Insufficient confidence, and Deadlocks.',
+    'Generate structured Meeting Summaries logging participants, decisions, open questions, risks, and follow-ups.'
   ],
   responsibilities: [
-    { title: 'CEO Brain & Planning models', description: 'Deploys CEOBrain contract, StrategicGoal categories, CompanyObjectives, and Initiative models.', status: 'Completed & Verified' },
-    { title: 'Delegation Framework', description: 'Establishes secure, role-restricted DelegationPlan and ExecutiveAssignment structures.', status: 'Completed & Verified' },
-    { title: 'Executive Council & Consensus', description: 'Models council assembly requests, voting parameters, and formal dissenting opinion capture.', status: 'Completed & Verified' },
-    { title: 'Weighted Prioritization Framework', description: 'Sets up scoring criteria for Roadmaps (Impact, Alignment, Cost, Risk, Time to Value).', status: 'Completed & Verified' }
+    { title: 'Council Contracts & Sessions', description: 'Deploys ExecutiveCouncil, CouncilSession, and CouncilContext structures.', status: 'Completed & Verified' },
+    { title: 'Discussions & Opinion Models', description: 'Models AgendaItem, DiscussionThread, and multifaceted ExecutiveOpinion types.', status: 'Completed & Verified' },
+    { title: 'Consensus & Balloting Engine', description: 'Builds ConsensusModel, VotingResult, and CouncilDissentingOpinion records.', status: 'Completed & Verified' },
+    { title: 'Escalation & Facilitation Governance', description: 'Deploys EscalationPolicy and EscalationRule for deadlock mitigation and records MeetingSummary logs.', status: 'Completed & Verified' }
   ]
 };
 
