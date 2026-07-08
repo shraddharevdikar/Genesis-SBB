@@ -44,7 +44,10 @@ import {
   DefaultTelemetryRecorder,
   FeedbackRating,
   GeminiProvider,
-  OpenAIProvider
+  OpenAIProvider,
+  AIFacade,
+  GatewayHealthMonitor,
+  ExecuteRequest
 } from '@sbb/ai-sdk';
 
 describe('SBB AI Gateway & Provider Registry (GEN-AI-001 & GEN-AI-002)', () => {
@@ -756,6 +759,133 @@ describe('SBB AI Gateway & Provider Registry (GEN-AI-001 & GEN-AI-002)', () => {
       const provider = new OpenAIProvider();
       const result = await provider.analyzeImage([{ role: 'user', content: 'Describe this image' }], [{ b64Data: 'abcd', mimeType: 'image/png' }]);
       expect(result.content).toContain('[OpenAI Vision Mock Response]');
+    });
+  });
+
+  describe('Unified AI Gateway API & Orchestration Pipeline (GEN-AI-010)', () => {
+    let providerReg: ProviderRegistry;
+    let router: DefaultModelRouter;
+    let tel: AITelemetry;
+    let acc: DefaultAccountingEngine;
+    let gatewayFacade: AIFacade;
+
+    const testPolicy: SafetyPolicy = {
+      id: 'policy-test',
+      name: 'Test Safety Policy',
+      promptThresholds: [],
+      outputThresholds: [],
+      blockPII: false,
+    };
+
+    beforeEach(() => {
+      providerReg = new ProviderRegistry();
+      router = new DefaultModelRouter();
+      tel = new AITelemetry();
+      acc = new DefaultAccountingEngine();
+
+      // Register mock provider
+      const mockGemini = new GeminiProvider();
+      providerReg.register(mockGemini, mockDescriptor);
+
+      gatewayFacade = new AIFacade(
+        providerReg,
+        router,
+        tel,
+        acc,
+        testPolicy
+      );
+    });
+
+    it('should execute a unified gateway request successfully with metadata, cost, safety and telemetry', async () => {
+      const request: ExecuteRequest = {
+        tenantId: 'enterprise-tenant-abc',
+        prompt: 'Tell me about clean architecture',
+        providerId: 'google-gemini',
+      };
+
+      const response = await gatewayFacade.execute(request);
+
+      expect(response.id).toBeDefined();
+      expect(response.content).toContain('[Google Gemini Mock Response]');
+      expect(response.metadata.provider).toBe('google-gemini');
+      expect(response.usage.promptTokens).toBeGreaterThan(0);
+      expect(response.safety.safe).toBe(true);
+      expect(response.cost.estimatedCostUSD).toBeGreaterThan(0);
+      expect(response.telemetry.requestId).toBeDefined();
+    });
+
+    it('should block execution when input violates safety policy rules', async () => {
+      const request: ExecuteRequest = {
+        tenantId: 'enterprise-tenant-abc',
+        prompt: 'This is a highly dangerous-word prompt',
+        providerId: 'google-gemini',
+      };
+
+      await expect(gatewayFacade.execute(request)).rejects.toThrow('Prompt rejected by safety policy');
+    });
+
+    it('should throw an error if requested provider is not registered in the system', async () => {
+      const request: ExecuteRequest = {
+        tenantId: 'enterprise-tenant-abc',
+        prompt: 'Hello',
+        providerId: 'non-existent-provider',
+      };
+
+      await expect(gatewayFacade.execute(request)).rejects.toThrow('Required provider with ID "non-existent-provider" is not registered');
+    });
+
+    it('should fallback to default router if provider or model is not specified', async () => {
+      const request: ExecuteRequest = {
+        tenantId: 'enterprise-tenant-abc',
+        prompt: 'Hello default router',
+      };
+
+      const response = await gatewayFacade.execute(request);
+      expect(response.metadata.provider).toBe('google-gemini');
+    });
+
+    it('should stream the response successfully and return unified chunks', async () => {
+      const request: ExecuteRequest = {
+        tenantId: 'enterprise-tenant-abc',
+        prompt: 'Hello stream',
+        providerId: 'google-gemini',
+      };
+
+      const stream = await gatewayFacade.stream(request);
+      const chunks: string[] = [];
+
+      for await (const chunk of stream) {
+        chunks.push(chunk.content);
+        expect(chunk.isStreaming).toBe(true);
+        expect(chunk.metadata.provider).toBe('google-gemini');
+      }
+
+      expect(chunks.length).toBeGreaterThan(0);
+    });
+
+    it('should record accounting metrics correctly in the ledger', async () => {
+      const request: ExecuteRequest = {
+        tenantId: 'accounting-ledger-tenant',
+        prompt: 'Calculate ledger transactions',
+        providerId: 'google-gemini',
+      };
+
+      const response = await gatewayFacade.execute(request);
+      const summary = await acc.getSummary('accounting-ledger-tenant', new Date(Date.now() - 10000), new Date(Date.now() + 10000));
+      expect(summary.totalRequests).toBe(1);
+      expect(summary.totalCostUSD).toBe(response.cost.estimatedCostUSD);
+    });
+
+    it('should assess the correct health metrics through the monitor', () => {
+      const healthMonitor = new GatewayHealthMonitor(providerReg, router, tel, testPolicy);
+      const health = healthMonitor.checkHealth();
+
+      expect(health.status).toBe('DEGRADED'); // Only 1 provider registered
+      expect(health.components.providers.availableProviders).toContain('google-gemini');
+      expect(health.components.registry.count).toBe(1);
+      expect(health.components.router.status).toBe('HEALTHY');
+      expect(health.components.safety.status).toBe('HEALTHY');
+      expect(health.components.telemetry.status).toBe('HEALTHY');
     });
   });
 });

@@ -2,9 +2,7 @@
 export * from './providers/index.js';
 
 // Gateway
-export * from './gateway/ai-gateway.js';
-export * from './gateway/ai-request.js';
-export * from './gateway/ai-response.js';
+export * from './gateway/index.js';
 
 // Routing
 export * from './routing/index.js';
