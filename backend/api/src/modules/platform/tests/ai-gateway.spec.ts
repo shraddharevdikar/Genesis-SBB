@@ -39,7 +39,10 @@ import {
   DefaultStreamController,
   DefaultProgressTracker,
   DefaultStreamSerializer,
-  DefaultCancellationToken
+  DefaultCancellationToken,
+  DefaultTelemetryEngine,
+  DefaultTelemetryRecorder,
+  FeedbackRating
 } from '@sbb/ai-sdk';
 
 describe('SBB AI Gateway & Provider Registry (GEN-AI-001 & GEN-AI-002)', () => {
@@ -603,6 +606,78 @@ describe('SBB AI Gateway & Provider Registry (GEN-AI-001 & GEN-AI-002)', () => {
       expect(deserialized.streamId).toBe('stream-123');
       expect(deserialized.type).toBe('chunk');
       expect(deserialized.message?.content).toBe('Hello World');
+    });
+  });
+
+  describe('AI Telemetry Foundation (GEN-AI-008)', () => {
+    const context = {
+      requestId: 'req-999',
+      correlationId: 'corr-999',
+      tenantId: 'sbb-tenant',
+      organizationId: 'sbb-org',
+      userId: 'user-111',
+      sessionId: 'sess-111',
+      streamId: 'stream-111',
+      providerId: 'google-gemini',
+      modelId: 'gemini-1.5-flash',
+      promptVersion: 'v1.2',
+      capability: 'translation',
+    };
+
+    it('should record telemetry events using DefaultTelemetryRecorder', () => {
+      const recorder = new DefaultTelemetryRecorder();
+      recorder.recordEvent('request.started', context, { customMeta: 'test' });
+      recorder.recordFeedback(context, {
+        feedbackId: 'fb-001',
+        rating: FeedbackRating.POSITIVE,
+        comments: 'Great response!',
+        userId: 'user-111',
+        timestamp: new Date(),
+      });
+
+      const events = recorder.getEvents();
+      expect(events.length).toBe(1);
+      expect(events[0].eventType).toBe('request.started');
+      expect(events[0].context.tenantId).toBe('sbb-tenant');
+
+      const feedback = recorder.getFeedback();
+      expect(feedback.length).toBe(1);
+      expect(feedback[0].feedback.rating).toBe(FeedbackRating.POSITIVE);
+    });
+
+    it('should log metrics using DefaultTelemetryRecorder', () => {
+      const recorder = new DefaultTelemetryRecorder();
+      recorder.recordMetric({
+        metricId: 'm-001',
+        name: 'latency_ms',
+        value: 120,
+        context,
+        timestamp: new Date(),
+      });
+
+      const metrics = recorder.getMetrics();
+      expect(metrics.length).toBe(1);
+      expect(metrics[0].name).toBe('latency_ms');
+      expect(metrics[0].value).toBe(120);
+    });
+
+    it('should aggregate events and generate reports in DefaultTelemetryEngine', async () => {
+      const engine = new DefaultTelemetryEngine();
+
+      await engine.recordEvent('request.started', context);
+      await engine.recordEvent('request.completed', context);
+      await engine.recordEvent('request.failed', context);
+
+      const startDate = new Date();
+      startDate.setDate(startDate.getDate() - 1);
+      const endDate = new Date();
+      endDate.setDate(endDate.getDate() + 1);
+
+      const summary = await engine.generateSummary('sbb-tenant', startDate, endDate);
+
+      expect(summary.tenantId).toBe('sbb-tenant');
+      expect(summary.totalRequests).toBe(2); // one completed + one failed
+      expect(summary.successRate).toBe(0.5); // 1 out of 2 completed
     });
   });
 });

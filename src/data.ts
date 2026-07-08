@@ -1,28 +1,27 @@
 import { TicketDetails, FileNode, FutureTicket } from './types';
 
 export const ticketDetails: TicketDetails = {
-  id: 'GEN-AI-007',
-  title: 'AI Streaming Infrastructure',
+  id: 'GEN-AI-008',
+  title: 'AI Telemetry Foundation',
   status: 'DONE',
   priority: 'CRITICAL',
   author: 'SBB Principal Architect',
   assignee: 'shraddha.revdikar@gmail.com',
-  objective: 'Build the enterprise streaming infrastructure for the AI Gateway to support real-time decoupled communication.',
-  modulePath: 'packages/ai-sdk/src/streaming/control/stream-controller.ts',
+  objective: 'Build the enterprise AI Telemetry subsystem to collect, log, and analyze telemetry and metrics across every AI interaction on the platform.',
+  modulePath: 'packages/ai-sdk/src/telemetry/tracking/telemetry-engine.ts',
   requirements: [
-    'Define strongly typed StreamType enums modeling text, JSON, structured, progress, tool calls, and completion events.',
-    'Formulate stateful StreamStatus enums tracking created, running, completed, cancelled, failed, paused, and resumed states.',
-    'Build StreamContext metadata structures tracing stream sessions across multi-tenant bounds.',
-    'Establish the central StreamController interface and default state machine implementation.',
-    'Create ProgressTracker structures modeling percent complete, active phase, and remaining seconds.',
-    'Formulate provider-independent StreamSerializer contracts with standard JSON codec fallbacks.',
-    'Construct Event Schemas for StreamStarted, StreamCompleted, and StreamCancelled lifecycle records.'
+    'Track comprehensive metadata contexts spanning tenants, orgs, users, sessions, streams, provider, and capabilities.',
+    'Build strongly-typed event contracts modeling requests, routing, provider states, stream cycles, and feedback.',
+    'Expose modular telemetry metrics representing latency performance, retry thresholds, success/error rates, and token costs.',
+    'Establish user feedback rating enums supporting positive/negative sentiment tagging and commentary.',
+    'Create decoupled performance summary models profiling individual models, providers, prompts, and capability tiers.',
+    'Implement the central TelemetryEngine and TelemetryRecorder orchestrating transaction collection without persistent storage hook overhead.'
   ],
   responsibilities: [
-    { title: 'Lifecycle Stream Controller', description: 'Handles starting, pausing, resuming, cancelling, and closing active stream sessions.', status: 'Completed & Verified' },
-    { title: 'Type and Status States', description: 'Structures strongly typed enums representing message frame classifications and state transitions.', status: 'Completed & Verified' },
-    { title: 'Progress and Serialization', description: 'Provides progress trackers, stage updates, and codec serialization contracts.', status: 'Completed & Verified' },
-    { title: 'Tracing Context & Event Models', description: 'Exposes context schemas, connection checkpoints, and detailed stream lifecycle events.', status: 'Completed & Verified' }
+    { title: 'Telemetry Recording Engine', description: 'Supports lightweight storage-agnostic tracing logs, metrics logs, and feedback capture.', status: 'Completed & Verified' },
+    { title: 'Core Lifecycle Events', description: 'Structures events logging provider routing choices, compliance blocks, session starting, and completions.', status: 'Completed & Verified' },
+    { title: 'Unified Analytics Metrics', description: 'Provides granular interfaces mapping execution latencies, token consumption, and success parameters.', status: 'Completed & Verified' },
+    { title: 'Summary Reports & Feedback', description: 'Enables user experience rating objects, prompt template performance profiles, and multi-tenant summaries.', status: 'Completed & Verified' }
   ]
 };
 

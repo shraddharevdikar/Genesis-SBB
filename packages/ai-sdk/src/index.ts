@@ -28,7 +28,7 @@ export * from './cache/ai-cache.js';
 export * from './streaming/index.js';
 
 // Telemetry
-export * from './telemetry/ai-telemetry.js';
+export * from './telemetry/index.js';
 
 // Events
 export * from './events/ai-requested.event.js';
