@@ -33,7 +33,13 @@ import {
   DefaultInputValidator,
   DefaultOutputValidator,
   DefaultAccountingEngine,
-  DefaultUsageTracker
+  DefaultUsageTracker,
+  StreamType,
+  StreamStatus,
+  DefaultStreamController,
+  DefaultProgressTracker,
+  DefaultStreamSerializer,
+  DefaultCancellationToken
 } from '@sbb/ai-sdk';
 
 describe('SBB AI Gateway & Provider Registry (GEN-AI-001 & GEN-AI-002)', () => {
@@ -518,6 +524,85 @@ describe('SBB AI Gateway & Provider Registry (GEN-AI-001 & GEN-AI-002)', () => {
       expect(summary.models.find(m => m.modelId === 'gemini-1.5-flash')).toBeDefined();
       expect(summary.modules.find(mo => mo.module === 'chatbot')?.totalCostUSD).toBeCloseTo(0.05);
       expect(summary.capabilities.find(c => c.capability === 'coding')?.requestCount).toBe(1);
+    });
+  });
+
+  describe('AI Streaming Infrastructure (GEN-AI-007)', () => {
+    it('should define stream status and stream type enums correctly', () => {
+      expect(StreamStatus.CREATED).toBe('created');
+      expect(StreamStatus.RUNNING).toBe('running');
+      expect(StreamStatus.CANCELLED).toBe('cancelled');
+
+      expect(StreamType.TEXT).toBe('text');
+      expect(StreamType.JSON).toBe('json');
+      expect(StreamType.PROGRESS).toBe('progress');
+    });
+
+    it('should manage stream lifecycle and state transitions via StreamController', async () => {
+      const controller = new DefaultStreamController('test-stream-123');
+      expect(controller.getStatus()).toBe(StreamStatus.CREATED);
+
+      await controller.start();
+      expect(controller.getStatus()).toBe(StreamStatus.RUNNING);
+
+      await controller.pause();
+      expect(controller.getStatus()).toBe(StreamStatus.PAUSED);
+
+      await controller.resume();
+      expect(controller.getStatus()).toBe(StreamStatus.RESUMED);
+
+      await controller.close();
+      expect(controller.getStatus()).toBe(StreamStatus.COMPLETED);
+    });
+
+    it('should support cancellation via CancellationToken', () => {
+      const token = new DefaultCancellationToken();
+      expect(token.isCancelled).toBe(false);
+
+      let triggered = false;
+      token.onCancel(() => {
+        triggered = true;
+      });
+
+      token.cancel();
+      expect(token.isCancelled).toBe(true);
+      expect(triggered).toBe(true);
+    });
+
+    it('should track progress via ProgressTracker', async () => {
+      const tracker = new DefaultProgressTracker();
+      const event = await tracker.trackProgress('stream-456', 45, 'generating', 12);
+
+      expect(event.streamId).toBe('stream-456');
+      expect(event.percentComplete).toBe(45);
+      expect(event.currentStage).toBe('generating');
+      expect(event.estimatedTimeRemainingSeconds).toBe(12);
+      expect(event.progressId).toBeDefined();
+    });
+
+    it('should serialize and deserialize StreamEvents via StreamSerializer', () => {
+      const serializer = new DefaultStreamSerializer();
+      const event = {
+        eventId: 'evt-123',
+        streamId: 'stream-123',
+        type: 'chunk' as const,
+        timestamp: new Date(),
+        message: {
+          id: 'msg-123',
+          type: StreamType.TEXT,
+          index: 0,
+          content: 'Hello World',
+          timestamp: new Date(),
+        }
+      };
+
+      const serialized = serializer.serialize(event);
+      const deserialized = serializer.deserialize(serialized);
+
+      expect(deserialized.eventId).toBe('evt-123');
+      expect(deserialized.streamId).toBe('stream-123');
+      expect(deserialized.type).toBe('chunk');
+      expect(deserialized.message?.content).toBe('Hello World');
     });
   });
 });

@@ -25,7 +25,7 @@ export * from './accounting/index.js';
 export * from './cache/ai-cache.js';
 
 // Streaming
-export * from './streaming/stream-response.js';
+export * from './streaming/index.js';
 
 // Telemetry
 export * from './telemetry/ai-telemetry.js';

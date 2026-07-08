@@ -1,28 +1,28 @@
 import { TicketDetails, FileNode, FutureTicket } from './types';
 
 export const ticketDetails: TicketDetails = {
-  id: 'GEN-AI-006',
-  title: 'AI Cost & Token Accounting Foundation',
+  id: 'GEN-AI-007',
+  title: 'AI Streaming Infrastructure',
   status: 'DONE',
   priority: 'CRITICAL',
   author: 'SBB Principal Architect',
   assignee: 'shraddha.revdikar@gmail.com',
-  objective: 'Build the enterprise AI Cost & Token Accounting subsystem to track consumption across providers, tenants, modules, and users.',
-  modulePath: 'packages/ai-sdk/src/accounting/tracking/accounting-engine.ts',
+  objective: 'Build the enterprise streaming infrastructure for the AI Gateway to support real-time decoupled communication.',
+  modulePath: 'packages/ai-sdk/src/streaming/control/stream-controller.ts',
   requirements: [
-    'Define strongly typed TokenUsage properties tracking input, output, cached, and total tokens.',
-    'Build CostRecord stubs capturing tenant, organization, user, module, provider, model, capability, and costs.',
-    'Formulate provider-agnostic PricingPolicy contracts to retrieve pricing matrices per model.',
-    'Define AIBudget trackers supporting tenant, organization, department, and project limits.',
-    'Establish UsageQuotas modeling daily, weekly, and monthly limit thresholds.',
-    'Create granular summary analytics reporting aggregates by provider, model, capability, and module.',
-    'Construct Event Schemas for TokenUsageRecorded, BudgetExceeded, and QuotaReached transitions.'
+    'Define strongly typed StreamType enums modeling text, JSON, structured, progress, tool calls, and completion events.',
+    'Formulate stateful StreamStatus enums tracking created, running, completed, cancelled, failed, paused, and resumed states.',
+    'Build StreamContext metadata structures tracing stream sessions across multi-tenant bounds.',
+    'Establish the central StreamController interface and default state machine implementation.',
+    'Create ProgressTracker structures modeling percent complete, active phase, and remaining seconds.',
+    'Formulate provider-independent StreamSerializer contracts with standard JSON codec fallbacks.',
+    'Construct Event Schemas for StreamStarted, StreamCompleted, and StreamCancelled lifecycle records.'
   ],
   responsibilities: [
-    { title: 'Accounting & Tracking Engine', description: 'Supports registering usage records, estimating costs, and aggregating summary analytics.', status: 'Completed & Verified' },
-    { title: 'Token & Cost Structures', description: 'Structures immutable consumption records, currency definitions, and fine-grained token breakdowns.', status: 'Completed & Verified' },
-    { title: 'Quotas & Budget Policies', description: 'Provides granular contracts for budget thresholds, reset windows, and quota policies.', status: 'Completed & Verified' },
-    { title: 'Subsystem Event Models', description: 'Defines robust schema stubs for consumption tracking, budget alerts, and quota limit notifications.', status: 'Completed & Verified' }
+    { title: 'Lifecycle Stream Controller', description: 'Handles starting, pausing, resuming, cancelling, and closing active stream sessions.', status: 'Completed & Verified' },
+    { title: 'Type and Status States', description: 'Structures strongly typed enums representing message frame classifications and state transitions.', status: 'Completed & Verified' },
+    { title: 'Progress and Serialization', description: 'Provides progress trackers, stage updates, and codec serialization contracts.', status: 'Completed & Verified' },
+    { title: 'Tracing Context & Event Models', description: 'Exposes context schemas, connection checkpoints, and detailed stream lifecycle events.', status: 'Completed & Verified' }
   ]
 };
 
