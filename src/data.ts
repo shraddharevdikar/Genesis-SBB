@@ -1,29 +1,30 @@
 import { TicketDetails, FileNode, FutureTicket } from './types';
 
 export const ticketDetails: TicketDetails = {
-  id: 'MEM-001',
-  title: 'Business Memory Foundation',
+  id: 'MEM-002',
+  title: 'Executive Memory Foundation',
   status: 'DONE',
   priority: 'CRITICAL',
   author: 'SBB Principal Architect',
   assignee: 'shraddha.revdikar@gmail.com',
-  objective: 'Build the foundational Business Memory architecture providing persistent organizational knowledge but without implementing database systems, vector stores, or LLM reasoning modules.',
-  modulePath: 'packages/business-memory/src/core/business-memory.ts',
+  objective: 'Build the foundational Executive Memory architecture allowing executive brains to retain structured organizational knowledge, strategic observations, assumptions, lessons learned, goals, playbooks, decisions, and experiences over time.',
+  modulePath: 'packages/business-memory/src/executive/core/executive-memory.ts',
   requirements: [
-    'Establish the BusinessMemory contract with methods for creating, updating, archiving, classifying, and relating organizational memories.',
-    'Model MemoryRecord aggregates coordinating metadata, custom key-values, and relational links.',
-    'Define memory type categorizations supporting Executive, Customer, Organization, Product, Financial, Marketing, Operational, and Technical domains.',
-    'Design memory category layers covering Strategic, Operational, Financial, Customer, Technical, Compliance, and Learning parameters.',
-    'Formulate multi-tier memory scopes: User, Team, Department, Organization, Tenant, and Global configurations.',
-    'Structure robust corporate governance, access control roles, and compliance enums tracking GDPR/SOC2 parameters.',
-    'Model long-term retention policies, explicit expiration rules, and cold-storage archival guidelines.',
-    'Broadcast key business memory lifecycle events: MemoryCreated, MemoryUpdated, and MemoryArchived.'
+    'Establish the ExecutiveMemory contract supporting strategic observations, assumptions, lessons learned, insights, goals, and experiences.',
+    'Model ExecutiveMemoryRecord aggregates uniting strategic knowledge, decisions, playbooks, experience progress, and governance policies.',
+    'Define Strategic Knowledge entities: observations, assumptions, insights, and lesson-learned structures.',
+    'Model Remembered Decisions tracking context, outcome evaluations, confidence metrics, and dynamic evidence links.',
+    'Model Remembered Goals tracking success criteria, progress timelines, obstacles, and post-mortem learnings.',
+    'Structure Executive Playbooks supporting Market Expansion, Crisis Response, Digital Transformation, and Cost Optimization categories.',
+    'Define Executive Experience levels tracking confidence evolution patterns and learning progressions.',
+    'Establish Executive Governance structures governing council visibility restrictions and sharing permissions.',
+    'Broadcast key executive memory lifecycle events: ExecutiveMemoryCreated, ExecutiveInsightRecorded, and LessonLearnedRecorded.'
   ],
   responsibilities: [
-    { title: 'Memory Core & Strategy', description: 'Deploys BusinessMemory contract, context structures, multi-tier scopes, and standard record aggregates.', status: 'Completed & Verified' },
-    { title: 'Classifications & References', description: 'Models type enums, category tiers, priority tags, and semantic relational pointers connecting records.', status: 'Completed & Verified' },
-    { title: 'Retention & Governance', description: 'Tracks archival rules, duration metrics, GDPR compliance mappings, and role-based access policy thresholds.', status: 'Completed & Verified' },
-    { title: 'Lifecycle Events & PubSub', description: 'Establishes creation, update, and archive events ensuring system-wide synchronization.', status: 'Completed & Verified' }
+    { title: 'Executive Memory & Strategy', description: 'Deploys ExecutiveMemory contract, core execution context, and record aggregates.', status: 'Completed & Verified' },
+    { title: 'Strategic Knowledge & Decisions', description: 'Tracks observations, assumptions, lesson post-mortems, and decision outcome evaluators.', status: 'Completed & Verified' },
+    { title: 'Playbooks & Experiences', description: 'Models reusable corporate playbooks, step workflows, and confidence progression indexes.', status: 'Completed & Verified' },
+    { title: 'Governance & Events', description: 'Establishes sharing clearances, visibility rules, and broadcasts key executive knowledge events.', status: 'Completed & Verified' }
   ]
 };
 
