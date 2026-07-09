@@ -1,0 +1,8 @@
+export enum MemoryScope {
+  USER = 'USER',
+  TEAM = 'TEAM',
+  DEPARTMENT = 'DEPARTMENT',
+  ORGANIZATION = 'ORGANIZATION',
+  TENANT = 'TENANT',
+  GLOBAL = 'GLOBAL'
+}

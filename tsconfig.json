@@ -48,6 +48,9 @@
       ],
       "@sbb/business-brain": [
         "./packages/business-brain/src/index.ts"
+      ],
+      "@sbb/business-memory": [
+        "./packages/business-memory/src/index.ts"
       ]
     },
     "allowImportingTsExtensions": true,
