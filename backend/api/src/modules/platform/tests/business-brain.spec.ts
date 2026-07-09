@@ -141,7 +141,10 @@ import {
   MarketOpportunityIdentifiedEvent,
   CROBrain,
   RevenueHealth,
-  PipelineRiskDetectedEvent
+  PipelineRiskDetectedEvent,
+  CHROBrain,
+  WorkforceCapacity,
+  SkillGapIdentifiedEvent
 } from '@sbb/business-brain';
 
 class MockWorkingMemory implements WorkingMemory {

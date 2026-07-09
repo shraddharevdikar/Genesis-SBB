@@ -362,4 +362,53 @@ export * from './cro/events/revenue-forecast-updated.event.js';
 export * from './cro/events/pipeline-risk-detected.event.js';
 export * from './cro/events/pricing-reviewed.event.js';
 
+// CHRO Brain Core
+export * from './chro/chro-brain.js';
+
+// CHRO Workforce
+export * from './chro/workforce/workforce-strategy.js';
+export * from './chro/workforce/workforce-capacity.js';
+export * from './chro/workforce/workforce-planning.js';
+
+// CHRO Talent
+export * from './chro/talent/talent-intelligence.js';
+export * from './chro/talent/skill-gap-analysis.js';
+export * from './chro/talent/succession-plan.js';
+
+// CHRO Organization
+export * from './chro/organization/organization-design.js';
+export * from './chro/organization/team-effectiveness.js';
+export * from './chro/organization/leadership-capability.js';
+
+// CHRO Culture
+export * from './chro/culture/culture-health.js';
+export * from './chro/culture/employee-engagement.js';
+export * from './chro/culture/organizational-values.js';
+
+// CHRO Performance
+export * from './chro/performance/performance-framework.js';
+export * from './chro/performance/performance-health.js';
+export * from './chro/performance/productivity-insights.js';
+
+// CHRO Learning
+export * from './chro/learning/learning-strategy.js';
+export * from './chro/learning/capability-development.js';
+
+// CHRO Metrics
+export * from './chro/metrics/people-kpi.js';
+export * from './chro/metrics/workforce-kpi.js';
+
+// CHRO Advisory
+export * from './chro/advisory/people-recommendation.js';
+export * from './chro/advisory/executive-people-summary.js';
+
+// CHRO Governance
+export * from './chro/governance/people-policy.js';
+export * from './chro/governance/authority-matrix.js';
+
+// CHRO Events
+export * from './chro/events/skill-gap-identified.event.js';
+export * from './chro/events/culture-reviewed.event.js';
+export * from './chro/events/succession-updated.event.js';
+
 

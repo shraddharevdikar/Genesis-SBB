@@ -1,29 +1,29 @@
 import { TicketDetails, FileNode, FutureTicket } from './types';
 
 export const ticketDetails: TicketDetails = {
-  id: 'BRAIN-009',
-  title: 'CRO Brain Foundation',
+  id: 'BRAIN-010',
+  title: 'CHRO Brain Foundation',
   status: 'DONE',
   priority: 'CRITICAL',
   author: 'SBB Principal Architect',
   assignee: 'shraddha.revdikar@gmail.com',
-  objective: 'Build the strategic Chief Revenue Officer (CRO) Brain responsible for revenue strategy, sales intelligence, pricing strategy, pipeline governance, customer expansion, partnership strategy, and executive revenue recommendations.',
-  modulePath: 'packages/business-brain/src/cro/cro-brain.ts',
+  objective: 'Build the strategic Chief Human Resources Officer (CHRO) Brain responsible for workforce strategy, talent intelligence, organizational design, leadership development, culture health, succession planning, and executive people recommendations.',
+  modulePath: 'packages/business-brain/src/chro/chro-brain.ts',
   requirements: [
-    'Establish the CROBrain contract supporting assessment of revenue health, pipeline quality, pricing strategy, forecasting, and expansion plans.',
-    'Model revenue strategy structures covering ARR, MRR, churn impact, net retention, and growth scenarios.',
-    'Model sales pipeline structures tracking opportunities, win rates, conversion stages, and stalled deal risk assessments.',
-    'Define pricing strategy attributes covering tier models, elasticity, and discount governance tiers.',
-    'Model customer expansion dynamics tracking upsell, cross-sell, renewal, and retention vectors.',
-    'Formulate partner strategy mixes modeling referral alliances, channel contribution percentages, and co-selling budgets.',
-    'Establish executive revenue advisories, discount approval matrices, and pricing policies.',
-    'Broadcast key revenue lifecycle events: RevenueForecastUpdated, PipelineRiskDetected, and PricingReviewed.'
+    'Establish the CHROBrain contract supporting assessment of workforce capability, skill gaps, organizational health, leadership readiness, workforce strategies, and executive people summaries.',
+    'Model workforce strategy and capacity matrices tracking current vs budgeted FTEs, remote vs hybrid ratios, and geographic hubs.',
+    'Model talent intelligence frameworks covering skill inventories, proficiency gaps, succession plans, and emergency backups.',
+    'Define organization design metrics covering spans of control, layer counts, leadership capability competencies, and team effectiveness indexes.',
+    'Model culture health attributes tracking attrition, eNPS survey factors, organizational value resonance, and change readiness.',
+    'Formulate performance frameworks mapping calibration requirements, PIP counts, and outputs per FTE productivity indicators.',
+    'Establish executive people advisories, learning budget strategies, authority threshold matrices, and remote work policies.',
+    'Broadcast key human resource lifecycle events: SkillGapIdentified, CultureReviewed, and SuccessionUpdated.'
   ],
   responsibilities: [
-    { title: 'CRO Brain & Strategy', description: 'Deploys CROBrain contract, revenue strategy and health indices, and growth scenarios.', status: 'Completed & Verified' },
-    { title: 'Sales & Quota Intelligence', description: 'Tracks pipeline stage values, opportunity risks, win rates, and rep quota attainments.', status: 'Completed & Verified' },
-    { title: 'Pricing & Accounts', description: 'Models billing tiers, elasticity indicators, discount tolerances, and customer expansion plans.', status: 'Completed & Verified' },
-    { title: 'Governance, Advisory & Events', description: 'Establishes pricing policies, provider-independent advisory summaries, and broadcasts revenue lifecycle events.', status: 'Completed & Verified' }
+    { title: 'CHRO Brain & Workforce', description: 'Deploys CHROBrain contract, workforce strategies and capacity profiles, and future hiring plans.', status: 'Completed & Verified' },
+    { title: 'Talent & Org Design', description: 'Tracks skill proficiency inventories, gap deltas, key role succession plans, and direct report span profiles.', status: 'Completed & Verified' },
+    { title: 'Culture & Performance', description: 'Models eNPS survey factors, values alignment gaps, rating scales, calibration rules, and FTE output indices.', status: 'Completed & Verified' },
+    { title: 'Governance, Advisory & Events', description: 'Establishes compensation authority limits, remote working guidelines, independent board summaries, and broadcasts HR lifecycle events.', status: 'Completed & Verified' }
   ]
 };
 
