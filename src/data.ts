@@ -1,32 +1,32 @@
 import { TicketDetails, FileNode, FutureTicket } from './types';
 
 export const ticketDetails: TicketDetails = {
-  id: 'MEM-003',
-  title: 'Organization Memory Foundation',
+  id: 'MEM-004',
+  title: 'Customer Memory Foundation',
   status: 'DONE',
   priority: 'CRITICAL',
   author: 'SBB Principal Architect',
   assignee: 'shraddha.revdikar@gmail.com',
-  objective: 'Build the foundational Organization Memory architecture representing company identity, operating model, governance, capabilities, products, services, policies, strategic initiatives, and organizational relationships.',
-  modulePath: 'packages/business-memory/src/organization/core/organization-memory.ts',
+  objective: 'Build the foundational Customer Memory architecture representing long-term customer understanding across every interaction, executive relationship, business objective, product usage, and organizational learning.',
+  modulePath: 'packages/business-memory/src/customer/core/customer-memory.ts',
   requirements: [
-    'Establish the OrganizationMemory contract supporting profile registration, strategy, capabilities, relationships, and governance.',
-    'Model OrganizationMemoryRecord aggregate coordinating profiles, structures, capabilities, catalogs, strategy, and compliance frameworks.',
-    'Define Company Identity structures: profile, mission, vision, and core-values.',
-    'Model Organization Structure entities tracking units, departments, agile teams, and leadership reporting roles.',
-    'Structure Business Capabilities mapping hierarchies, owner roles, and supporting system lists.',
-    'Define Portfolio Catalogs for corporate products and service offerings.',
-    'Define Governance frameworks mapping approval thresholds, authority, and ISO/SOC2 standards.',
-    'Model corporate Strategy components: initiatives, business objectives, and organizational goals.',
-    'Design Compliance obligation registers and transformation programs with milestone stages.',
-    'Establish Organizational Relationships with dynamic dependency-maps and directional pointer links.',
-    'Broadcast key organization memory lifecycle events: OrganizationMemoryCreated, StrategicInitiativeAdded, and PolicyUpdated.'
+    'Establish the CustomerMemory contract supporting customer knowledge, goals, stakeholders, health, learnings, and executive interactions.',
+    'Model CustomerMemoryRecord aggregate coordinating profiles, organizations, buying committees, health metrics, and adoptions.',
+    'Define Customer Profile and Organization structures tracking region, industry, size, importance, and lifecycle stage.',
+    'Model Stakeholders including decision makers, executive sponsors, champions, influencers, procurement, and technical contacts.',
+    'Structure Business Context capturing goals, pain points, and success criteria targets.',
+    'Define Relationships mapping trust level, health trends, communication preferences, and executive connection strength.',
+    'Define Product Understanding tracking product adoption, license usage patterns, and expansion opportunities.',
+    'Model Customer Health tracking numerical scores, renewal readiness likelihood, and detailed churn-risk mitigation logs.',
+    'Structure Organizational Learning tracking customer-centric insights and relationship lessons learned.',
+    'Establish Governance structures covering data privacy ccpa/gdpr, masking, and sharing rules.',
+    'Broadcast key customer memory lifecycle events: CustomerMemoryCreated, CustomerInsightRecorded, and CustomerHealthUpdated.'
   ],
   responsibilities: [
-    { title: 'Organization Memory & Strategy', description: 'Deploys OrganizationMemory contract, context structures, and core record aggregates.', status: 'Completed & Verified' },
-    { title: 'Identity & Structures', description: 'Models company profiles, mission/vision standards, and hierarchical units/departments.', status: 'Completed & Verified' },
-    { title: 'Capabilities & Portfolios', description: 'Establishes hierarchical capability maps, product catalogues, and service structures.', status: 'Completed & Verified' },
-    { title: 'Governance & Events', description: 'Deploys spend thresholds, regulatory obligation matrices, and key lifecycle broadcast events.', status: 'Completed & Verified' }
+    { title: 'Customer Memory & Strategy', description: 'Deploys CustomerMemory contract, execution contexts, and core record aggregates.', status: 'Completed & Verified' },
+    { title: 'Stakeholders & Goals', description: 'Models buying committees, executive sponsors, trust ratings, and customer business targets.', status: 'Completed & Verified' },
+    { title: 'Health & Adoptions', description: 'Tracks product license adoptions, system usage trends, renewal readiness, and risk models.', status: 'Completed & Verified' },
+    { title: 'Governance & Events', description: 'Deploys compliance privacy filters, customer insights, lessons learned, and key lifecycle event publishers.', status: 'Completed & Verified' }
   ]
 };
 

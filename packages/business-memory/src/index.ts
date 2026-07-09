@@ -129,3 +129,55 @@ export * from './organization/events/organization-memory-created.event.js';
 export * from './organization/events/strategic-initiative-added.event.js';
 export * from './organization/events/policy-updated.event.js';
 
+// Customer Memory Core
+export * from './customer/core/customer-memory.js';
+export * from './customer/core/customer-memory-record.js';
+export * from './customer/core/customer-context.js';
+
+// Customer Memory Identity
+export * from './customer/identity/customer-profile.js';
+export * from './customer/identity/customer-organization.js';
+export * from './customer/identity/customer-contact.js';
+
+// Customer Memory Stakeholders
+export * from './customer/stakeholders/stakeholder.js';
+export * from './customer/stakeholders/executive-sponsor.js';
+export * from './customer/stakeholders/buying-committee.js';
+
+// Customer Memory Business Context
+export * from './customer/business/business-goal.js';
+export * from './customer/business/business-challenge.js';
+export * from './customer/business/success-criteria.js';
+
+// Customer Memory Relationships
+export * from './customer/relationships/relationship-health.js';
+export * from './customer/relationships/communication-preference.js';
+export * from './customer/relationships/executive-relationship.js';
+
+// Customer Memory Engagement
+export * from './customer/engagement/engagement-history.js';
+export * from './customer/engagement/interaction-summary.js';
+export * from './customer/engagement/milestone.js';
+
+// Customer Memory Products
+export * from './customer/products/product-adoption.js';
+export * from './customer/products/usage-pattern.js';
+export * from './customer/products/expansion-opportunity.js';
+
+// Customer Memory Health
+export * from './customer/health/customer-health.js';
+export * from './customer/health/renewal-readiness.js';
+export * from './customer/health/churn-risk.js';
+
+// Customer Memory Learning & Insights
+export * from './customer/insights/customer-insight.js';
+export * from './customer/insights/lesson-learned.js';
+
+// Customer Memory Governance
+export * from './customer/governance/customer-memory-policy.js';
+
+// Customer Memory Events
+export * from './customer/events/customer-memory-created.event.js';
+export * from './customer/events/customer-insight-recorded.event.js';
+export * from './customer/events/customer-health-updated.event.js';
+

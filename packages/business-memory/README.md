@@ -1,6 +1,6 @@
-# Business, Executive & Organization Memory Foundation (MEM-001, MEM-002 & MEM-003)
+# Business, Executive, Organization & Customer Memory Foundation (MEM-001, MEM-002, MEM-003 & MEM-004)
 
-The Business Memory, Executive Memory, and Organization Memory layers provide foundational abstractions, contracts, policies, and schemas for persistent organizational knowledge across SBB systems. Every executive brain, AI capability, and operational module builds on this strategic memory layer.
+The Business Memory, Executive Memory, Organization Memory, and Customer Memory layers provide foundational abstractions, contracts, policies, and schemas for persistent organizational knowledge across SBB systems. Every executive brain, AI capability, and operational module builds on this strategic memory layer.
 
 ## Module Structure
 
@@ -115,6 +115,49 @@ packages/business-memory/
 │           ├── organization-memory-created.event.ts  # Lifecycle event on initial aggregate registry
 │           ├── strategic-initiative-added.event.ts   # Broadcaster when strategy programs are launched
 │           └── policy-updated.event.ts               # Event on revision of corporate policy directives
+│
+│   └── customer/                    # Customer Memory Architecture (MEM-004)
+│       ├── core/
+│       │   ├── customer-memory.ts         # CustomerMemory contract interface
+│       │   ├── customer-memory-record.ts  # Consolidated customer memory record schema
+│       │   └── customer-context.ts        # Customer execution contexts linked to accounts
+│       ├── identity/
+│       │   ├── customer-profile.ts        # Dynamic profile parameters, regions, and tiers
+│       │   ├── customer-organization.ts   # Legal entity properties, sizing, and sector indicators
+│       │   └── customer-contact.ts        # Personnel directory cards and primary contact flags
+│       ├── stakeholders/
+│       │   ├── stakeholder.ts             # Influence levels, key sentiments, and personal pain points
+│       │   ├── executive-sponsor.ts       # External stakeholder alignments to SBB executive owners
+│       │   └── buying-committee.ts        # Committee participants, consensus scoring, blocker points
+│       ├── business/
+│       │   ├── business-goal.ts           # Customer-defined high-level targets and KPI horizons
+│       │   ├── business-challenge.ts      # Active organizational pain points, severity, and mitigations
+│       │   └── success-criteria.ts        # Agreed success metrics, baselines, and validation status
+│       ├── relationships/
+│       │   ├── relationship-health.ts     # Health levels, NPS scoring, and critical risk logs
+│       │   ├── communication-preference.ts # Preferred communication cadences and format arrays
+│       │   └── executive-relationship.ts  # Strength indices between customer and internal leaders
+│       ├── engagement/
+│       │   ├── engagement-history.ts      # Merged activity timelines
+│       │   ├── interaction-summary.ts     # Summary, participants, action items, and decision logs
+│       │   └── milestone.ts               # Kickoff dates, contract anniversaries, and renewals
+│       ├── products/
+│       │   ├── product-adoption.ts        # Utilized licenses, active users, and featured elements
+│       │   ├── usage-pattern.ts           # Volume patterns, throughput metrics, and SLA status
+│       │   └── expansion-opportunity.ts   # Upsell potential, contract values, and stages
+│       ├── health/
+│       │   ├── customer-health.ts         # Multi-vector numerical scoring, bands, and weights
+│       │   ├── renewal-readiness.ts       # Likelihood metrics, expiring contracts, and uplifts
+│       │   └── churn-risk.ts              # active threats, triggers, signals, and mitigation pipelines
+│       ├── insights/
+│       │   ├── customer-insight.ts        # Feature requests, stories, and competitive intelligence
+│       │   └── lesson-learned.ts          # Root causes, post-mortem takeaways, and actions
+│       ├── governance/
+│       │   └── customer-memory-policy.ts  # Data privacy regimes (GDPR/HIPAA/SOC2) and sharing rules
+│       └── events/
+│           ├── customer-memory-created.event.ts  # Broadcast on customer memory instantiation
+│           ├── customer-insight-recorded.event.ts # Broadcast when qualitative insight is recorded
+│           └── customer-health-updated.event.ts  # Broadcast when account health metrics fluctuate
 └── package.json
 ```
 
@@ -142,6 +185,14 @@ packages/business-memory/
 - **Store Business Capabilities**: Builds semantic maps detailing capabilities, maturity tiers, and underpinning technologies.
 - **Maintain Organizational Relationships**: Configures graph relation layers illustrating operational linkages and dependencies.
 - **Track Governance Information**: Holds strict authorization policies, approval limits, and regulator obligations.
+
+### Customer Memory (MEM-004)
+- **Record Customer Knowledge**: Standardizes custom multi-vector portfolios of client identifiers, sizes, and operational stages.
+- **Track Customer Goals**: Captures customer objectives and connects them to success criteria metrics.
+- **Track Stakeholder Relationships**: Maps dynamic buying committee layouts, internal executive alignments, and trust sentiments.
+- **Maintain Customer Health**: Aggregates usage patterns, product adoptions, churn threat signal registers, and renewal likelihood scores.
+- **Preserve Organizational Learnings**: Preserves historical post-mortems, competitive insights, and qualitative use cases.
+- **Record Executive Interactions**: Archives strategic alignment logs and coordinates partnership touchpoint plans.
 
 ## Out of Scope
 This module strictly defines memory architecture, data definitions, and strategic contracts. It **does NOT** implement:
