@@ -1,29 +1,29 @@
 import { TicketDetails, FileNode, FutureTicket } from './types';
 
 export const ticketDetails: TicketDetails = {
-  id: 'BRAIN-008',
-  title: 'CMO Brain Foundation',
+  id: 'BRAIN-009',
+  title: 'CRO Brain Foundation',
   status: 'DONE',
   priority: 'CRITICAL',
   author: 'SBB Principal Architect',
   assignee: 'shraddha.revdikar@gmail.com',
-  objective: 'Build the strategic CMO Brain responsible for market intelligence, brand strategy, growth planning, customer strategy, marketing investment, and executive marketing recommendations.',
-  modulePath: 'packages/business-brain/src/cmo/cmo-brain.ts',
+  objective: 'Build the strategic Chief Revenue Officer (CRO) Brain responsible for revenue strategy, sales intelligence, pricing strategy, pipeline governance, customer expansion, partnership strategy, and executive revenue recommendations.',
+  modulePath: 'packages/business-brain/src/cro/cro-brain.ts',
   requirements: [
-    'Establish the CMOBrain contract supporting assessment of target markets, competitors, brand health, and growth strategies.',
-    'Model market intelligence structures covering TAM, SAM, SOM, competitive analysis, and segment dynamics.',
-    'Model brand health metrics tracking equity, sentiment breakdowns, trust indices, and strategic positioning.',
-    'Track growth strategy attributes covering acquisition, retention, expansion, and launch plans.',
-    'Define customer intelligence profiles capturing personas, journey drops, CSAT, and behavior insights.',
-    'Formulate marketing investment guidelines, channel allocations, and calculation-free ROI expectations.',
-    'Establish executive marketing advisories and brand governance standards.',
-    'Broadcast key marketing lifecycle events: MarketOpportunityIdentified, BrandHealthReviewed, and GrowthStrategyCreated.'
+    'Establish the CROBrain contract supporting assessment of revenue health, pipeline quality, pricing strategy, forecasting, and expansion plans.',
+    'Model revenue strategy structures covering ARR, MRR, churn impact, net retention, and growth scenarios.',
+    'Model sales pipeline structures tracking opportunities, win rates, conversion stages, and stalled deal risk assessments.',
+    'Define pricing strategy attributes covering tier models, elasticity, and discount governance tiers.',
+    'Model customer expansion dynamics tracking upsell, cross-sell, renewal, and retention vectors.',
+    'Formulate partner strategy mixes modeling referral alliances, channel contribution percentages, and co-selling budgets.',
+    'Establish executive revenue advisories, discount approval matrices, and pricing policies.',
+    'Broadcast key revenue lifecycle events: RevenueForecastUpdated, PipelineRiskDetected, and PricingReviewed.'
   ],
   responsibilities: [
-    { title: 'CMO Brain & Strategy', description: 'Deploys CMOBrain contract, market intelligence, segments, and competitive analyses.', status: 'Completed & Verified' },
-    { title: 'Brand & Growth Planning', description: 'Tracks brand health scores, positioning pillars, and growth launch blueprints.', status: 'Completed & Verified' },
-    { title: 'Customer & Investment', description: 'Models customer personas, journeys, channel mix budgets, and ROI matrices.', status: 'Completed & Verified' },
-    { title: 'Governance, Advisory & Events', description: 'Establishes brand policies, provider-independent summaries, and broadcasts marketing lifecycle events.', status: 'Completed & Verified' }
+    { title: 'CRO Brain & Strategy', description: 'Deploys CROBrain contract, revenue strategy and health indices, and growth scenarios.', status: 'Completed & Verified' },
+    { title: 'Sales & Quota Intelligence', description: 'Tracks pipeline stage values, opportunity risks, win rates, and rep quota attainments.', status: 'Completed & Verified' },
+    { title: 'Pricing & Accounts', description: 'Models billing tiers, elasticity indicators, discount tolerances, and customer expansion plans.', status: 'Completed & Verified' },
+    { title: 'Governance, Advisory & Events', description: 'Establishes pricing policies, provider-independent advisory summaries, and broadcasts revenue lifecycle events.', status: 'Completed & Verified' }
   ]
 };
 

@@ -313,4 +313,53 @@ export * from './cmo/events/market-opportunity-identified.event.js';
 export * from './cmo/events/brand-health-reviewed.event.js';
 export * from './cmo/events/growth-strategy-created.event.js';
 
+// CRO Brain Core
+export * from './cro/cro-brain.js';
+
+// CRO Revenue
+export * from './cro/revenue/revenue-strategy.js';
+export * from './cro/revenue/revenue-health.js';
+export * from './cro/revenue/revenue-forecast.js';
+
+// CRO Sales
+export * from './cro/sales/sales-pipeline.js';
+export * from './cro/sales/opportunity-health.js';
+export * from './cro/sales/conversion-analysis.js';
+
+// CRO Pricing
+export * from './cro/pricing/pricing-strategy.js';
+export * from './cro/pricing/pricing-optimization.js';
+export * from './cro/pricing/discount-governance.js';
+
+// CRO Accounts
+export * from './cro/accounts/account-growth.js';
+export * from './cro/accounts/customer-expansion.js';
+export * from './cro/accounts/renewal-strategy.js';
+
+// CRO Partners
+export * from './cro/partners/partner-strategy.js';
+export * from './cro/partners/partner-performance.js';
+
+// CRO Forecast
+export * from './cro/forecast/revenue-scenario.js';
+export * from './cro/forecast/quota-analysis.js';
+
+// CRO Metrics
+export * from './cro/metrics/revenue-kpi.js';
+export * from './cro/metrics/sales-kpi.js';
+export * from './cro/metrics/pipeline-kpi.js';
+
+// CRO Advisory
+export * from './cro/advisory/revenue-recommendation.js';
+export * from './cro/advisory/executive-revenue-summary.js';
+
+// CRO Governance
+export * from './cro/governance/pricing-policy.js';
+export * from './cro/governance/revenue-authority.js';
+
+// CRO Events
+export * from './cro/events/revenue-forecast-updated.event.js';
+export * from './cro/events/pipeline-risk-detected.event.js';
+export * from './cro/events/pricing-reviewed.event.js';
+
 

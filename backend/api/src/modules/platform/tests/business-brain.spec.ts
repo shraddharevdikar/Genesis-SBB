@@ -138,7 +138,10 @@ import {
   CMOBrain,
   MarketAnalysis,
   BrandHealth,
-  MarketOpportunityIdentifiedEvent
+  MarketOpportunityIdentifiedEvent,
+  CROBrain,
+  RevenueHealth,
+  PipelineRiskDetectedEvent
 } from '@sbb/business-brain';
 
 class MockWorkingMemory implements WorkingMemory {
