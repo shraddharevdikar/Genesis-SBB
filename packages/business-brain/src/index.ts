@@ -169,3 +169,52 @@ export * from './cfo/events/budget-reviewed.event.js';
 export * from './cfo/events/investment-evaluated.event.js';
 export * from './cfo/events/financial-risk-detected.event.js';
 
+// COO Brain Core
+export * from './coo/coo-brain.js';
+
+// COO Operations
+export * from './coo/operations/operational-health.js';
+export * from './coo/operations/operational-capability.js';
+export * from './coo/operations/operational-readiness.js';
+
+// COO Resources
+export * from './coo/resources/resource-plan.js';
+export * from './coo/resources/resource-allocation.js';
+export * from './coo/resources/capacity-plan.js';
+
+// COO Execution
+export * from './coo/execution/execution-plan.js';
+export * from './coo/execution/execution-stage.js';
+export * from './coo/execution/dependency-map.js';
+
+// COO Workflow
+export * from './coo/workflow/workflow-assessment.js';
+export * from './coo/workflow/process-efficiency.js';
+export * from './coo/workflow/bottleneck-analysis.js';
+
+// COO Delivery
+export * from './coo/delivery/delivery-status.js';
+export * from './coo/delivery/milestone-health.js';
+export * from './coo/delivery/sla-status.js';
+
+// COO Continuity
+export * from './coo/continuity/continuity-plan.js';
+export * from './coo/continuity/contingency-plan.js';
+
+// COO Risk
+export * from './coo/risk/operational-risk.js';
+export * from './coo/risk/operational-mitigation.js';
+
+// COO Advisory
+export * from './coo/advisory/operational-recommendation.js';
+export * from './coo/advisory/executive-operational-summary.js';
+
+// COO Governance
+export * from './coo/governance/execution-policy.js';
+export * from './coo/governance/operational-authority.js';
+
+// COO Events
+export * from './coo/events/execution-reviewed.event.js';
+export * from './coo/events/bottleneck-detected.event.js';
+export * from './coo/events/operational-risk-raised.event.js';
+

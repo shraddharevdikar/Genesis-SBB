@@ -1,28 +1,29 @@
 import { TicketDetails, FileNode, FutureTicket } from './types';
 
 export const ticketDetails: TicketDetails = {
-  id: 'BRAIN-004',
-  title: 'Executive Decision Engine Foundation',
+  id: 'BRAIN-006',
+  title: 'COO Brain Foundation',
   status: 'DONE',
   priority: 'CRITICAL',
   author: 'SBB Principal Architect',
   assignee: 'shraddha.revdikar@gmail.com',
-  objective: 'Build the shared Executive Decision Engine that every executive brain will use for structured decision-making, including alternative evaluations, tradeoffs, confidence scores, risks, and recommendations without AI reasoning.',
-  modulePath: 'packages/business-brain/src/decision-engine/core/decision-engine.ts',
+  objective: 'Build the strategic COO Brain responsible for operational intelligence, execution planning, delivery oversight, resource optimization, and operational risk management.',
+  modulePath: 'packages/business-brain/src/coo/coo-brain.ts',
   requirements: [
-    'Establish the ExecutiveDecisionEngine contract supporting evaluation, comparisons, risk profiles, confidence scoring, and recommendations.',
-    'Model alternative options capturing cost, time, and strategic alignment parameters.',
-    'Model multi-dimensional evaluation dimensions covering strategic, financial, technical, customer, operational complexity, risk, and time to value.',
-    'Formulate unified confidence tracking metrics based on supporting evidence indexes and uncertainty models.',
-    'Define comprehensive multi-category risk assessments (business, financial, operational, technical, legal) with mitigation plans.',
-    'Design provider-independent recommendation summaries and governance policies (budget limits, escalation caps).',
-    'Broadcast core decision engine lifecycle events (DecisionStarted, RecommendationGenerated, EscalationRequired).'
+    'Establish the COOBrain contract supporting assessment of operational readiness, resource allocation, and delivery health.',
+    'Model operational health parameters including process health, delivery health, utilization, operational efficiency, and SLA compliance.',
+    'Track resource planning metrics covering teams, skills, capacity, availability, and critical dependencies.',
+    'Define execution planning models including stages, milestones, dependencies, and critical path analysis.',
+    'Model workflow assessments focusing on bottlenecks, waste, cycle time, throughput, and automation opportunities.',
+    'Formulate delivery monitoring metrics supporting SLA compliance and blocker tracking.',
+    'Establish operational advisory recommendations and governance policies covering execution authority.',
+    'Broadcast operational lifecycle events: ExecutionReviewed, BottleneckDetected, and OperationalRiskRaised.'
   ],
   responsibilities: [
-    { title: 'Decision Core & Options', description: 'Deploys ExecutiveDecisionEngine interface, DecisionEngineContext, and DecisionOption alternative comparisons.', status: 'Completed & Verified' },
-    { title: 'Evaluation & Tradeoffs', description: 'Models EvaluationCriteria, EvaluationScore structures, and TradeoffAnalysis matrices.', status: 'Completed & Verified' },
-    { title: 'Confidence & Risk Assessment', description: 'Implements EvidenceReference reliability, Uncertainty levels, and multi-category RiskAssessment models.', status: 'Completed & Verified' },
-    { title: 'Governance & Event Broadcasts', description: 'Establishes DecisionPolicy threshold structures and publishes lifecycle Event schemas.', status: 'Completed & Verified' }
+    { title: 'COO Brain & Operations', description: 'Deploys COOBrain contract, OperationalHealth, OperationalCapability, and OperationalReadiness.', status: 'Completed & Verified' },
+    { title: 'Resource & Capacity Planning', description: 'Tracks ResourcePlan, ResourceAllocation, and CapacityPlan metrics.', status: 'Completed & Verified' },
+    { title: 'Execution & Workflow Assessment', description: 'Models ExecutionPlan, workflow cycle times, BottleneckAnalysis, and process efficiency.', status: 'Completed & Verified' },
+    { title: 'Delivery, Governance & Events', description: 'Models DeliveryStatus, SLA compliance, ExecutionPolicy, and broadcasts operational lifecycle events.', status: 'Completed & Verified' }
   ]
 };
 

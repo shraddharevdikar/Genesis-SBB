@@ -2,7 +2,7 @@ import { ExecutiveBrain } from '../core/contracts/executive-brain.js';
 import { ExecutiveContext } from '../core/contracts/executive-context.js';
 import { FinancialHealth } from './financial-health/financial-health.js';
 import { InvestmentOpportunity } from './investment/investment-opportunity.js';
-import { RoiAnalysis } from './investment/roi-analysis.js';
+import { ROIAnalysis } from './investment/roi-analysis.js';
 import { PaybackAnalysis } from './investment/payback-analysis.js';
 import { BudgetPlan } from './budget/budget-plan.js';
 import { CapitalAllocation } from './investment/capital-allocation.js';
@@ -28,7 +28,7 @@ export interface CFOBrain extends ExecutiveBrain {
   /**
    * Analyzes Return on Investment (ROI) and break-even paybacks for a given opportunity.
    */
-  analyzeRoi(context: ExecutiveContext, opportunity: InvestmentOpportunity): Promise<{ roi: RoiAnalysis; payback: PaybackAnalysis }>;
+  analyzeRoi(context: ExecutiveContext, opportunity: InvestmentOpportunity): Promise<{ roi: ROIAnalysis; payback: PaybackAnalysis }>;
 
   /**
    * Reviews proposed budget plans, calculating departmental allocations and variance reports.
