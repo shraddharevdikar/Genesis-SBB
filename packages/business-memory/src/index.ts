@@ -72,3 +72,60 @@ export * from './executive/governance/executive-memory-policy.js';
 export * from './executive/events/executive-memory-created.event.js';
 export * from './executive/events/executive-insight-recorded.event.js';
 export * from './executive/events/lesson-learned-recorded.event.js';
+
+// Organization Memory Core
+export * from './organization/core/organization-memory.js';
+export * from './organization/core/organization-memory-record.js';
+export * from './organization/core/organization-context.js';
+
+// Organization Memory Identity
+export * from './organization/identity/company-profile.js';
+export * from './organization/identity/mission.js';
+export * from './organization/identity/vision.js';
+export * from './organization/identity/core-values.js';
+
+// Organization Memory Structure
+export * from './organization/structure/business-unit.js';
+export * from './organization/structure/department.js';
+export * from './organization/structure/team.js';
+export * from './organization/structure/organizational-role.js';
+
+// Organization Memory Capabilities
+export * from './organization/capabilities/business-capability.js';
+export * from './organization/capabilities/capability-map.js';
+
+// Organization Memory Products & Services
+export * from './organization/products/product-catalog.js';
+export * from './organization/products/service-catalog.js';
+
+// Organization Memory Governance
+export * from './organization/governance/policy.js';
+export * from './organization/governance/governance-framework.js';
+export * from './organization/governance/approval-matrix.js';
+
+// Organization Memory Strategy
+export * from './organization/strategy/strategic-initiative.js';
+export * from './organization/strategy/business-objective.js';
+export * from './organization/strategy/organizational-goal.js';
+
+// Organization Memory Processes
+export * from './organization/processes/business-process.js';
+export * from './organization/processes/operating-model.js';
+
+// Organization Memory Compliance
+export * from './organization/compliance/compliance-obligation.js';
+export * from './organization/compliance/regulatory-framework.js';
+
+// Organization Memory Milestones
+export * from './organization/milestones/organizational-milestone.js';
+export * from './organization/milestones/transformation-program.js';
+
+// Organization Memory Relationships
+export * from './organization/relationships/organizational-relationship.js';
+export * from './organization/relationships/dependency-map.js';
+
+// Organization Memory Events
+export * from './organization/events/organization-memory-created.event.js';
+export * from './organization/events/strategic-initiative-added.event.js';
+export * from './organization/events/policy-updated.event.js';
+

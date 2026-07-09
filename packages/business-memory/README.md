@@ -1,6 +1,6 @@
-# Business Memory & Executive Memory Foundation (MEM-001 & MEM-002)
+# Business, Executive & Organization Memory Foundation (MEM-001, MEM-002 & MEM-003)
 
-The Business Memory and Executive Memory layers provide foundational abstractions, contracts, policies, and schemas for persistent organizational knowledge across SBB systems. Every executive brain, AI capability, and operational module builds on this strategic memory layer.
+The Business Memory, Executive Memory, and Organization Memory layers provide foundational abstractions, contracts, policies, and schemas for persistent organizational knowledge across SBB systems. Every executive brain, AI capability, and operational module builds on this strategic memory layer.
 
 ## Module Structure
 
@@ -38,37 +38,83 @@ packages/business-memory/
 │   │   ├── memory-updated.event.ts  # Audit-ready tracker for memory revisions
 │   │   └── memory-archived.event.ts # Archival event broadcast
 │   │
-│   └── executive/                   # Executive Memory Architecture (MEM-002)
+│   ├── executive/                   # Executive Memory Architecture (MEM-002)
+│   │   ├── core/
+│   │   │   ├── executive-memory.ts         # ExecutiveMemory contract interface
+│   │   │   ├── executive-memory-record.ts  # Consolidated executive memory record schema
+│   │   │   └── executive-memory-context.ts # Executive execution contexts linked to owners
+│   │   ├── identity/
+│   │   │   ├── executive-memory-id.ts      # Value object for unique executive memory references
+│   │   │   └── executive-owner.ts          # Identifiers for specific executive roles (CEO, CFO, CRO, etc.)
+│   │   ├── knowledge/
+│   │   │   ├── strategic-observation.ts    # Observations from strategic environments
+│   │   │   ├── executive-assumption.ts     # Assumptions tracking confidence score and validation criteria
+│   │   │   ├── executive-insight.ts        # Business theories and core thesis records
+│   │   │   └── lesson-learned.ts           # Scenario descriptions, failure analysis, preventive actions
+│   │   ├── decisions/
+│   │   │   ├── remembered-decision.ts      # Record of decisions, rationales, and alternative options considered
+│   │   │   └── decision-outcome.ts         # Outcome evaluators tracking metric differences and consequences
+│   │   ├── goals/
+│   │   │   ├── remembered-goal.ts          # Tracked organizational goals and target timelines
+│   │   │   └── goal-progress.ts            # Obstacles faced and remediation plans
+│   │   ├── playbooks/
+│   │   │   ├── executive-playbook.ts       # Strategic playbook schemas (Market Expansion, Cost Optimization, etc.)
+│   │   │   └── playbook-reference.ts       # Document references, templates, checklists
+│   │   ├── experience/
+│   │   │   ├── executive-experience.ts     # Tracks confidence levels, pattern recognition indexes
+│   │   │   └── confidence-evolution.ts     # Experience evolution timelines and tracking metrics
+│   │   ├── governance/
+│   │   │   └── executive-memory-policy.ts  # Visibility tiers and council sharing clearances
+│   │   └── events/
+│   │       ├── executive-memory-created.event.ts  # Broadcast for new executive knowledge spaces
+│   │       ├── executive-insight-recorded.event.ts # Broadcast when a strategic insight is formulated
+│   │       └── lesson-learned-recorded.event.ts    # Broadcast when a key organizational lesson is recorded
+│   │
+│   └── organization/                # Organization Memory Architecture (MEM-003)
 │       ├── core/
-│       │   ├── executive-memory.ts         # ExecutiveMemory contract interface
-│       │   ├── executive-memory-record.ts  # Consolidated executive memory record schema
-│       │   └── executive-memory-context.ts # Executive execution contexts linked to owners
+│       │   ├── organization-memory.ts         # OrganizationMemory contract interface
+│       │   ├── organization-memory-record.ts  # Consolidated organization memory aggregate schema
+│       │   └── organization-context.ts        # Execution contexts including strategic review toggles
 │       ├── identity/
-│       │   ├── executive-memory-id.ts      # Value object for unique executive memory references
-│       │   └── executive-owner.ts          # Identifiers for specific executive roles (CEO, CFO, CRO, etc.)
-│       ├── knowledge/
-│       │   ├── strategic-observation.ts    # Observations from strategic environments
-│       │   ├── executive-assumption.ts     # Assumptions tracking confidence score and validation criteria
-│       │   ├── executive-insight.ts        # Business theories and core thesis records
-│       │   └── lesson-learned.ts           # Scenario descriptions, failure analysis, preventive actions
-│       ├── decisions/
-│       │   ├── remembered-decision.ts      # Record of decisions, rationales, and alternative options considered
-│       │   └── decision-outcome.ts         # Outcome evaluators tracking metric differences and consequences
-│       ├── goals/
-│       │   ├── remembered-goal.ts          # Tracked organizational goals and target timelines
-│       │   └── goal-progress.ts            # Obstacles faced and remediation plans
-│       ├── playbooks/
-│       │   ├── executive-playbook.ts       # Strategic playbook schemas (Market Expansion, Cost Optimization, etc.)
-│       │   └── playbook-reference.ts       # Document references, templates, checklists
-│       ├── experience/
-│       │   ├── executive-experience.ts     # Tracks confidence levels, pattern recognition indexes
-│       │   └── confidence-evolution.ts     # Experience evolution timelines and tracking metrics
+│       │   ├── company-profile.ts             # Legal names, sector identifiers, corporate headquarter values
+│       │   ├── mission.ts                     # Operational mission statements and active key results
+│       │   ├── vision.ts                      # Multi-year strategic pillars and target horizons
+│       │   └── core-values.ts                 # Behaviors, core culture values, and alignment checks
+│       ├── structure/
+│       │   ├── business-unit.ts               # Divisional segments, leader roles, headcounts, budgets
+│       │   ├── department.ts                  # nested cost centers, reporting lineages, and scopes
+│       │   ├── team.ts                        # Pods, agile teams, functional cells, velocities
+│       │   └── organizational-role.ts         # Bands, positions, reports-to pointers, compensations
+│       ├── capabilities/
+│       │   ├── business-capability.ts         # Capabilities, maturity levels, and underlying systems
+│       │   └── capability-map.ts              # Hierarchical multi-tier node map representations
+│       ├── products/
+│       │   ├── product-catalog.ts             # Lifecycles, target markets, and active listings
+│       │   └── service-catalog.ts             # Service catalogues, SLA ratios, internal owner roles
 │       ├── governance/
-│       │   └── executive-memory-policy.ts  # Visibility tiers and council sharing clearances
+│       │   ├── policy.ts                      # Text standards, compliance controls, enforcement toggles
+│       │   ├── governance-framework.ts        # ISO/SOC2 mapping registries
+│       │   └── approval-matrix.ts             # Spend / headcount approval double sign-off thresholds
+│       ├── strategy/
+│       │   ├── strategic-initiative.ts        # Major transformations, scopes, pillars, and budgets
+│       │   ├── business-objective.ts          # Key KPI targets and quarterly achievements
+│       │   └── organizational-goal.ts         # Critical priorities and timeline benchmarks
+│       ├── processes/
+│       │   ├── business-process.ts            # Detailed process steps, performer roles, and duration metrics
+│       │   └── operating-model.ts             # Agility indexing, layout configurations (Matrix/Flat/Divisional)
+│       ├── compliance/
+│       │   ├── compliance-obligation.ts       # Legal penalties, adherence assessments, officer roles
+│       │   └── regulatory-framework.ts        # Sovereign jurisdictions and compliance scores
+│       ├── milestones/
+│       │   ├── organizational-milestone.ts    # Key acquisition / launch dates and achievements
+│       │   └── transformation-program.ts      # Multi-program budgets and risk levels
+│       ├── relationships/
+│       │   ├── organizational-relationship.ts  # Component-to-component directional semantic pointers
+│       │   └── dependency-map.ts              # Bottleneck analytics and circular dependency indicators
 │       └── events/
-│           ├── executive-memory-created.event.ts  # Broadcast for new executive knowledge spaces
-│           ├── executive-insight-recorded.event.ts # Broadcast when a strategic insight is formulated
-│           └── lesson-learned-recorded.event.ts    # Broadcast when a key organizational lesson is recorded
+│           ├── organization-memory-created.event.ts  # Lifecycle event on initial aggregate registry
+│           ├── strategic-initiative-added.event.ts   # Broadcaster when strategy programs are launched
+│           └── policy-updated.event.ts               # Event on revision of corporate policy directives
 └── package.json
 ```
 
@@ -88,6 +134,14 @@ packages/business-memory/
 - **Store Strategic Insights**: Formulates strategic thesis statements and maps them to concrete impact areas.
 - **Track Remembered Goals**: Monitors progress milestones, obstacles encountered, and remediation actions.
 - **Track Executive Experiences**: Charts learning curves, confidence levels, and pattern recognition evolutions.
+
+### Organization Memory (MEM-003)
+- **Record Organizational Knowledge**: Initializes aggregate corporate registry files detailing divisions, processes, and catalogs.
+- **Maintain Company Identity**: Curates central statements of corporate purpose, missions, target visions, and value guidelines.
+- **Store Strategic Initiatives**: Tracks high-level transition timelines, objectives, budgets, and KPI achievements.
+- **Store Business Capabilities**: Builds semantic maps detailing capabilities, maturity tiers, and underpinning technologies.
+- **Maintain Organizational Relationships**: Configures graph relation layers illustrating operational linkages and dependencies.
+- **Track Governance Information**: Holds strict authorization policies, approval limits, and regulator obligations.
 
 ## Out of Scope
 This module strictly defines memory architecture, data definitions, and strategic contracts. It **does NOT** implement:

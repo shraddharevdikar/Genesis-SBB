@@ -1,30 +1,32 @@
 import { TicketDetails, FileNode, FutureTicket } from './types';
 
 export const ticketDetails: TicketDetails = {
-  id: 'MEM-002',
-  title: 'Executive Memory Foundation',
+  id: 'MEM-003',
+  title: 'Organization Memory Foundation',
   status: 'DONE',
   priority: 'CRITICAL',
   author: 'SBB Principal Architect',
   assignee: 'shraddha.revdikar@gmail.com',
-  objective: 'Build the foundational Executive Memory architecture allowing executive brains to retain structured organizational knowledge, strategic observations, assumptions, lessons learned, goals, playbooks, decisions, and experiences over time.',
-  modulePath: 'packages/business-memory/src/executive/core/executive-memory.ts',
+  objective: 'Build the foundational Organization Memory architecture representing company identity, operating model, governance, capabilities, products, services, policies, strategic initiatives, and organizational relationships.',
+  modulePath: 'packages/business-memory/src/organization/core/organization-memory.ts',
   requirements: [
-    'Establish the ExecutiveMemory contract supporting strategic observations, assumptions, lessons learned, insights, goals, and experiences.',
-    'Model ExecutiveMemoryRecord aggregates uniting strategic knowledge, decisions, playbooks, experience progress, and governance policies.',
-    'Define Strategic Knowledge entities: observations, assumptions, insights, and lesson-learned structures.',
-    'Model Remembered Decisions tracking context, outcome evaluations, confidence metrics, and dynamic evidence links.',
-    'Model Remembered Goals tracking success criteria, progress timelines, obstacles, and post-mortem learnings.',
-    'Structure Executive Playbooks supporting Market Expansion, Crisis Response, Digital Transformation, and Cost Optimization categories.',
-    'Define Executive Experience levels tracking confidence evolution patterns and learning progressions.',
-    'Establish Executive Governance structures governing council visibility restrictions and sharing permissions.',
-    'Broadcast key executive memory lifecycle events: ExecutiveMemoryCreated, ExecutiveInsightRecorded, and LessonLearnedRecorded.'
+    'Establish the OrganizationMemory contract supporting profile registration, strategy, capabilities, relationships, and governance.',
+    'Model OrganizationMemoryRecord aggregate coordinating profiles, structures, capabilities, catalogs, strategy, and compliance frameworks.',
+    'Define Company Identity structures: profile, mission, vision, and core-values.',
+    'Model Organization Structure entities tracking units, departments, agile teams, and leadership reporting roles.',
+    'Structure Business Capabilities mapping hierarchies, owner roles, and supporting system lists.',
+    'Define Portfolio Catalogs for corporate products and service offerings.',
+    'Define Governance frameworks mapping approval thresholds, authority, and ISO/SOC2 standards.',
+    'Model corporate Strategy components: initiatives, business objectives, and organizational goals.',
+    'Design Compliance obligation registers and transformation programs with milestone stages.',
+    'Establish Organizational Relationships with dynamic dependency-maps and directional pointer links.',
+    'Broadcast key organization memory lifecycle events: OrganizationMemoryCreated, StrategicInitiativeAdded, and PolicyUpdated.'
   ],
   responsibilities: [
-    { title: 'Executive Memory & Strategy', description: 'Deploys ExecutiveMemory contract, core execution context, and record aggregates.', status: 'Completed & Verified' },
-    { title: 'Strategic Knowledge & Decisions', description: 'Tracks observations, assumptions, lesson post-mortems, and decision outcome evaluators.', status: 'Completed & Verified' },
-    { title: 'Playbooks & Experiences', description: 'Models reusable corporate playbooks, step workflows, and confidence progression indexes.', status: 'Completed & Verified' },
-    { title: 'Governance & Events', description: 'Establishes sharing clearances, visibility rules, and broadcasts key executive knowledge events.', status: 'Completed & Verified' }
+    { title: 'Organization Memory & Strategy', description: 'Deploys OrganizationMemory contract, context structures, and core record aggregates.', status: 'Completed & Verified' },
+    { title: 'Identity & Structures', description: 'Models company profiles, mission/vision standards, and hierarchical units/departments.', status: 'Completed & Verified' },
+    { title: 'Capabilities & Portfolios', description: 'Establishes hierarchical capability maps, product catalogues, and service structures.', status: 'Completed & Verified' },
+    { title: 'Governance & Events', description: 'Deploys spend thresholds, regulatory obligation matrices, and key lifecycle broadcast events.', status: 'Completed & Verified' }
   ]
 };
 
