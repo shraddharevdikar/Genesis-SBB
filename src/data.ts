@@ -1,29 +1,29 @@
 import { TicketDetails, FileNode, FutureTicket } from './types';
 
 export const ticketDetails: TicketDetails = {
-  id: 'BRAIN-006',
-  title: 'COO Brain Foundation',
+  id: 'BRAIN-007',
+  title: 'CTO Brain Foundation',
   status: 'DONE',
   priority: 'CRITICAL',
   author: 'SBB Principal Architect',
   assignee: 'shraddha.revdikar@gmail.com',
-  objective: 'Build the strategic COO Brain responsible for operational intelligence, execution planning, delivery oversight, resource optimization, and operational risk management.',
-  modulePath: 'packages/business-brain/src/coo/coo-brain.ts',
+  objective: 'Build the strategic CTO Brain responsible for technology leadership, architecture governance, engineering excellence, platform strategy, AI adoption, security oversight, and executive technology recommendations.',
+  modulePath: 'packages/business-brain/src/cto/cto-brain.ts',
   requirements: [
-    'Establish the COOBrain contract supporting assessment of operational readiness, resource allocation, and delivery health.',
-    'Model operational health parameters including process health, delivery health, utilization, operational efficiency, and SLA compliance.',
-    'Track resource planning metrics covering teams, skills, capacity, availability, and critical dependencies.',
-    'Define execution planning models including stages, milestones, dependencies, and critical path analysis.',
-    'Model workflow assessments focusing on bottlenecks, waste, cycle time, throughput, and automation opportunities.',
-    'Formulate delivery monitoring metrics supporting SLA compliance and blocker tracking.',
-    'Establish operational advisory recommendations and governance policies covering execution authority.',
-    'Broadcast operational lifecycle events: ExecutionReviewed, BottleneckDetected, and OperationalRiskRaised.'
+    'Establish the CTOBrain contract supporting assessment of system architecture, scalability, technical debt, and security posture.',
+    'Model technology strategy structures covering Cloud, AI, Modernization, and Build vs Buy analyses.',
+    'Model architectural health parameters focusing on modularity, reliability, maintainability, debt, and observability.',
+    'Track engineering metrics covering capability maturity, team velocities, capacity, and overall code quality.',
+    'Define security posture models tracking cyber-resilience ratings, compliance status, and vulnerability risk mapping.',
+    'Formulate innovation opportunity assessments, emerging technology trends, and generative AI adoptions.',
+    'Establish executive technology advisories and provider-independent recommendation contracts.',
+    'Broadcast key technical lifecycle events: ArchitectureReviewed, TechnicalRiskDetected, and InnovationIdentified.'
   ],
   responsibilities: [
-    { title: 'COO Brain & Operations', description: 'Deploys COOBrain contract, OperationalHealth, OperationalCapability, and OperationalReadiness.', status: 'Completed & Verified' },
-    { title: 'Resource & Capacity Planning', description: 'Tracks ResourcePlan, ResourceAllocation, and CapacityPlan metrics.', status: 'Completed & Verified' },
-    { title: 'Execution & Workflow Assessment', description: 'Models ExecutionPlan, workflow cycle times, BottleneckAnalysis, and process efficiency.', status: 'Completed & Verified' },
-    { title: 'Delivery, Governance & Events', description: 'Models DeliveryStatus, SLA compliance, ExecutionPolicy, and broadcasts operational lifecycle events.', status: 'Completed & Verified' }
+    { title: 'CTO Brain & Strategy', description: 'Deploys CTOBrain contract, technology strategies, roadmap initiatives, and build vs buy analyses.', status: 'Completed & Verified' },
+    { title: 'Architecture & Engineering', description: 'Tracks architecture health, reviews scalability limits, technical debt, engineering capability maturity, and code quality.', status: 'Completed & Verified' },
+    { title: 'Security & Innovation', description: 'Models security posture scores, compliance status (SOC2/GDPR), risk registries, and generative AI adoption KPIs.', status: 'Completed & Verified' },
+    { title: 'Governance, Advisory & Events', description: 'Establishes architecture standards, provider-independent advisories, and broadcasts technical lifecycle events.', status: 'Completed & Verified' }
   ]
 };
 

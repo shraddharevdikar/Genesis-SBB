@@ -218,3 +218,52 @@ export * from './coo/events/execution-reviewed.event.js';
 export * from './coo/events/bottleneck-detected.event.js';
 export * from './coo/events/operational-risk-raised.event.js';
 
+// CTO Brain Core
+export * from './cto/cto-brain.js';
+
+// CTO Technology
+export * from './cto/technology/technology-strategy.js';
+export * from './cto/technology/technology-roadmap.js';
+export * from './cto/technology/technology-investment.js';
+
+// CTO Architecture
+export * from './cto/architecture/architecture-health.js';
+export * from './cto/architecture/architecture-review.js';
+export * from './cto/architecture/scalability-assessment.js';
+export * from './cto/architecture/technical-debt.js';
+
+// CTO Engineering
+export * from './cto/engineering/engineering-capability.js';
+export * from './cto/engineering/engineering-capacity.js';
+export * from './cto/engineering/engineering-quality.js';
+
+// CTO Security
+export * from './cto/security/security-posture.js';
+export * from './cto/security/security-risk.js';
+export * from './cto/security/compliance-status.js';
+
+// CTO Innovation
+export * from './cto/innovation/innovation-opportunity.js';
+export * from './cto/innovation/emerging-technology.js';
+export * from './cto/innovation/ai-adoption.js';
+
+// CTO Platform
+export * from './cto/platform/platform-readiness.js';
+export * from './cto/platform/release-readiness.js';
+export * from './cto/platform/operational-resilience.js';
+
+// CTO Advisory
+export * from './cto/advisory/technology-recommendation.js';
+export * from './cto/advisory/executive-technology-summary.js';
+
+// CTO Governance
+export * from './cto/governance/architecture-policy.js';
+export * from './cto/governance/engineering-standard.js';
+export * from './cto/governance/technology-authority.js';
+
+// CTO Events
+export * from './cto/events/architecture-reviewed.event.js';
+export * from './cto/events/technical-risk-detected.event.js';
+export * from './cto/events/innovation-identified.event.js';
+
+

@@ -131,7 +131,10 @@ import {
   OperationalAuthority,
   ExecutionReviewedEvent,
   BottleneckDetectedEvent,
-  OperationalRiskRaisedEvent
+  OperationalRiskRaisedEvent,
+  CTOBrain,
+  ArchitectureHealth,
+  TechnicalRiskDetectedEvent
 } from '@sbb/business-brain';
 
 class MockWorkingMemory implements WorkingMemory {
