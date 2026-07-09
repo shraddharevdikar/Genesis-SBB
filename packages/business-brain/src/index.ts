@@ -266,4 +266,51 @@ export * from './cto/events/architecture-reviewed.event.js';
 export * from './cto/events/technical-risk-detected.event.js';
 export * from './cto/events/innovation-identified.event.js';
 
+// CMO Brain Core
+export * from './cmo/cmo-brain.js';
+
+// CMO Market
+export * from './cmo/market/market-analysis.js';
+export * from './cmo/market/market-opportunity.js';
+export * from './cmo/market/competitive-analysis.js';
+export * from './cmo/market/market-segmentation.js';
+
+// CMO Brand
+export * from './cmo/brand/brand-health.js';
+export * from './cmo/brand/brand-positioning.js';
+export * from './cmo/brand/value-proposition.js';
+
+// CMO Growth
+export * from './cmo/growth/growth-strategy.js';
+export * from './cmo/growth/growth-opportunity.js';
+export * from './cmo/growth/expansion-plan.js';
+
+// CMO Customer
+export * from './cmo/customer/customer-persona.js';
+export * from './cmo/customer/customer-journey.js';
+export * from './cmo/customer/customer-insights.js';
+
+// CMO Investment
+export * from './cmo/investment/marketing-investment.js';
+export * from './cmo/investment/channel-allocation.js';
+export * from './cmo/investment/marketing-roi.js';
+
+// CMO Performance
+export * from './cmo/performance/marketing-kpi.js';
+export * from './cmo/performance/campaign-health.js';
+export * from './cmo/performance/pipeline-health.js';
+
+// CMO Advisory
+export * from './cmo/advisory/marketing-recommendation.js';
+export * from './cmo/advisory/executive-marketing-summary.js';
+
+// CMO Governance
+export * from './cmo/governance/marketing-policy.js';
+export * from './cmo/governance/brand-governance.js';
+
+// CMO Events
+export * from './cmo/events/market-opportunity-identified.event.js';
+export * from './cmo/events/brand-health-reviewed.event.js';
+export * from './cmo/events/growth-strategy-created.event.js';
+
 

@@ -1,29 +1,29 @@
 import { TicketDetails, FileNode, FutureTicket } from './types';
 
 export const ticketDetails: TicketDetails = {
-  id: 'BRAIN-007',
-  title: 'CTO Brain Foundation',
+  id: 'BRAIN-008',
+  title: 'CMO Brain Foundation',
   status: 'DONE',
   priority: 'CRITICAL',
   author: 'SBB Principal Architect',
   assignee: 'shraddha.revdikar@gmail.com',
-  objective: 'Build the strategic CTO Brain responsible for technology leadership, architecture governance, engineering excellence, platform strategy, AI adoption, security oversight, and executive technology recommendations.',
-  modulePath: 'packages/business-brain/src/cto/cto-brain.ts',
+  objective: 'Build the strategic CMO Brain responsible for market intelligence, brand strategy, growth planning, customer strategy, marketing investment, and executive marketing recommendations.',
+  modulePath: 'packages/business-brain/src/cmo/cmo-brain.ts',
   requirements: [
-    'Establish the CTOBrain contract supporting assessment of system architecture, scalability, technical debt, and security posture.',
-    'Model technology strategy structures covering Cloud, AI, Modernization, and Build vs Buy analyses.',
-    'Model architectural health parameters focusing on modularity, reliability, maintainability, debt, and observability.',
-    'Track engineering metrics covering capability maturity, team velocities, capacity, and overall code quality.',
-    'Define security posture models tracking cyber-resilience ratings, compliance status, and vulnerability risk mapping.',
-    'Formulate innovation opportunity assessments, emerging technology trends, and generative AI adoptions.',
-    'Establish executive technology advisories and provider-independent recommendation contracts.',
-    'Broadcast key technical lifecycle events: ArchitectureReviewed, TechnicalRiskDetected, and InnovationIdentified.'
+    'Establish the CMOBrain contract supporting assessment of target markets, competitors, brand health, and growth strategies.',
+    'Model market intelligence structures covering TAM, SAM, SOM, competitive analysis, and segment dynamics.',
+    'Model brand health metrics tracking equity, sentiment breakdowns, trust indices, and strategic positioning.',
+    'Track growth strategy attributes covering acquisition, retention, expansion, and launch plans.',
+    'Define customer intelligence profiles capturing personas, journey drops, CSAT, and behavior insights.',
+    'Formulate marketing investment guidelines, channel allocations, and calculation-free ROI expectations.',
+    'Establish executive marketing advisories and brand governance standards.',
+    'Broadcast key marketing lifecycle events: MarketOpportunityIdentified, BrandHealthReviewed, and GrowthStrategyCreated.'
   ],
   responsibilities: [
-    { title: 'CTO Brain & Strategy', description: 'Deploys CTOBrain contract, technology strategies, roadmap initiatives, and build vs buy analyses.', status: 'Completed & Verified' },
-    { title: 'Architecture & Engineering', description: 'Tracks architecture health, reviews scalability limits, technical debt, engineering capability maturity, and code quality.', status: 'Completed & Verified' },
-    { title: 'Security & Innovation', description: 'Models security posture scores, compliance status (SOC2/GDPR), risk registries, and generative AI adoption KPIs.', status: 'Completed & Verified' },
-    { title: 'Governance, Advisory & Events', description: 'Establishes architecture standards, provider-independent advisories, and broadcasts technical lifecycle events.', status: 'Completed & Verified' }
+    { title: 'CMO Brain & Strategy', description: 'Deploys CMOBrain contract, market intelligence, segments, and competitive analyses.', status: 'Completed & Verified' },
+    { title: 'Brand & Growth Planning', description: 'Tracks brand health scores, positioning pillars, and growth launch blueprints.', status: 'Completed & Verified' },
+    { title: 'Customer & Investment', description: 'Models customer personas, journeys, channel mix budgets, and ROI matrices.', status: 'Completed & Verified' },
+    { title: 'Governance, Advisory & Events', description: 'Establishes brand policies, provider-independent summaries, and broadcasts marketing lifecycle events.', status: 'Completed & Verified' }
   ]
 };
 

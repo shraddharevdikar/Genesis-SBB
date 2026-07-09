@@ -134,7 +134,11 @@ import {
   OperationalRiskRaisedEvent,
   CTOBrain,
   ArchitectureHealth,
-  TechnicalRiskDetectedEvent
+  TechnicalRiskDetectedEvent,
+  CMOBrain,
+  MarketAnalysis,
+  BrandHealth,
+  MarketOpportunityIdentifiedEvent
 } from '@sbb/business-brain';
 
 class MockWorkingMemory implements WorkingMemory {
