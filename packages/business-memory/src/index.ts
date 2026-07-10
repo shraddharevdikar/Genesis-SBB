@@ -181,3 +181,84 @@ export * from './customer/events/customer-memory-created.event.js';
 export * from './customer/events/customer-insight-recorded.event.js';
 export * from './customer/events/customer-health-updated.event.js';
 
+// Knowledge Graph Core
+export * from './knowledge-graph/core/knowledge-graph.js';
+export * from './knowledge-graph/core/graph-context.js';
+export * from './knowledge-graph/core/graph-node.js';
+export * from './knowledge-graph/core/graph-edge.js';
+export * from './knowledge-graph/core/graph-path.js';
+
+// Knowledge Graph Identity
+export * from './knowledge-graph/identity/graph-node-id.js';
+export * from './knowledge-graph/identity/graph-edge-id.js';
+
+// Knowledge Graph Ontology
+export * from './knowledge-graph/ontology/entity-type.js';
+export * from './knowledge-graph/ontology/entity-category.js';
+export { RelationshipType as GraphRelationshipType } from './knowledge-graph/ontology/relationship-type.js';
+export * from './knowledge-graph/ontology/relationship-category.js';
+export * from './knowledge-graph/ontology/graph-schema.js';
+
+// Knowledge Graph Nodes
+export * from './knowledge-graph/nodes/executive-node.js';
+export * from './knowledge-graph/nodes/organization-node.js';
+export * from './knowledge-graph/nodes/customer-node.js';
+export * from './knowledge-graph/nodes/employee-node.js';
+export * from './knowledge-graph/nodes/department-node.js';
+export * from './knowledge-graph/nodes/team-node.js';
+export * from './knowledge-graph/nodes/product-node.js';
+export * from './knowledge-graph/nodes/service-node.js';
+export * from './knowledge-graph/nodes/technology-node.js';
+export * from './knowledge-graph/nodes/market-node.js';
+export * from './knowledge-graph/nodes/capability-node.js';
+export * from './knowledge-graph/nodes/initiative-node.js';
+export * from './knowledge-graph/nodes/goal-node.js';
+export * from './knowledge-graph/nodes/risk-node.js';
+export * from './knowledge-graph/nodes/policy-node.js';
+export * from './knowledge-graph/nodes/process-node.js';
+export * from './knowledge-graph/nodes/workflow-node.js';
+export * from './knowledge-graph/nodes/asset-node.js';
+
+// Knowledge Graph Edges
+export * from './knowledge-graph/edges/owns.edge.ts';
+export * from './knowledge-graph/edges/supports.edge.ts';
+export * from './knowledge-graph/edges/uses.edge.ts';
+export * from './knowledge-graph/edges/depends-on.edge.ts';
+export * from './knowledge-graph/edges/implements.edge.ts';
+export * from './knowledge-graph/edges/reports-to.edge.ts';
+export * from './knowledge-graph/edges/governs.edge.ts';
+export * from './knowledge-graph/edges/funds.edge.ts';
+export * from './knowledge-graph/edges/delivers.edge.ts';
+export * from './knowledge-graph/edges/related-to.edge.ts';
+export * from './knowledge-graph/edges/member-of.edge.ts';
+
+// Knowledge Graph Relationships
+export * from './knowledge-graph/relationships/relationship-direction.js';
+export * from './knowledge-graph/relationships/relationship-strength.js';
+export * from './knowledge-graph/relationships/relationship-confidence.js';
+export * from './knowledge-graph/relationships/relationship-lifecycle.js';
+
+// Knowledge Graph Queries
+export * from './knowledge-graph/queries/graph-query.js';
+export * from './knowledge-graph/queries/graph-filter.js';
+export * from './knowledge-graph/queries/graph-traversal.js';
+export * from './knowledge-graph/queries/graph-path-query.js';
+
+// Knowledge Graph Constraints
+export * from './knowledge-graph/constraints/relationship-rule.js';
+export * from './knowledge-graph/constraints/node-rule.js';
+export * from './knowledge-graph/constraints/ontology-rule.js';
+export * from './knowledge-graph/constraints/validation-rule.js';
+
+// Knowledge Graph Governance
+export * from './knowledge-graph/governance/graph-policy.js';
+export * from './knowledge-graph/governance/graph-visibility.js';
+export * from './knowledge-graph/governance/graph-classification.js';
+
+// Knowledge Graph Events
+export * from './knowledge-graph/events/node-created.event.js';
+export * from './knowledge-graph/events/edge-created.event.js';
+export * from './knowledge-graph/events/relationship-updated.event.js';
+export * from './knowledge-graph/events/ontology-updated.event.js';
+
+

@@ -1,32 +1,29 @@
 import { TicketDetails, FileNode, FutureTicket } from './types';
 
 export const ticketDetails: TicketDetails = {
-  id: 'MEM-004',
-  title: 'Customer Memory Foundation',
+  id: 'MEM-005',
+  title: 'Enterprise Knowledge Graph Foundation',
   status: 'DONE',
   priority: 'CRITICAL',
   author: 'SBB Principal Architect',
   assignee: 'shraddha.revdikar@gmail.com',
-  objective: 'Build the foundational Customer Memory architecture representing long-term customer understanding across every interaction, executive relationship, business objective, product usage, and organizational learning.',
-  modulePath: 'packages/business-memory/src/customer/core/customer-memory.ts',
+  objective: 'Build the foundational Enterprise Knowledge Graph model representing enterprise semantic relationships between core entity types independently of database technologies.',
+  modulePath: 'packages/business-memory/src/knowledge-graph/core/knowledge-graph.ts',
   requirements: [
-    'Establish the CustomerMemory contract supporting customer knowledge, goals, stakeholders, health, learnings, and executive interactions.',
-    'Model CustomerMemoryRecord aggregate coordinating profiles, organizations, buying committees, health metrics, and adoptions.',
-    'Define Customer Profile and Organization structures tracking region, industry, size, importance, and lifecycle stage.',
-    'Model Stakeholders including decision makers, executive sponsors, champions, influencers, procurement, and technical contacts.',
-    'Structure Business Context capturing goals, pain points, and success criteria targets.',
-    'Define Relationships mapping trust level, health trends, communication preferences, and executive connection strength.',
-    'Define Product Understanding tracking product adoption, license usage patterns, and expansion opportunities.',
-    'Model Customer Health tracking numerical scores, renewal readiness likelihood, and detailed churn-risk mitigation logs.',
-    'Structure Organizational Learning tracking customer-centric insights and relationship lessons learned.',
-    'Establish Governance structures covering data privacy ccpa/gdpr, masking, and sharing rules.',
-    'Broadcast key customer memory lifecycle events: CustomerMemoryCreated, CustomerInsightRecorded, and CustomerHealthUpdated.'
+    'Establish the KnowledgeGraph contract supporting node, connection, traversal, and validation operations.',
+    'Model GraphNode and GraphEdge bases as first-class business structures with metadata, strength, and confidence scoring.',
+    'Implement a Canonical Universal Business Ontology spanning Executive, Organization, Customer, Employee, Product, etc.',
+    'Deconstruct relationships into reusable OWNS, USES, SUPPORTS, DEPENDS_ON, and REPORTS_TO edge types.',
+    'Integrate semantic relationship rules to prevent invalid connection definitions.',
+    'Design non-DFS/BFS architecture contracts for high-level customer-capability-executive graph traversals.',
+    'Draft robust governance, visibility levels, data privacy regimes, and property masking strategies.',
+    'Broadcast key domain lifecycle events: NodeCreated, EdgeCreated, RelationshipUpdated, and OntologyUpdated.'
   ],
   responsibilities: [
-    { title: 'Customer Memory & Strategy', description: 'Deploys CustomerMemory contract, execution contexts, and core record aggregates.', status: 'Completed & Verified' },
-    { title: 'Stakeholders & Goals', description: 'Models buying committees, executive sponsors, trust ratings, and customer business targets.', status: 'Completed & Verified' },
-    { title: 'Health & Adoptions', description: 'Tracks product license adoptions, system usage trends, renewal readiness, and risk models.', status: 'Completed & Verified' },
-    { title: 'Governance & Events', description: 'Deploys compliance privacy filters, customer insights, lessons learned, and key lifecycle event publishers.', status: 'Completed & Verified' }
+    { title: 'Graph Core & Ontology', description: 'Deploys KnowledgeGraph contract, execution contexts, node/edge bases, and entity/relationship types.', status: 'Completed & Verified' },
+    { title: 'Semantic Nodes & Edges', description: 'Models 18 domain-specific entity nodes and 11 relational business edges.', status: 'Completed & Verified' },
+    { title: 'Validation & Constraints', description: 'Implements semantic validation rules, node property guidelines, and ontological constraints.', status: 'Completed & Verified' },
+    { title: 'Governance & Events', description: 'Provides visibility tier configurations, GDPR/HIPAA privacy regimes, and key lifecycle broadcast events.', status: 'Completed & Verified' }
   ]
 };
 
