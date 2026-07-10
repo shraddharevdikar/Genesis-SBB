@@ -261,4 +261,72 @@ export * from './knowledge-graph/events/edge-created.event.js';
 export * from './knowledge-graph/events/relationship-updated.event.js';
 export * from './knowledge-graph/events/ontology-updated.event.js';
 
+// Business Digital Twin Core
+export * from './business-digital-twin/core/business-digital-twin.js';
+export * from './business-digital-twin/core/twin-context.js';
+export * from './business-digital-twin/core/twin-state.js';
+export * from './business-digital-twin/core/twin-snapshot.js';
+export * from './business-digital-twin/core/twin-view.js';
+
+// Business Digital Twin Identity
+export * from './business-digital-twin/identity/twin-id.js';
+export * from './business-digital-twin/identity/snapshot-id.js';
+
+// Business Digital Twin Organization
+export * from './business-digital-twin/organization/organization-state.js';
+export * from './business-digital-twin/organization/department-state.js';
+export * from './business-digital-twin/organization/team-state.js';
+
+// Business Digital Twin Customers
+export * from './business-digital-twin/customers/customer-state.js';
+export * from './business-digital-twin/customers/customer-health-state.js';
+
+// Business Digital Twin Products
+export * from './business-digital-twin/products/product-state.js';
+export * from './business-digital-twin/products/service-state.js';
+
+// Business Digital Twin Finance
+export * from './business-digital-twin/finance/financial-state.js';
+export * from './business-digital-twin/finance/revenue-state.js';
+export * from './business-digital-twin/finance/cost-state.js';
+
+// Business Digital Twin Operations
+export * from './business-digital-twin/operations/operational-state.js';
+export * from './business-digital-twin/operations/capacity-state.js';
+
+// Business Digital Twin Technology
+export * from './business-digital-twin/technology/technology-state.js';
+export * from './business-digital-twin/technology/platform-state.js';
+
+// Business Digital Twin Workforce
+export * from './business-digital-twin/workforce/workforce-state.js';
+export * from './business-digital-twin/workforce/leadership-state.js';
+
+// Business Digital Twin Strategy
+export * from './business-digital-twin/strategy/initiative-state.js';
+export * from './business-digital-twin/strategy/goal-state.js';
+
+// Business Digital Twin Risks
+export * from './business-digital-twin/risks/risk-state.js';
+export * from './business-digital-twin/risks/dependency-state.js';
+
+// Business Digital Twin Health
+export * from './business-digital-twin/health/enterprise-health.js';
+export * from './business-digital-twin/health/business-health-index.js';
+
+// Business Digital Twin Simulation
+export * from './business-digital-twin/simulation/scenario.js';
+export * from './business-digital-twin/simulation/scenario-impact.js';
+export * from './business-digital-twin/simulation/impact-summary.js';
+
+// Business Digital Twin Governance
+export * from './business-digital-twin/governance/twin-governance.js';
+export * from './business-digital-twin/governance/snapshot-policy.js';
+
+// Business Digital Twin Events
+export * from './business-digital-twin/events/twin-created.event.js';
+export * from './business-digital-twin/events/snapshot-created.event.js';
+export * from './business-digital-twin/events/enterprise-health-updated.event.js';
+
+
 
