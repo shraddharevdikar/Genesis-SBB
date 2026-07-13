@@ -1,0 +1,20 @@
+{
+  "name": "@sbb/runtime-platform",
+  "version": "1.0.0",
+  "description": "Foundational contracts, execution models, coordination services, governance policies, and event schemas for SBB Enterprise Runtime Platform",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@sbb/shared": "^1.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.5",
+    "@types/node": "^20.12.12"
+  },
+  "publishConfig": {
+    "access": "restricted"
+  }
+}

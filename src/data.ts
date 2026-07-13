@@ -1,27 +1,29 @@
 import { TicketDetails, FileNode, FutureTicket } from './types';
 
 export const ticketDetails: TicketDetails = {
-  id: 'MEM-010',
-  title: 'Enterprise Memory API Foundation',
+  id: 'RUN-001',
+  title: 'Enterprise Runtime Foundation',
   status: 'DONE',
   priority: 'CRITICAL',
   author: 'SBB Principal Architect',
   assignee: 'shraddha.revdikar@gmail.com',
-  objective: 'Build the foundational Enterprise Memory API as the unified, multi-tenant secure internal domain access layer for the Enterprise Intelligence Core.',
-  modulePath: 'packages/business-memory/src/memory-api/core/memory-api.ts',
+  objective: 'Build the foundational Runtime Platform providing the execution layer, context, sessions, and state boundaries for SBB.',
+  modulePath: 'packages/runtime-platform/src/core/runtime-platform.ts',
   requirements: [
-    'Establish the MemoryAPI contract supporting Memory queries, reads, searches, and context, learning, and graph retrievals.',
-    'Model request and response contracts mapping structured input queries (Executive, Customer, Product, Strategy, etc.) to typed results.',
-    'Integrate governance policies including tenant network/subnet isolation, role clearances, and audit logging frameworks.',
-    'Define request router and source selector to identify SBB engine destination targets based on semantics.',
-    'Implement tracking performance and quality metrics capturing response times, cache hits, and response quality scores.',
-    'Broadcast key Memory API lifecycle domain events: MemoryRequested, MemoryReturned, and AccessDenied.'
+    'Establish the RuntimePlatform contract supporting runtime startup, teardown, execution, coordination, validation, and health monitoring.',
+    'Model runtime context, session, and dynamic state containers tracking resource allocation and concurrent operations.',
+    'Deconstruct execution requests, contexts, and results detailing CPU/memory usage, latency boundaries, and sandboxing limits.',
+    'Define command, query, and response structures modeling transactional and fetch requests.',
+    'Integrate runtime coordinator and orchestrator to handle sequencing pipelines and execution schedules.',
+    'Enforce governance policies spanning multi-tenant isolation, authorization clearances, and security checks.',
+    'Implement metrics tracking availability, memory capacity, backlog sizes, and error rates.',
+    'Broadcast key runtime lifecycle domain events: RuntimeStarted, RuntimeStopped, and ExecutionRequested.'
   ],
   responsibilities: [
-    { title: 'Memory API Contracts', description: 'Deploys MemoryAPI contract, core request, response, session, and query/command/result schemas.', status: 'Completed & Verified' },
-    { title: 'Operations & Routing', description: 'Models query/write operations across SBB modules with routing mechanisms and target selection.', status: 'Completed & Verified' },
-    { title: 'Governance & Security', description: 'Establishes multi-tenant tenant isolation, authorization clearance levels, and compliance frameworks.', status: 'Completed & Verified' },
-    { title: 'Metrics & Domain Events', description: 'Tracks performance response metrics and broadcasts key requested, returned, and access-denied events.', status: 'Completed & Verified' }
+    { title: 'Runtime platform contracts', description: 'Deploys RuntimePlatform contract, core session, and dynamic state models.', status: 'Completed & Verified' },
+    { title: 'Execution & Coordination', description: 'Models execution requests/results and establishes coordinator and orchestrator sequencing contracts.', status: 'Completed & Verified' },
+    { title: 'Governance & Security', description: 'Enforces multi-tenant isolation verification and clearance-based execution security.', status: 'Completed & Verified' },
+    { title: 'Metrics & Domain Events', description: 'Tracks capacity limits, error rates, and broadcasts started, stopped, and requested events.', status: 'Completed & Verified' }
   ]
 };
 

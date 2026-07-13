@@ -51,6 +51,9 @@
       ],
       "@sbb/business-memory": [
         "./packages/business-memory/src/index.ts"
+      ],
+      "@sbb/runtime-platform": [
+        "./packages/runtime-platform/src/index.ts"
       ]
     },
     "allowImportingTsExtensions": true,
