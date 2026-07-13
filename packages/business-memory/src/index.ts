@@ -379,6 +379,59 @@ export * from './decision-dna/events/decision-recorded.event.js';
 export * from './decision-dna/events/decision-reviewed.event.js';
 export * from './decision-dna/events/lesson-captured.event.js';
 
+// Learning Engine Core
+export * from './learning-engine/core/learning-engine.js';
+export * from './learning-engine/core/learning-context.js';
+export * from './learning-engine/core/learning-cycle.js';
+export * from './learning-engine/core/learning-profile.js';
+
+// Learning Engine Identity
+export * from './learning-engine/identity/learning-id.js';
+export * from './learning-engine/identity/pattern-id.js';
+
+// Learning Engine Patterns
+export * from './learning-engine/patterns/learning-pattern.js';
+export * from './learning-engine/patterns/success-pattern.js';
+export * from './learning-engine/patterns/failure-pattern.js';
+export * from './learning-engine/patterns/opportunity-pattern.js';
+
+// Learning Engine Experience
+export * from './learning-engine/experience/experience-model.js';
+export * from './learning-engine/experience/organizational-experience.js';
+export * from './learning-engine/experience/executive-experience.js';
+
+// Learning Engine Recommendations
+export * from './learning-engine/recommendations/learning-recommendation.js';
+export * from './learning-engine/recommendations/improvement-opportunity.js';
+export * from './learning-engine/recommendations/best-practice.js';
+
+// Learning Engine Confidence
+export * from './learning-engine/confidence/confidence-model.js';
+export * from './learning-engine/confidence/confidence-trend.js';
+export * from './learning-engine/confidence/confidence-calibration.js';
+
+// Learning Engine Playbooks
+export * from './learning-engine/playbooks/reusable-playbook.js';
+export * from './learning-engine/playbooks/playbook-evolution.js';
+
+// Learning Engine Insights
+export * from './learning-engine/insights/organizational-insight.js';
+export * from './learning-engine/insights/strategic-insight.js';
+
+// Learning Engine Governance
+export * from './learning-engine/governance/learning-policy.js';
+export * from './learning-engine/governance/learning-retention.js';
+
+// Learning Engine Metrics
+export * from './learning-engine/metrics/learning-effectiveness.js';
+export * from './learning-engine/metrics/organizational-maturity.js';
+
+// Learning Engine Events
+export * from './learning-engine/events/learning-recorded.event.js';
+export * from './learning-engine/events/pattern-discovered.event.js';
+export * from './learning-engine/events/best-practice-identified.event.js';
+
+
 
 
 

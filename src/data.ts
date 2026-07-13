@@ -1,29 +1,28 @@
 import { TicketDetails, FileNode, FutureTicket } from './types';
 
 export const ticketDetails: TicketDetails = {
-  id: 'MEM-007',
-  title: 'Decision DNA Foundation',
+  id: 'MEM-008',
+  title: 'Learning Engine Foundation',
   status: 'DONE',
   priority: 'CRITICAL',
   author: 'SBB Principal Architect',
   assignee: 'shraddha.revdikar@gmail.com',
-  objective: 'Build the foundational Decision DNA capability that preserves how strategic, tactical, and operational decisions are made, evaluated, and learned from over time.',
-  modulePath: 'packages/business-memory/src/decision-dna/core/decision-dna.ts',
+  objective: 'Build the foundational Learning Engine that captures and models corporate learning from accumulated organizational experiences, outcomes, and reflections over time.',
+  modulePath: 'packages/business-memory/src/learning-engine/core/learning-engine.ts',
   requirements: [
-    'Establish the DecisionDNA contract supporting decision recording, assumptions, alternatives, evidence, outcomes, and retrospective learnings.',
-    'Model DecisionRecord as the central domain aggregate coordinating profile data, participants, governance rules, and outcomes.',
-    'Implement multi-tier Strategic, Tactical, and Operational specialized decision wrappers.',
-    'Deconstruct analysis elements into explicit Assumption, Alternative, Evidence, Trade-off, and Confidence structures.',
-    'Define DecisionParticipant roles spanning C-Suite executives and external advisory stakeholders with alignment weights.',
-    'Model expected vs actual outcome metrics tracking variance, business impact, and performance evaluations.',
-    'Integrate governance, approval status models, compliance policy structures, and retention configurations.',
-    'Broadcast key decision lifecycle events: DecisionRecorded, DecisionReviewed, and LessonCaptured.'
+    'Establish the LearningEngine contract supporting learning capture, patterns, best practices, failure models, opportunities, and playbooks.',
+    'Model organizational, executive, department, and team experiences as first-class domain models.',
+    'Deconstruct pattern recognition models into explicit Success, Failure, and Opportunity patterns.',
+    'Implement three-dimensional Confidence metrics spanning Analytical, Historical Consistency, and Stakeholder Consensus.',
+    'Define reusable playbooks, evolutionary performance shifts, and strategic/operational organizational insights.',
+    'Model learning retention policies, double reflection validation controls, knowledge reuse scores, and pattern accuracy.',
+    'Broadcast key learning engine lifecycle events: LearningRecorded, PatternDiscovered, and BestPracticeIdentified.'
   ],
   responsibilities: [
-    { title: 'Decision DNA Core', description: 'Deploys DecisionDNA contract, context variables, and central DecisionRecord aggregate.', status: 'Completed & Verified' },
-    { title: 'Multi-Tier & Analysis Models', description: 'Models Strategic/Tactical/Operational decision templates and deconstructs assumptions/alternatives.', status: 'Completed & Verified' },
-    { title: 'Outcomes, Metrics & Learning', description: 'Tracks expected/actual outcomes, quality scores, effectiveness indices, and retrospective decision patterns.', status: 'Completed & Verified' },
-    { title: 'Governance & Domain Events', description: 'Implements approval policy, ownership metrics, and key lifecycle broadcast events.', status: 'Completed & Verified' }
+    { title: 'Learning Engine Core', description: 'Deploys LearningEngine contract, cycle phase models, and learning profiles.', status: 'Completed & Verified' },
+    { title: 'Experience & Pattern Domains', description: 'Models organizational/executive experiences and success/failure/opportunity patterns.', status: 'Completed & Verified' },
+    { title: 'Confidence, Playbooks & Insights', description: 'Establishes three-dimensional confidence trends, reusable playbooks, and strategic insights.', status: 'Completed & Verified' },
+    { title: 'Governance, Metrics & Events', description: 'Tracks knowledge reuse rates, double-reflection policies, and broadcasts key lifecycle domain events.', status: 'Completed & Verified' }
   ]
 };
 
