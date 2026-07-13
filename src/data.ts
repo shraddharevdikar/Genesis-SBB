@@ -1,29 +1,29 @@
 import { TicketDetails, FileNode, FutureTicket } from './types';
 
 export const ticketDetails: TicketDetails = {
-  id: 'MEM-005',
-  title: 'Enterprise Knowledge Graph Foundation',
+  id: 'MEM-007',
+  title: 'Decision DNA Foundation',
   status: 'DONE',
   priority: 'CRITICAL',
   author: 'SBB Principal Architect',
   assignee: 'shraddha.revdikar@gmail.com',
-  objective: 'Build the foundational Enterprise Knowledge Graph model representing enterprise semantic relationships between core entity types independently of database technologies.',
-  modulePath: 'packages/business-memory/src/knowledge-graph/core/knowledge-graph.ts',
+  objective: 'Build the foundational Decision DNA capability that preserves how strategic, tactical, and operational decisions are made, evaluated, and learned from over time.',
+  modulePath: 'packages/business-memory/src/decision-dna/core/decision-dna.ts',
   requirements: [
-    'Establish the KnowledgeGraph contract supporting node, connection, traversal, and validation operations.',
-    'Model GraphNode and GraphEdge bases as first-class business structures with metadata, strength, and confidence scoring.',
-    'Implement a Canonical Universal Business Ontology spanning Executive, Organization, Customer, Employee, Product, etc.',
-    'Deconstruct relationships into reusable OWNS, USES, SUPPORTS, DEPENDS_ON, and REPORTS_TO edge types.',
-    'Integrate semantic relationship rules to prevent invalid connection definitions.',
-    'Design non-DFS/BFS architecture contracts for high-level customer-capability-executive graph traversals.',
-    'Draft robust governance, visibility levels, data privacy regimes, and property masking strategies.',
-    'Broadcast key domain lifecycle events: NodeCreated, EdgeCreated, RelationshipUpdated, and OntologyUpdated.'
+    'Establish the DecisionDNA contract supporting decision recording, assumptions, alternatives, evidence, outcomes, and retrospective learnings.',
+    'Model DecisionRecord as the central domain aggregate coordinating profile data, participants, governance rules, and outcomes.',
+    'Implement multi-tier Strategic, Tactical, and Operational specialized decision wrappers.',
+    'Deconstruct analysis elements into explicit Assumption, Alternative, Evidence, Trade-off, and Confidence structures.',
+    'Define DecisionParticipant roles spanning C-Suite executives and external advisory stakeholders with alignment weights.',
+    'Model expected vs actual outcome metrics tracking variance, business impact, and performance evaluations.',
+    'Integrate governance, approval status models, compliance policy structures, and retention configurations.',
+    'Broadcast key decision lifecycle events: DecisionRecorded, DecisionReviewed, and LessonCaptured.'
   ],
   responsibilities: [
-    { title: 'Graph Core & Ontology', description: 'Deploys KnowledgeGraph contract, execution contexts, node/edge bases, and entity/relationship types.', status: 'Completed & Verified' },
-    { title: 'Semantic Nodes & Edges', description: 'Models 18 domain-specific entity nodes and 11 relational business edges.', status: 'Completed & Verified' },
-    { title: 'Validation & Constraints', description: 'Implements semantic validation rules, node property guidelines, and ontological constraints.', status: 'Completed & Verified' },
-    { title: 'Governance & Events', description: 'Provides visibility tier configurations, GDPR/HIPAA privacy regimes, and key lifecycle broadcast events.', status: 'Completed & Verified' }
+    { title: 'Decision DNA Core', description: 'Deploys DecisionDNA contract, context variables, and central DecisionRecord aggregate.', status: 'Completed & Verified' },
+    { title: 'Multi-Tier & Analysis Models', description: 'Models Strategic/Tactical/Operational decision templates and deconstructs assumptions/alternatives.', status: 'Completed & Verified' },
+    { title: 'Outcomes, Metrics & Learning', description: 'Tracks expected/actual outcomes, quality scores, effectiveness indices, and retrospective decision patterns.', status: 'Completed & Verified' },
+    { title: 'Governance & Domain Events', description: 'Implements approval policy, ownership metrics, and key lifecycle broadcast events.', status: 'Completed & Verified' }
   ]
 };
 

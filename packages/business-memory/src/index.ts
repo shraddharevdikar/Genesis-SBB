@@ -328,5 +328,57 @@ export * from './business-digital-twin/events/twin-created.event.js';
 export * from './business-digital-twin/events/snapshot-created.event.js';
 export * from './business-digital-twin/events/enterprise-health-updated.event.js';
 
+// Decision DNA Core
+export * from './decision-dna/core/decision-dna.js';
+export * from './decision-dna/core/decision-record.js';
+export * from './decision-dna/core/decision-context.js';
+export * from './decision-dna/core/decision-profile.js';
+
+// Decision DNA Identity
+export * from './decision-dna/identity/decision-id.js';
+export * from './decision-dna/identity/decision-version.js';
+
+// Decision DNA Strategy
+export * from './decision-dna/strategy/strategic-decision.js';
+export * from './decision-dna/strategy/tactical-decision.js';
+export * from './decision-dna/strategy/operational-decision.js';
+
+// Decision DNA Analysis
+export * from './decision-dna/analysis/assumption.js';
+export * from './decision-dna/analysis/alternative.js';
+export * from './decision-dna/analysis/evidence.js';
+export * from './decision-dna/analysis/confidence.js';
+export * from './decision-dna/analysis/tradeoff.js';
+
+// Decision DNA Participants
+export * from './decision-dna/participants/decision-participant.js';
+export * from './decision-dna/participants/executive-participant.js';
+export * from './decision-dna/participants/stakeholder-participant.js';
+
+// Decision DNA Outcomes
+export * from './decision-dna/outcomes/expected-outcome.js';
+export * from './decision-dna/outcomes/actual-outcome.js';
+export * from './decision-dna/outcomes/outcome-comparison.js';
+
+// Decision DNA Learning
+export type { LessonLearned as DecisionLessonLearned } from './decision-dna/learning/lesson-learned.js';
+export * from './decision-dna/learning/decision-pattern.js';
+export * from './decision-dna/learning/success-factor.js';
+export * from './decision-dna/learning/failure-factor.js';
+
+// Decision DNA Governance
+export * from './decision-dna/governance/decision-policy.js';
+export * from './decision-dna/governance/approval-model.js';
+
+// Decision DNA Metrics
+export * from './decision-dna/metrics/decision-quality.js';
+export * from './decision-dna/metrics/decision-effectiveness.js';
+
+// Decision DNA Events
+export * from './decision-dna/events/decision-recorded.event.js';
+export * from './decision-dna/events/decision-reviewed.event.js';
+export * from './decision-dna/events/lesson-captured.event.js';
+
+
 
 
