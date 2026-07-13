@@ -66,6 +66,9 @@
       ],
       "@sbb/scheduling-engine": [
         "./packages/scheduling-engine/src/index.ts"
+      ],
+      "@sbb/notification-hub": [
+        "./packages/notification-hub/src/index.ts"
       ]
     },
     "allowImportingTsExtensions": true,

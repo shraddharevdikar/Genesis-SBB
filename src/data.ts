@@ -1,29 +1,29 @@
 import { TicketDetails, FileNode, FutureTicket } from './types';
 
 export const ticketDetails: TicketDetails = {
-  id: 'RUN-005',
-  title: 'Enterprise Scheduling Engine Foundation',
+  id: 'RUN-006',
+  title: 'Enterprise Notification Hub Foundation',
   status: 'DONE',
   priority: 'CRITICAL',
   author: 'SBB Principal Architect',
   assignee: 'shraddha.revdikar@gmail.com',
-  objective: 'Build the foundational Scheduling Engine responsible for defining, governing, and coordinating time-based business execution and evaluating strategic schedule conditions across SBB.',
-  modulePath: 'packages/scheduling-engine/src/core/scheduling-engine.ts',
+  objective: 'Build the foundational Notification Hub responsible for defining, governing, and coordinating multi-channel business communications and tracking delivery metrics across SBB.',
+  modulePath: 'packages/notification-hub/src/core/notification-hub.ts',
   requirements: [
-    'Establish the SchedulingEngine contract supporting creating, updating, activating, suspending, cancelling, and validating business schedules.',
-    'Model Schedule Definition, Schedule Instance, Schedule Context, and Schedule Lifecycle to decouple design-time blueprints from active scheduling states.',
-    'Formulate schedule types representing One-Time, Recurring (cron), Interval, and Event-Triggered execution triggers.',
-    'Incorporate operational calendar systems including Business, Holiday, Regional, and Maintenance Window calendars.',
-    'Specify timing policies tracking business hours, timezones, execution windows, blackout periods, and SLA deadlines.',
-    'Determine compliance governance controls covering scheduling policies, security role clearances, tenant boundaries, and immutable audit logs.',
-    'Track schedule execution health, reliability success rates, latencies, and missed trigger metrics.',
-    'Broadcast key scheduling lifecycle domain events: ScheduleCreated, ScheduleTriggered, ScheduleCompleted, ScheduleMissed, and ScheduleCancelled.'
+    'Establish the NotificationHub contract supporting creating, queueing, validating, resolving, applying preferences, and tracking deliveries.',
+    'Model Notification Definition, Notification Instance, Notification Context, and Notification Lifecycle to decouple design-time templates from active communication envelopes.',
+    'Formulate channel protocols representing Email, SMS, Push, In-App, Slack, Teams, WhatsApp, and Webhooks.',
+    'Incorporate rendering templates including versioned markups, localization, customizable branding, and variables declaration.',
+    'Specify delivery policies tracking retry backoffs, allowed windows, priority levels, and quiet hours user preferences.',
+    'Determine compliance governance controls covering security role clearances, tenant envelopes boundary validation, and masked audit logs.',
+    'Track delivery health, latency performance, and read engagement rate metrics.',
+    'Broadcast key communication lifecycle domain events: NotificationCreated, NotificationQueued, NotificationDelivered, NotificationFailed, and NotificationRead.'
   ],
   responsibilities: [
-    { title: 'Scheduling Engine Contracts', description: 'Deploys SchedulingEngine contract, definition, instance, context, and lifecycle aggregates.', status: 'Completed & Verified' },
-    { title: 'Timing Types & Calendars', description: 'Models recurring, interval, one-time, and event-triggered timings with multi-tenant calendars.', status: 'Completed & Verified' },
-    { title: 'Governance & Timezone Rules', description: 'Enforces timezone DST shifts, regional overrides, blackout dates, execution windows, and compliance audits.', status: 'Completed & Verified' },
-    { title: 'Domain Events & Metrics', description: 'Tracks schedule health, reliability, and latencies, and broadcasts created, triggered, completed, missed, and cancelled events.', status: 'Completed & Verified' }
+    { title: 'Notification Hub Contracts', description: 'Deploys NotificationHub contract, definition, instance, context, and lifecycle aggregates.', status: 'Completed & Verified' },
+    { title: 'Channels & Rendering Templates', description: 'Models versioned templates, localization translations, and eight provider-independent channels.', status: 'Completed & Verified' },
+    { title: 'Delivery Policies & Preferences', description: 'Enforces user quiet hours, channel opt-ins, retry windows, and priority bypass controls.', status: 'Completed & Verified' },
+    { title: 'Domain Events & Metrics', description: 'Tracks transit latencies, bounce health, read rates, and broadcasts created, queued, delivered, failed, and read events.', status: 'Completed & Verified' }
   ]
 };
 
