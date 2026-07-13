@@ -63,6 +63,9 @@
       ],
       "@sbb/task-engine": [
         "./packages/task-engine/src/index.ts"
+      ],
+      "@sbb/scheduling-engine": [
+        "./packages/scheduling-engine/src/index.ts"
       ]
     },
     "allowImportingTsExtensions": true,

@@ -1,29 +1,29 @@
 import { TicketDetails, FileNode, FutureTicket } from './types';
 
 export const ticketDetails: TicketDetails = {
-  id: 'RUN-004',
-  title: 'Enterprise Task Engine Foundation',
+  id: 'RUN-005',
+  title: 'Enterprise Scheduling Engine Foundation',
   status: 'DONE',
   priority: 'CRITICAL',
   author: 'SBB Principal Architect',
   assignee: 'shraddha.revdikar@gmail.com',
-  objective: 'Build the foundational Task Engine responsible for defining, assigning, governing, and tracking business work units and evaluating strategic completion conditions across SBB.',
-  modulePath: 'packages/task-engine/src/core/task-engine.ts',
+  objective: 'Build the foundational Scheduling Engine responsible for defining, governing, and coordinating time-based business execution and evaluating strategic schedule conditions across SBB.',
+  modulePath: 'packages/scheduling-engine/src/core/scheduling-engine.ts',
   requirements: [
-    'Establish the TaskEngine contract supporting creating, assigning, reassigning, starting, completing, cancelling, and escalating business tasks.',
-    'Model Task Definition, Task Instance, Task Context, and Task Lifecycle to decouple design-time blueprints from active task states.',
-    'Formulate assignment models representing Individual, Role, Team, Department, and future-ready AI Agent assignments.',
-    'Incorporate task dependency networks including blocking, sequential, parallel, and optional dependencies.',
-    'Specify scheduling systems tracking due dates, SLAs, priority scales, and target completions.',
-    'Determine explicit task execution statuses spanning draft, ready, assigned, in progress, waiting, blocked, completed, cancelled, and failed.',
-    'Implement compliance governance auditing, role clearances, tenant isolations, and immutable history logs.',
-    'Broadcast key task lifecycle domain events: TaskCreated, TaskAssigned, TaskStarted, TaskCompleted, TaskCancelled, and TaskOverdue.'
+    'Establish the SchedulingEngine contract supporting creating, updating, activating, suspending, cancelling, and validating business schedules.',
+    'Model Schedule Definition, Schedule Instance, Schedule Context, and Schedule Lifecycle to decouple design-time blueprints from active scheduling states.',
+    'Formulate schedule types representing One-Time, Recurring (cron), Interval, and Event-Triggered execution triggers.',
+    'Incorporate operational calendar systems including Business, Holiday, Regional, and Maintenance Window calendars.',
+    'Specify timing policies tracking business hours, timezones, execution windows, blackout periods, and SLA deadlines.',
+    'Determine compliance governance controls covering scheduling policies, security role clearances, tenant boundaries, and immutable audit logs.',
+    'Track schedule execution health, reliability success rates, latencies, and missed trigger metrics.',
+    'Broadcast key scheduling lifecycle domain events: ScheduleCreated, ScheduleTriggered, ScheduleCompleted, ScheduleMissed, and ScheduleCancelled.'
   ],
   responsibilities: [
-    { title: 'Task Engine Contracts', description: 'Deploys TaskEngine contract, definition, instance, context, and lifecycle aggregates.', status: 'Completed & Verified' },
-    { title: 'Assignments & Dependencies', description: 'Models assignments, rule engines, dependency chains, and progress state structures.', status: 'Completed & Verified' },
-    { title: 'Governance & Scheduling', description: 'Enforces compliance standards, security validation, SLA metrics, and completion/cancellation outcomes.', status: 'Completed & Verified' },
-    { title: 'Domain Events & Metrics', description: 'Tracks task velocity and health, and broadcasts created, assigned, started, completed, cancelled, and overdue events.', status: 'Completed & Verified' }
+    { title: 'Scheduling Engine Contracts', description: 'Deploys SchedulingEngine contract, definition, instance, context, and lifecycle aggregates.', status: 'Completed & Verified' },
+    { title: 'Timing Types & Calendars', description: 'Models recurring, interval, one-time, and event-triggered timings with multi-tenant calendars.', status: 'Completed & Verified' },
+    { title: 'Governance & Timezone Rules', description: 'Enforces timezone DST shifts, regional overrides, blackout dates, execution windows, and compliance audits.', status: 'Completed & Verified' },
+    { title: 'Domain Events & Metrics', description: 'Tracks schedule health, reliability, and latencies, and broadcasts created, triggered, completed, missed, and cancelled events.', status: 'Completed & Verified' }
   ]
 };
 
