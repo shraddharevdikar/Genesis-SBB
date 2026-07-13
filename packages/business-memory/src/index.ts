@@ -398,7 +398,7 @@ export * from './learning-engine/patterns/opportunity-pattern.js';
 // Learning Engine Experience
 export * from './learning-engine/experience/experience-model.js';
 export * from './learning-engine/experience/organizational-experience.js';
-export * from './learning-engine/experience/executive-experience.js';
+export type { ExecutiveExperience as LearningExecutiveExperience } from './learning-engine/experience/executive-experience.js';
 
 // Learning Engine Recommendations
 export * from './learning-engine/recommendations/learning-recommendation.js';
@@ -411,7 +411,7 @@ export * from './learning-engine/confidence/confidence-trend.js';
 export * from './learning-engine/confidence/confidence-calibration.js';
 
 // Learning Engine Playbooks
-export * from './learning-engine/playbooks/reusable-playbook.js';
+export type { ReusablePlaybook, PlaybookStep as LearningPlaybookStep } from './learning-engine/playbooks/reusable-playbook.js';
 export * from './learning-engine/playbooks/playbook-evolution.js';
 
 // Learning Engine Insights
@@ -430,6 +430,56 @@ export * from './learning-engine/metrics/organizational-maturity.js';
 export * from './learning-engine/events/learning-recorded.event.js';
 export * from './learning-engine/events/pattern-discovered.event.js';
 export * from './learning-engine/events/best-practice-identified.event.js';
+
+// Context Engine Core
+export * from './context-engine/core/context-engine.js';
+export * from './context-engine/core/context.js';
+export * from './context-engine/core/context-profile.js';
+export * from './context-engine/core/context-package.js';
+export * from './context-engine/core/context-session.js';
+
+// Context Engine Identity
+export * from './context-engine/identity/context-id.js';
+export * from './context-engine/identity/session-id.js';
+
+// Context Engine Assembly
+export * from './context-engine/assembly/context-assembler.js';
+export * from './context-engine/assembly/context-builder.js';
+export * from './context-engine/assembly/context-selector.js';
+
+// Context Engine Sources
+export * from './context-engine/sources/memory-context.js';
+export * from './context-engine/sources/graph-context.js';
+export * from './context-engine/sources/twin-context.js';
+export * from './context-engine/sources/decision-context.js';
+export * from './context-engine/sources/learning-context.js';
+
+// Context Engine Priority
+export * from './context-engine/priority/context-priority.js';
+export * from './context-engine/priority/context-weight.js';
+export * from './context-engine/priority/context-score.js';
+
+// Context Engine Filters
+export * from './context-engine/filters/context-filter.js';
+export * from './context-engine/filters/context-scope.js';
+
+// Context Engine Relevance
+export * from './context-engine/relevance/relevance-model.js';
+export * from './context-engine/relevance/relevance-factor.js';
+
+// Context Engine Governance
+export * from './context-engine/governance/context-policy.js';
+export * from './context-engine/governance/context-visibility.js';
+
+// Context Engine Metrics
+export * from './context-engine/metrics/context-quality.js';
+export * from './context-engine/metrics/context-completeness.js';
+
+// Context Engine Events
+export * from './context-engine/events/context-created.event.js';
+export * from './context-engine/events/context-assembled.event.js';
+export * from './context-engine/events/context-expired.event.js';
+
 
 
 

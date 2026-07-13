@@ -1,28 +1,29 @@
 import { TicketDetails, FileNode, FutureTicket } from './types';
 
 export const ticketDetails: TicketDetails = {
-  id: 'MEM-008',
-  title: 'Learning Engine Foundation',
+  id: 'MEM-009',
+  title: 'Context Engine Foundation',
   status: 'DONE',
   priority: 'CRITICAL',
   author: 'SBB Principal Architect',
   assignee: 'shraddha.revdikar@gmail.com',
-  objective: 'Build the foundational Learning Engine that captures and models corporate learning from accumulated organizational experiences, outcomes, and reflections over time.',
-  modulePath: 'packages/business-memory/src/learning-engine/core/learning-engine.ts',
+  objective: 'Build the foundational Context Engine designed to assemble, prioritize, weight, filter, and validate the most relevant enterprise context from SBB modules for executive reasoning.',
+  modulePath: 'packages/business-memory/src/context-engine/core/context-engine.ts',
   requirements: [
-    'Establish the LearningEngine contract supporting learning capture, patterns, best practices, failure models, opportunities, and playbooks.',
-    'Model organizational, executive, department, and team experiences as first-class domain models.',
-    'Deconstruct pattern recognition models into explicit Success, Failure, and Opportunity patterns.',
-    'Implement three-dimensional Confidence metrics spanning Analytical, Historical Consistency, and Stakeholder Consensus.',
-    'Define reusable playbooks, evolutionary performance shifts, and strategic/operational organizational insights.',
-    'Model learning retention policies, double reflection validation controls, knowledge reuse scores, and pattern accuracy.',
-    'Broadcast key learning engine lifecycle events: LearningRecorded, PatternDiscovered, and BestPracticeIdentified.'
+    'Establish the ContextEngine contract supporting Context building, assembly, merging, prioritization, filtering, scoring, and validation.',
+    'Model Context and ContextItem aggregates as unified containers of raw, prioritized, and scored cross-engine contextual facts.',
+    'Integrate multi-source adapters modeling raw Business Memory, Knowledge Graph, Digital Twin, Decision DNA, and Learning contexts.',
+    'Deconstruct relevance scoring variables into explicit RelevanceFactor and composite RelevanceModel segments.',
+    'Define priority and weight mappings including Urgency levels, Urgency multipliers, and source-specific Priority Weight models.',
+    'Implement multi-level filtering scopes spanning Executive, Department, Organization, Customer, and Product scopes.',
+    'Integrate context policies, visibility boundaries, advisor signature overrides, quality scores, and completeness gap metrics.',
+    'Broadcast key context lifecycle events: ContextCreated, ContextAssembled, and ContextExpired.'
   ],
   responsibilities: [
-    { title: 'Learning Engine Core', description: 'Deploys LearningEngine contract, cycle phase models, and learning profiles.', status: 'Completed & Verified' },
-    { title: 'Experience & Pattern Domains', description: 'Models organizational/executive experiences and success/failure/opportunity patterns.', status: 'Completed & Verified' },
-    { title: 'Confidence, Playbooks & Insights', description: 'Establishes three-dimensional confidence trends, reusable playbooks, and strategic insights.', status: 'Completed & Verified' },
-    { title: 'Governance, Metrics & Events', description: 'Tracks knowledge reuse rates, double-reflection policies, and broadcasts key lifecycle domain events.', status: 'Completed & Verified' }
+    { title: 'Context Engine Core', description: 'Deploys ContextEngine contract, core context items structures, profiles, packages, and sessions.', status: 'Completed & Verified' },
+    { title: 'Source Adapters & Scoring', description: 'Models SBB engine context sources and deconstructs relevance factors and priority weights.', status: 'Completed & Verified' },
+    { title: 'Assembly, Filters & Governance', description: 'Establishes assembler, builder, and selector components with privacy filtering scopes and access rules.', status: 'Completed & Verified' },
+    { title: 'Metrics & Domain Events', description: 'Tracks context quality, completeness ratios, and broadcasts key lifecycle domain events.', status: 'Completed & Verified' }
   ]
 };
 
