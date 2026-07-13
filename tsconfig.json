@@ -60,6 +60,9 @@
       ],
       "@sbb/approval-engine": [
         "./packages/approval-engine/src/index.ts"
+      ],
+      "@sbb/task-engine": [
+        "./packages/task-engine/src/index.ts"
       ]
     },
     "allowImportingTsExtensions": true,

@@ -1,29 +1,29 @@
 import { TicketDetails, FileNode, FutureTicket } from './types';
 
 export const ticketDetails: TicketDetails = {
-  id: 'RUN-003',
-  title: 'Enterprise Approval Engine Foundation',
+  id: 'RUN-004',
+  title: 'Enterprise Task Engine Foundation',
   status: 'DONE',
   priority: 'CRITICAL',
   author: 'SBB Principal Architect',
   assignee: 'shraddha.revdikar@gmail.com',
-  objective: 'Build the foundational Approval Engine responsible for defining, governing, and coordinating multi-party approval pipelines and evaluating strategic sign-offs across SBB.',
-  modulePath: 'packages/approval-engine/src/core/approval-engine.ts',
+  objective: 'Build the foundational Task Engine responsible for defining, assigning, governing, and tracking business work units and evaluating strategic completion conditions across SBB.',
+  modulePath: 'packages/task-engine/src/core/task-engine.ts',
   requirements: [
-    'Establish the ApprovalEngine contract supporting creating approvals, assigning approvers, evaluating approvals, escalating, delegating, completing, and rejecting approval request chains.',
-    'Model ApprovalRequest, Instance, Context, and Decision aggregates to decouple active submission payloads from structural decider configurations.',
-    'Formulate strategy models supporting Sequential, Parallel, Quorum, Unanimous, and Delegated sign-offs.',
-    'Incorporate participant models representing Individual Approvers, Approval Roles, Approval Groups, and delegated sign-offs.',
-    'Specify policies spanning delay-based escalation thresholds, timeout expirations, delegation maximum durations, and compliance audits.',
-    'Determine explicit outcomes covering Approved, Rejected, Rework Required, Escalated, and Expired states.',
-    'Implement audit logs tracking cryptographic signatures, tenant isolation validations, SLA metrics, and compliance standards (SOC2, HIPAA, GDPR).',
-    'Broadcast key approval lifecycle domain events: ApprovalRequested, ApprovalGranted, ApprovalRejected, ApprovalEscalated, and ApprovalExpired.'
+    'Establish the TaskEngine contract supporting creating, assigning, reassigning, starting, completing, cancelling, and escalating business tasks.',
+    'Model Task Definition, Task Instance, Task Context, and Task Lifecycle to decouple design-time blueprints from active task states.',
+    'Formulate assignment models representing Individual, Role, Team, Department, and future-ready AI Agent assignments.',
+    'Incorporate task dependency networks including blocking, sequential, parallel, and optional dependencies.',
+    'Specify scheduling systems tracking due dates, SLAs, priority scales, and target completions.',
+    'Determine explicit task execution statuses spanning draft, ready, assigned, in progress, waiting, blocked, completed, cancelled, and failed.',
+    'Implement compliance governance auditing, role clearances, tenant isolations, and immutable history logs.',
+    'Broadcast key task lifecycle domain events: TaskCreated, TaskAssigned, TaskStarted, TaskCompleted, TaskCancelled, and TaskOverdue.'
   ],
   responsibilities: [
-    { title: 'Approval Engine Contracts', description: 'Deploys ApprovalEngine contract, request, instance, context, and decision aggregates.', status: 'Completed & Verified' },
-    { title: 'Topologies & Strategies', description: 'Models approval chains, stages, steps, and sequential, parallel, quorum, unanimous, and delegated strategies.', status: 'Completed & Verified' },
-    { title: 'Governance & Outcomes', description: 'Enforces SOC2/HIPAA compliance, signature audits, tenant validations, escalation policies, and rework outcomes.', status: 'Completed & Verified' },
-    { title: 'Metrics & Domain Events', description: 'Tracks SLA compliant performance rates, average durations, and broadcasts requested, granted, rejected, escalated, and expired events.', status: 'Completed & Verified' }
+    { title: 'Task Engine Contracts', description: 'Deploys TaskEngine contract, definition, instance, context, and lifecycle aggregates.', status: 'Completed & Verified' },
+    { title: 'Assignments & Dependencies', description: 'Models assignments, rule engines, dependency chains, and progress state structures.', status: 'Completed & Verified' },
+    { title: 'Governance & Scheduling', description: 'Enforces compliance standards, security validation, SLA metrics, and completion/cancellation outcomes.', status: 'Completed & Verified' },
+    { title: 'Domain Events & Metrics', description: 'Tracks task velocity and health, and broadcasts created, assigned, started, completed, cancelled, and overdue events.', status: 'Completed & Verified' }
   ]
 };
 
