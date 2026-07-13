@@ -1,29 +1,29 @@
 import { TicketDetails, FileNode, FutureTicket } from './types';
 
 export const ticketDetails: TicketDetails = {
-  id: 'RUN-006',
-  title: 'Enterprise Notification Hub Foundation',
+  id: 'RUN-007',
+  title: 'Enterprise Runtime Events Foundation',
   status: 'DONE',
   priority: 'CRITICAL',
   author: 'SBB Principal Architect',
   assignee: 'shraddha.revdikar@gmail.com',
-  objective: 'Build the foundational Notification Hub responsible for defining, governing, and coordinating multi-channel business communications and tracking delivery metrics across SBB.',
-  modulePath: 'packages/notification-hub/src/core/notification-hub.ts',
+  objective: 'Build the foundational Runtime Events responsible for defining, governing, and coordinating business events and evaluating correlation tracking context across SBB.',
+  modulePath: 'packages/runtime-events/src/core/runtime-events.ts',
   requirements: [
-    'Establish the NotificationHub contract supporting creating, queueing, validating, resolving, applying preferences, and tracking deliveries.',
-    'Model Notification Definition, Notification Instance, Notification Context, and Notification Lifecycle to decouple design-time templates from active communication envelopes.',
-    'Formulate channel protocols representing Email, SMS, Push, In-App, Slack, Teams, WhatsApp, and Webhooks.',
-    'Incorporate rendering templates including versioned markups, localization, customizable branding, and variables declaration.',
-    'Specify delivery policies tracking retry backoffs, allowed windows, priority levels, and quiet hours user preferences.',
-    'Determine compliance governance controls covering security role clearances, tenant envelopes boundary validation, and masked audit logs.',
-    'Track delivery health, latency performance, and read engagement rate metrics.',
-    'Broadcast key communication lifecycle domain events: NotificationCreated, NotificationQueued, NotificationDelivered, NotificationFailed, and NotificationRead.'
+    'Establish the RuntimeEvents contract supporting publishing, registering, validating, routing, correlating, and tracking lineages.',
+    'Model Event Definition, Event Instance, Event Context, and Event Lifecycle to decouple design-time schemas from active event instances.',
+    'Formulate event categories representing Business, Domain, Integration, and System events.',
+    'Incorporate operational routing systems including Publishers, Subscribers, Routes, Topics, and Subscription filtering.',
+    'Specify tracking properties tracking Correlation IDs, Causation IDs, and dynamic Lineage Chains graphs.',
+    'Determine compliance governance controls covering Security Role clearances, Tenant sandbox isolation, and masked Audit logs.',
+    'Track event processing health, throughput, latency, and delivery reliability success metrics.',
+    'Broadcast key event lifecycle domain events: EventPublished, EventConsumed, EventFailed, and EventExpired.'
   ],
   responsibilities: [
-    { title: 'Notification Hub Contracts', description: 'Deploys NotificationHub contract, definition, instance, context, and lifecycle aggregates.', status: 'Completed & Verified' },
-    { title: 'Channels & Rendering Templates', description: 'Models versioned templates, localization translations, and eight provider-independent channels.', status: 'Completed & Verified' },
-    { title: 'Delivery Policies & Preferences', description: 'Enforces user quiet hours, channel opt-ins, retry windows, and priority bypass controls.', status: 'Completed & Verified' },
-    { title: 'Domain Events & Metrics', description: 'Tracks transit latencies, bounce health, read rates, and broadcasts created, queued, delivered, failed, and read events.', status: 'Completed & Verified' }
+    { title: 'Runtime Events Contracts', description: 'Deploys RuntimeEvents contract, definition, instance, context, and lifecycle aggregates.', status: 'Completed & Verified' },
+    { title: 'Categories & Routing Configurations', description: 'Models business, domain, integration, and system events with publisher/subscriber filter routes.', status: 'Completed & Verified' },
+    { title: 'Governance & Correlation Chains', description: 'Enforces security clearance, tenant sandbox isolation, correlation/causation tracking, and full lineage trees.', status: 'Completed & Verified' },
+    { title: 'Domain Events & Metrics', description: 'Tracks delivery reliability, processing throughput velocity, health backlogs, and broadcasts published, consumed, failed, and expired events.', status: 'Completed & Verified' }
   ]
 };
 
