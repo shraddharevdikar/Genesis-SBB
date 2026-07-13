@@ -480,6 +480,49 @@ export * from './context-engine/events/context-created.event.js';
 export * from './context-engine/events/context-assembled.event.js';
 export * from './context-engine/events/context-expired.event.js';
 
+// Memory API Core
+export * from './memory-api/core/memory-api.js';
+export * from './memory-api/core/memory-service.js';
+export * from './memory-api/core/memory-session.js';
+export * from './memory-api/core/memory-request.js';
+export * from './memory-api/core/memory-response.js';
+
+// Memory API Identity
+export * from './memory-api/identity/request-id.js';
+export type { SessionId as ApiSessionId } from './memory-api/identity/session-id.js';
+
+// Memory API Contracts
+export * from './memory-api/contracts/memory-query.js';
+export * from './memory-api/contracts/memory-command.js';
+export * from './memory-api/contracts/memory-result.js';
+
+// Memory API Operations
+export * from './memory-api/operations/memory-read.js';
+export * from './memory-api/operations/memory-write.js';
+export * from './memory-api/operations/memory-search.js';
+export * from './memory-api/operations/memory-context.js';
+export * from './memory-api/operations/memory-learning.js';
+export * from './memory-api/operations/memory-graph.js';
+
+// Memory API Routing
+export * from './memory-api/routing/request-router.js';
+export * from './memory-api/routing/source-selector.js';
+
+// Memory API Governance
+export type { AccessPolicy as MemoryAccessPolicy } from './memory-api/governance/access-policy.js';
+export * from './memory-api/governance/authorization-policy.js';
+export * from './memory-api/governance/audit-policy.js';
+
+// Memory API Metrics
+export * from './memory-api/metrics/query-metrics.js';
+export * from './memory-api/metrics/response-quality.js';
+
+// Memory API Events
+export * from './memory-api/events/memory-requested.event.js';
+export * from './memory-api/events/memory-returned.event.js';
+export * from './memory-api/events/access-denied.event.js';
+
+
 
 
 

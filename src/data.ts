@@ -1,29 +1,27 @@
 import { TicketDetails, FileNode, FutureTicket } from './types';
 
 export const ticketDetails: TicketDetails = {
-  id: 'MEM-009',
-  title: 'Context Engine Foundation',
+  id: 'MEM-010',
+  title: 'Enterprise Memory API Foundation',
   status: 'DONE',
   priority: 'CRITICAL',
   author: 'SBB Principal Architect',
   assignee: 'shraddha.revdikar@gmail.com',
-  objective: 'Build the foundational Context Engine designed to assemble, prioritize, weight, filter, and validate the most relevant enterprise context from SBB modules for executive reasoning.',
-  modulePath: 'packages/business-memory/src/context-engine/core/context-engine.ts',
+  objective: 'Build the foundational Enterprise Memory API as the unified, multi-tenant secure internal domain access layer for the Enterprise Intelligence Core.',
+  modulePath: 'packages/business-memory/src/memory-api/core/memory-api.ts',
   requirements: [
-    'Establish the ContextEngine contract supporting Context building, assembly, merging, prioritization, filtering, scoring, and validation.',
-    'Model Context and ContextItem aggregates as unified containers of raw, prioritized, and scored cross-engine contextual facts.',
-    'Integrate multi-source adapters modeling raw Business Memory, Knowledge Graph, Digital Twin, Decision DNA, and Learning contexts.',
-    'Deconstruct relevance scoring variables into explicit RelevanceFactor and composite RelevanceModel segments.',
-    'Define priority and weight mappings including Urgency levels, Urgency multipliers, and source-specific Priority Weight models.',
-    'Implement multi-level filtering scopes spanning Executive, Department, Organization, Customer, and Product scopes.',
-    'Integrate context policies, visibility boundaries, advisor signature overrides, quality scores, and completeness gap metrics.',
-    'Broadcast key context lifecycle events: ContextCreated, ContextAssembled, and ContextExpired.'
+    'Establish the MemoryAPI contract supporting Memory queries, reads, searches, and context, learning, and graph retrievals.',
+    'Model request and response contracts mapping structured input queries (Executive, Customer, Product, Strategy, etc.) to typed results.',
+    'Integrate governance policies including tenant network/subnet isolation, role clearances, and audit logging frameworks.',
+    'Define request router and source selector to identify SBB engine destination targets based on semantics.',
+    'Implement tracking performance and quality metrics capturing response times, cache hits, and response quality scores.',
+    'Broadcast key Memory API lifecycle domain events: MemoryRequested, MemoryReturned, and AccessDenied.'
   ],
   responsibilities: [
-    { title: 'Context Engine Core', description: 'Deploys ContextEngine contract, core context items structures, profiles, packages, and sessions.', status: 'Completed & Verified' },
-    { title: 'Source Adapters & Scoring', description: 'Models SBB engine context sources and deconstructs relevance factors and priority weights.', status: 'Completed & Verified' },
-    { title: 'Assembly, Filters & Governance', description: 'Establishes assembler, builder, and selector components with privacy filtering scopes and access rules.', status: 'Completed & Verified' },
-    { title: 'Metrics & Domain Events', description: 'Tracks context quality, completeness ratios, and broadcasts key lifecycle domain events.', status: 'Completed & Verified' }
+    { title: 'Memory API Contracts', description: 'Deploys MemoryAPI contract, core request, response, session, and query/command/result schemas.', status: 'Completed & Verified' },
+    { title: 'Operations & Routing', description: 'Models query/write operations across SBB modules with routing mechanisms and target selection.', status: 'Completed & Verified' },
+    { title: 'Governance & Security', description: 'Establishes multi-tenant tenant isolation, authorization clearance levels, and compliance frameworks.', status: 'Completed & Verified' },
+    { title: 'Metrics & Domain Events', description: 'Tracks performance response metrics and broadcasts key requested, returned, and access-denied events.', status: 'Completed & Verified' }
   ]
 };
 
