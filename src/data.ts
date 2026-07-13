@@ -1,29 +1,29 @@
 import { TicketDetails, FileNode, FutureTicket } from './types';
 
 export const ticketDetails: TicketDetails = {
-  id: 'RUN-001',
-  title: 'Enterprise Runtime Foundation',
+  id: 'RUN-002',
+  title: 'Enterprise Workflow Engine Foundation',
   status: 'DONE',
   priority: 'CRITICAL',
   author: 'SBB Principal Architect',
   assignee: 'shraddha.revdikar@gmail.com',
-  objective: 'Build the foundational Runtime Platform providing the execution layer, context, sessions, and state boundaries for SBB.',
-  modulePath: 'packages/runtime-platform/src/core/runtime-platform.ts',
+  objective: 'Build the foundational Workflow Engine responsible for defining, governing, and coordinating multi-step business workflow templates and tracking instances in SBB.',
+  modulePath: 'packages/workflow-engine/src/core/workflow-engine.ts',
   requirements: [
-    'Establish the RuntimePlatform contract supporting runtime startup, teardown, execution, coordination, validation, and health monitoring.',
-    'Model runtime context, session, and dynamic state containers tracking resource allocation and concurrent operations.',
-    'Deconstruct execution requests, contexts, and results detailing CPU/memory usage, latency boundaries, and sandboxing limits.',
-    'Define command, query, and response structures modeling transactional and fetch requests.',
-    'Integrate runtime coordinator and orchestrator to handle sequencing pipelines and execution schedules.',
-    'Enforce governance policies spanning multi-tenant isolation, authorization clearances, and security checks.',
-    'Implement metrics tracking availability, memory capacity, backlog sizes, and error rates.',
-    'Broadcast key runtime lifecycle domain events: RuntimeStarted, RuntimeStopped, and ExecutionRequested.'
+    'Establish the WorkflowEngine contract supporting registration, validation, instantiating, advancing, completing, and cancelling pipelines.',
+    'Model WorkflowDefinition, Version, Instance, and Context aggregates to isolate design-time structures from active running traces.',
+    'Deconstruct step structures into explicit Stage, Step (HUMAN_APPROVAL, AUTOMATED, etc.), Transition, and routing Condition segments.',
+    'Define operational roles spanning Owners, Approvers, Reviewers, Executors, and Observers.',
+    'Integrate logical branching types including Sequential, Parallel fork-join, and Conditional branching models.',
+    'Implement recovery policies spanning backoff retry, compensation cleanups, and timeout escalation actions.',
+    'Enforce governance controls over draft states, loop/cycle detection, security clearances, and audit payload delta logging.',
+    'Broadcast key workflow lifecycle domain events: WorkflowCreated, WorkflowStarted, WorkflowCompleted, and WorkflowCancelled.'
   ],
   responsibilities: [
-    { title: 'Runtime platform contracts', description: 'Deploys RuntimePlatform contract, core session, and dynamic state models.', status: 'Completed & Verified' },
-    { title: 'Execution & Coordination', description: 'Models execution requests/results and establishes coordinator and orchestrator sequencing contracts.', status: 'Completed & Verified' },
-    { title: 'Governance & Security', description: 'Enforces multi-tenant isolation verification and clearance-based execution security.', status: 'Completed & Verified' },
-    { title: 'Metrics & Domain Events', description: 'Tracks capacity limits, error rates, and broadcasts started, stopped, and requested events.', status: 'Completed & Verified' }
+    { title: 'Workflow Engine Contracts', description: 'Deploys WorkflowEngine contract, core context/definitions/instances, and version entities.', status: 'Completed & Verified' },
+    { title: 'Definitions & Branching', description: 'Models stages, steps, transitions, conditions, and sequential/parallel/conditional branching pathways.', status: 'Completed & Verified' },
+    { title: 'Governance & Recovery', description: 'Enforces cycle-prevention policies, security clearances, delta-auditing, and backoff/compensation policies.', status: 'Completed & Verified' },
+    { title: 'Metrics & Domain Events', description: 'Tracks success rates, active/failed bottlenecks, and broadcasts created, started, completed, and cancelled events.', status: 'Completed & Verified' }
   ]
 };
 

@@ -54,6 +54,9 @@
       ],
       "@sbb/runtime-platform": [
         "./packages/runtime-platform/src/index.ts"
+      ],
+      "@sbb/workflow-engine": [
+        "./packages/workflow-engine/src/index.ts"
       ]
     },
     "allowImportingTsExtensions": true,
