@@ -57,6 +57,9 @@
       ],
       "@sbb/workflow-engine": [
         "./packages/workflow-engine/src/index.ts"
+      ],
+      "@sbb/approval-engine": [
+        "./packages/approval-engine/src/index.ts"
       ]
     },
     "allowImportingTsExtensions": true,
