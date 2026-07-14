@@ -1,29 +1,29 @@
 import { TicketDetails, FileNode, FutureTicket } from './types';
 
 export const ticketDetails: TicketDetails = {
-  id: 'RUN-007',
-  title: 'Enterprise Runtime Events Foundation',
+  id: 'RUN-008',
+  title: 'Enterprise Runtime Policies Foundation',
   status: 'DONE',
   priority: 'CRITICAL',
   author: 'SBB Principal Architect',
   assignee: 'shraddha.revdikar@gmail.com',
-  objective: 'Build the foundational Runtime Events responsible for defining, governing, and coordinating business events and evaluating correlation tracking context across SBB.',
-  modulePath: 'packages/runtime-events/src/core/runtime-events.ts',
+  objective: 'Build the foundational Runtime Policies responsible for defining, governing, and coordinating reusable enterprise policies across SBB.',
+  modulePath: 'packages/runtime-policies/src/core/runtime-policies.ts',
   requirements: [
-    'Establish the RuntimeEvents contract supporting publishing, registering, validating, routing, correlating, and tracking lineages.',
-    'Model Event Definition, Event Instance, Event Context, and Event Lifecycle to decouple design-time schemas from active event instances.',
-    'Formulate event categories representing Business, Domain, Integration, and System events.',
-    'Incorporate operational routing systems including Publishers, Subscribers, Routes, Topics, and Subscription filtering.',
-    'Specify tracking properties tracking Correlation IDs, Causation IDs, and dynamic Lineage Chains graphs.',
-    'Determine compliance governance controls covering Security Role clearances, Tenant sandbox isolation, and masked Audit logs.',
-    'Track event processing health, throughput, latency, and delivery reliability success metrics.',
-    'Broadcast key event lifecycle domain events: EventPublished, EventConsumed, EventFailed, and EventExpired.'
+    'Establish the RuntimePolicies contract supporting registering, validating, evaluating, activating, deactivating, and versioning.',
+    'Model Policy Definition, Policy Instance, Policy Context, and Policy Lifecycle to decouple design-time blueprints from active scheduling and execution states.',
+    'Formulate policy categories representing Security, Authorization, Execution, Scheduling, Notification, Compliance, and Retention policies.',
+    'Incorporate operational scope hierarchies including Global, Tenant, Department, and User specific exception overrides.',
+    'Specify conditions tracking regex matches, value operators, and customized override criteria.',
+    'Determine compliance governance controls covering Ownership assignment, double-approval validation, and GDPR masked compliance Audit logs.',
+    'Track policy health latencies, errors, and compliance passing vs override metrics.',
+    'Broadcast key policy lifecycle domain events: PolicyCreated, PolicyUpdated, PolicyActivated, and PolicyDeactivated.'
   ],
   responsibilities: [
-    { title: 'Runtime Events Contracts', description: 'Deploys RuntimeEvents contract, definition, instance, context, and lifecycle aggregates.', status: 'Completed & Verified' },
-    { title: 'Categories & Routing Configurations', description: 'Models business, domain, integration, and system events with publisher/subscriber filter routes.', status: 'Completed & Verified' },
-    { title: 'Governance & Correlation Chains', description: 'Enforces security clearance, tenant sandbox isolation, correlation/causation tracking, and full lineage trees.', status: 'Completed & Verified' },
-    { title: 'Domain Events & Metrics', description: 'Tracks delivery reliability, processing throughput velocity, health backlogs, and broadcasts published, consumed, failed, and expired events.', status: 'Completed & Verified' }
+    { title: 'Runtime Policies Contracts', description: 'Deploys RuntimePolicies contract, definition, instance, context, and lifecycle aggregates.', status: 'Completed & Verified' },
+    { title: 'Categories & Evaluation Engines', description: 'Models seven distinct policy categories with flexible operators matching condition definitions.', status: 'Completed & Verified' },
+    { title: 'Scopes, Governance & Versions', description: 'Enforces department-level, multi-tenant global overrides, double approvals check, and immutable history with rollback state snapshots.', status: 'Completed & Verified' },
+    { title: 'Domain Events & Metrics', description: 'Tracks policy evaluation processing delay latencies, error counts, compliance metrics, and broadcasts created, updated, activated, and deactivated events.', status: 'Completed & Verified' }
   ]
 };
 

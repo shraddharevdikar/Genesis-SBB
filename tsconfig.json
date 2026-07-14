@@ -72,6 +72,9 @@
       ],
       "@sbb/runtime-events": [
         "./packages/runtime-events/src/index.ts"
+      ],
+      "@sbb/runtime-policies": [
+        "./packages/runtime-policies/src/index.ts"
       ]
     },
     "allowImportingTsExtensions": true,
