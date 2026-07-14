@@ -1,29 +1,29 @@
 import { TicketDetails, FileNode, FutureTicket } from './types';
 
 export const ticketDetails: TicketDetails = {
-  id: 'RUN-008',
-  title: 'Enterprise Runtime Policies Foundation',
+  id: 'RUN-009',
+  title: 'Enterprise Runtime Monitoring Foundation',
   status: 'DONE',
   priority: 'CRITICAL',
   author: 'SBB Principal Architect',
   assignee: 'shraddha.revdikar@gmail.com',
-  objective: 'Build the foundational Runtime Policies responsible for defining, governing, and coordinating reusable enterprise policies across SBB.',
-  modulePath: 'packages/runtime-policies/src/core/runtime-policies.ts',
+  objective: 'Build the foundational Runtime Monitoring responsible for defining, governing, and coordinating business health observability and SLA compliance checks across SBB.',
+  modulePath: 'packages/runtime-monitoring/src/core/runtime-monitoring.ts',
   requirements: [
-    'Establish the RuntimePolicies contract supporting registering, validating, evaluating, activating, deactivating, and versioning.',
-    'Model Policy Definition, Policy Instance, Policy Context, and Policy Lifecycle to decouple design-time blueprints from active scheduling and execution states.',
-    'Formulate policy categories representing Security, Authorization, Execution, Scheduling, Notification, Compliance, and Retention policies.',
-    'Incorporate operational scope hierarchies including Global, Tenant, Department, and User specific exception overrides.',
-    'Specify conditions tracking regex matches, value operators, and customized override criteria.',
-    'Determine compliance governance controls covering Ownership assignment, double-approval validation, and GDPR masked compliance Audit logs.',
-    'Track policy health latencies, errors, and compliance passing vs override metrics.',
-    'Broadcast key policy lifecycle domain events: PolicyCreated, PolicyUpdated, PolicyActivated, and PolicyDeactivated.'
+    'Establish the RuntimeMonitoring contract supporting monitoring, evaluating health and SLAs, detecting anomalies, raising alerts, and publishing monitoring events.',
+    'Model Monitoring Context, Monitoring Session, Monitoring State, and Health Checks to decouple active telemetry sampling from target engine execution.',
+    'Formulate detailed health schemas covering Workflow, Approval, Task, Scheduling, Notification, Event, and Policy engines.',
+    'Incorporate operational SLA evaluation tracking warning and critical threshold boundaries, violations, and escalations.',
+    'Specify performance metrics tracking throughput operations per window, P50/P95/P99 latency profiles, raw execution times, and queue depths.',
+    'Determine compliance governance controls covering sampling rates, alert buffers limits, GDPR masked tracers, and immutable monitoring audit logs.',
+    'Track overall business, operational, and regulatory compliance metrics.',
+    'Broadcast key monitoring lifecycle domain events: HealthDegraded, SLAViolated, AlertTriggered, and MonitoringStarted.'
   ],
   responsibilities: [
-    { title: 'Runtime Policies Contracts', description: 'Deploys RuntimePolicies contract, definition, instance, context, and lifecycle aggregates.', status: 'Completed & Verified' },
-    { title: 'Categories & Evaluation Engines', description: 'Models seven distinct policy categories with flexible operators matching condition definitions.', status: 'Completed & Verified' },
-    { title: 'Scopes, Governance & Versions', description: 'Enforces department-level, multi-tenant global overrides, double approvals check, and immutable history with rollback state snapshots.', status: 'Completed & Verified' },
-    { title: 'Domain Events & Metrics', description: 'Tracks policy evaluation processing delay latencies, error counts, compliance metrics, and broadcasts created, updated, activated, and deactivated events.', status: 'Completed & Verified' }
+    { title: 'Runtime Monitoring Contracts', description: 'Deploys RuntimeMonitoring contract, context, session, state, and health check aggregates.', status: 'Completed & Verified' },
+    { title: 'Component Health & SLA Tracking', description: 'Models seven distinct engine health structures with warning/critical threshold warning checks, violations, and role escalations.', status: 'Completed & Verified' },
+    { title: 'Performance, Governance & Dashboards', description: 'Enforces sampling speeds, alert buffers, P-level latency profiles, queue depths, executive/operations dashboards, and audit logs.', status: 'Completed & Verified' },
+    { title: 'Domain Events & Metrics', description: 'Tracks financial milestones, operational loads, compliance ratios, and broadcasts health degraded, SLA violated, alert triggered, and monitoring started events.', status: 'Completed & Verified' }
   ]
 };
 

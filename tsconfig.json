@@ -75,6 +75,9 @@
       ],
       "@sbb/runtime-policies": [
         "./packages/runtime-policies/src/index.ts"
+      ],
+      "@sbb/runtime-monitoring": [
+        "./packages/runtime-monitoring/src/index.ts"
       ]
     },
     "allowImportingTsExtensions": true,
