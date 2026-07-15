@@ -1,29 +1,29 @@
 import { TicketDetails, FileNode, FutureTicket } from './types';
 
 export const ticketDetails: TicketDetails = {
-  id: 'AGT-004',
-  title: 'Enterprise Agent Skills',
+  id: 'AGT-005',
+  title: 'Enterprise Agent Memory',
   status: 'DONE',
   priority: 'CRITICAL',
   author: 'SBB Principal Architect',
   assignee: 'shraddha.revdikar@gmail.com',
-  objective: 'Build the foundational Agent Skills responsible for defining, proposing, assigning, certifying, and evaluating reusable business capabilities for SBB Digital Employees.',
-  modulePath: 'packages/agent-skills/src/core/agent-skills.ts',
+  objective: 'Build the foundational Agent Memory responsible for access, context retrieval, contributions, permissions, and auditing of SBB Enterprise Memory resources.',
+  modulePath: 'packages/agent-memory/src/core/agent-memory.ts',
   requirements: [
-    'Establish the AgentSkills contract supporting RegisterSkill, AssignSkill, RevokeSkill, ValidateSkill, EvaluateProficiency, and CertifySkill operations.',
-    'Model Skill Definition, Skill Instance, Skill Lifecycle, and Skill Context to decouple reusable skill declarations from execution profiles.',
-    'Formulate functional categories (Financial, Logistics, CX, Security, Admin) and dynamic catalog lookup engines.',
-    'Design capability requirements checking min-assurance security clearances prior to skill assignments.',
-    'Incorporate dependencies tree tracking prerequisite skills, required proficiencies, and required knowledge pack references.',
-    'Specify runtime execution requirements detailing RAM limits, timeout budgets, and sandboxed network boundaries.',
-    'Determine compliance skill policies, supervisor certification rules, and human dual-approvers escalation pathways.',
-    'Track performance success ratios, quantitative saved hours indices, and broadcast skill created, assigned, certified, and retired domain events.'
+    'Establish the AgentMemory contract supporting AccessMemory, SearchMemory, RetrieveContext, ContributeMemory, AttributeContribution, and ValidateAccess operations.',
+    'Model Memory Session, Memory Context, and Memory Access to decouple tenant request flows from system permissions and scopes.',
+    'Formulate seven distinct memory domains including Organizational, Customer, Employee, Project, Workflow, Decision, and Conversation.',
+    'Design semantic, keyword, and hybrid retrieval search queries bound to relevance and chronological decay policies.',
+    'Incorporate validation, confidence scores, duplicate check contribution metrics, and attribution tracking linked to SBB human supervisors.',
+    'Specify permissions modeling department, role, agent, tenant, and confidential scopes.',
+    'Determine retention and privacy governance limits tracking sensitive Swiss data classifications (e.g. AHV numbers).',
+    'Track memory freshness, cache hit-ratios, and broadcast accessed, contributed, updated, and retired domain events.'
   ],
   responsibilities: [
-    { title: 'Workforce Skills Contracts', description: 'Deploys AgentSkills contract, skill definitions blueprints, active instances, and compliance lifecycle structures.', status: 'Completed & Verified' },
-    { title: 'Prerequisites & Dependencies', description: 'Models required framework capabilities mappings, prerequisite skills trees, and official regulatory knowledge pack references.', status: 'Completed & Verified' },
-    { title: 'Runtime Sandbox & Governance', description: 'Enforces execution resource constraints, compliance skill policies, certification workflows, and dual-approvers threshold levels.', status: 'Completed & Verified' },
-    { title: 'Domain Events & Performance', description: 'Tracks success ratios, operational saved-hours indices, and broadcasts skill created, assigned, certified, and retired lifecycle events.', status: 'Completed & Verified' }
+    { title: 'Enterprise Memory Contracts', description: 'Deploys AgentMemory contract, auditable session leases, trace contexts, and security validation structures.', status: 'Completed & Verified' },
+    { title: 'Granular Domain Profiles', description: 'Models seven key SBB corporate memory sub-domains: Organizational, Customer, Employee, Project, Workflow, Decision, and Conversational.', status: 'Completed & Verified' },
+    { title: 'Audited Policies & Permissions', description: 'Enforces department-level scopes, strict GDPR/PII masking, dual-signature requirements, and immutable ledger triggers.', status: 'Completed & Verified' },
+    { title: 'Domain Events & Quality', description: 'Tracks informational freshness, cache hit-ratios, and broadcasts memory accessed, contributed, updated, and retired lifecycle events.', status: 'Completed & Verified' }
   ]
 };
 
@@ -7806,83 +7806,80 @@ All notable changes to the \`@sbb/ui\` package will be documented in this file.
 - Implemented **Alert banner**: Full accessibility, built-in indicator glyphs, title lines, and error/success messaging frames.`
   },
   {
-    name: 'agent-skills.ts',
-    path: 'packages/agent-skills/src/core/agent-skills.ts',
+    name: 'agent-memory.ts',
+    path: 'packages/agent-memory/src/core/agent-memory.ts',
     language: 'typescript',
-    role: 'Workforce Skills Contract',
-    description: 'Declares the core AgentSkills interface, assignment operations, and proficiency checks.',
-    content: `import { SkillId } from '../identity/skill-id.js';
-import { SkillVersionId } from '../identity/skill-version-id.js';
-import { SkillDefinition } from './skill-definition.js';
-import { SkillContext } from './skill-context.js';
-import { AgentId } from '@sbb/agent-framework';
-import { SkillAssignment } from '../assignment/skill-assignment.js';
-import { ProficiencyLevel } from '../assignment/proficiency-level.js';
+    role: 'Memory Platform Contract',
+    description: 'Declares the core AgentMemory interface, indexing, retrieval, and attribution controls.',
+    content: `import { AgentId } from '@sbb/agent-framework';
+import { MemoryContext } from './memory-context.js';
+import { MemoryAccess } from './memory-access.js';
+import { MemoryReferenceId } from '../identity/memory-reference-id.js';
+import { MemoryQuery } from '../retrieval/memory-query.js';
+import { MemoryContribution } from '../contribution/memory-contribution.js';
+import { MemoryAttribution } from '../contribution/memory-attribution.js';
 
-export interface AgentSkills {
-  registerSkill(tenantId: string, skill: SkillDefinition, context: SkillContext): Promise<SkillDefinition>;
-  assignSkill(tenantId: string, agentId: AgentId, skillId: SkillId, versionId: SkillVersionId, proficiency: ProficiencyLevel, context: SkillContext): Promise<SkillAssignment>;
-  revokeSkill(tenantId: string, agentId: AgentId, skillId: SkillId, reason: string, context: SkillContext): Promise<void>;
-  validateSkill(tenantId: string, agentId: AgentId, skillId: SkillId, versionId: SkillVersionId): Promise<{ readonly isValid: boolean; readonly missingPrerequisites: string[]; readonly policyViolations: string[] }>;
-  evaluateProficiency(tenantId: string, agentId: AgentId, skillId: SkillId): Promise<ProficiencyLevel>;
-  certifySkill(tenantId: string, agentId: AgentId, skillId: SkillId, certifiedByRoleId: string, context: SkillContext): Promise<SkillAssignment>;
+export interface AgentMemory {
+  accessMemory(tenantId: string, agentId: AgentId, references: MemoryReferenceId[], context: MemoryContext): Promise<MemoryAccess>;
+  searchMemory(tenantId: string, query: MemoryQuery, context: MemoryContext): Promise<MemoryReferenceId[]>;
+  retrieveContext(tenantId: string, agentId: AgentId, query: MemoryQuery, tokenLimit: number): Promise<{ readonly formattedContext: string; readonly totalTokensEstimated: number; readonly referencesUsed: MemoryReferenceId[] }>;
+  contributeMemory(tenantId: string, agentId: AgentId, contribution: MemoryContribution, context: MemoryContext): Promise<MemoryReferenceId>;
+  attributeContribution(tenantId: string, referenceId: MemoryReferenceId, attribution: MemoryAttribution, context: MemoryContext): Promise<MemoryAttribution>;
+  validateAccess(tenantId: string, agentId: AgentId, targetScope: string): Promise<{ readonly isAuthorized: boolean; readonly activePermissionTokenId?: string; readonly restrictionDetails?: string }>;
 }`
   },
   {
-    name: 'skill-definition.ts',
-    path: 'packages/agent-skills/src/core/skill-definition.ts',
+    name: 'memory-session.ts',
+    path: 'packages/agent-memory/src/core/memory-session.ts',
     language: 'typescript',
-    role: 'Skill Model Specs',
-    description: 'Models reusable, versioned business capability schemas.',
-    content: `import { SkillId } from '../identity/skill-id.js';
-import { SkillVersionId } from '../identity/skill-version-id.js';
-
-export interface SkillDefinition {
-  readonly skillId: SkillId;
-  readonly versionId: SkillVersionId;
-  readonly name: string;
-  readonly description: string;
-  readonly category: string;
-  readonly tags: string[];
-  readonly isDeprecated: boolean;
-  readonly schemaInputJson: string;
-  readonly schemaOutputJson: string;
-  readonly lastModifiedAt: Date;
-}`
-  },
-  {
-    name: 'skill-assignment.ts',
-    path: 'packages/agent-skills/src/assignment/skill-assignment.ts',
-    language: 'typescript',
-    role: 'Assignment Trackers',
-    description: 'Tracks the tenure, proficiency levels, and certification of assigned skills.',
-    content: `import { SkillId } from '../identity/skill-id.js';
-import { SkillVersionId } from '../identity/skill-version-id.js';
+    role: 'Session Management',
+    description: 'Tracks state, leases, and access scopes mapped to active agent session execution bounds.',
+    content: `import { MemoryAccessId } from '../identity/memory-access-id.js';
 import { AgentId } from '@sbb/agent-framework';
-import { ProficiencyLevel } from './proficiency-level.js';
 
-export interface SkillAssignment {
-  readonly assignmentId: string;
+export type MemorySessionState = 'ESTABLISHED' | 'ACTIVE' | 'COMMITTED' | 'EXPIRED' | 'REVOKED';
+
+export interface MemorySession {
+  readonly sessionId: string;
   readonly agentId: AgentId;
-  readonly skillId: SkillId;
-  readonly assignedVersionId: SkillVersionId;
-  readonly proficiencyLevel: ProficiencyLevel;
-  readonly isCertified: boolean;
-  readonly certifiedByRoleId?: string;
-  readonly certifiedAt?: Date;
-  readonly assignedAt: Date;
-  readonly expiresAt?: Date;
+  readonly tenantId: string;
+  readonly state: MemorySessionState;
+  readonly activeLeaseDurationMs: number;
+  readonly memoryAccessIds: MemoryAccessId[];
+  readonly establishedAt: Date;
+  readonly expiresAt: Date;
+}`
+  },
+  {
+    name: 'memory-scope.ts',
+    path: 'packages/agent-memory/src/permissions/memory-scope.ts',
+    language: 'typescript',
+    role: 'Privacy Scoping',
+    description: 'Models department, role, agent, tenant, and strictly confidential access scopes.',
+    content: `export type ScopeClassification = 
+  | 'TENANT_ALL'
+  | 'DEPARTMENT_COHORT'
+  | 'ROLE_CLASSIFIED'
+  | 'AGENT_OWNED'
+  | 'STRICT_CONFIDENTIAL';
+
+export interface MemoryScope {
+  readonly scopeId: string;
+  readonly scopeCode: string;
+  readonly classification: ScopeClassification;
+  readonly encryptionKeyReferenceId?: string;
+  readonly activeSupervisorSignoffsCount: number;
 }`
   },
   {
     name: 'README.md',
-    path: 'packages/agent-skills/README.md',
+    path: 'packages/agent-memory/README.md',
     language: 'markdown',
     role: 'Architectural Specs',
-    description: 'Detailed specifications for AGT-004 Enterprise Agent Skills module.',
-    content: `# Enterprise Agent Skills (AGT-004)
+    description: 'Detailed specifications for AGT-005 Enterprise Agent Memory module.',
+    content: `# Enterprise Agent Memory (AGT-005)
 
-The Enterprise Agent Skills module delivers versioned, reusable, and governed business capabilities that can be assigned, revoked, and measured across Digital Employees running across SBB.`
+The Enterprise Agent Memory module structures how Digital Employees running on the SBB platform query, contribute to, and validate corporate information stores under strict compliance policies.`
   }
 ];
 

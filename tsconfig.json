@@ -93,6 +93,9 @@
       ],
       "@sbb/agent-skills": [
         "./packages/agent-skills/src/index.ts"
+      ],
+      "@sbb/agent-memory": [
+        "./packages/agent-memory/src/index.ts"
       ]
     },
     "allowImportingTsExtensions": true,
