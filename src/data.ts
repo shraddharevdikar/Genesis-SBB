@@ -1,28 +1,28 @@
 import { TicketDetails, FileNode, FutureTicket } from './types';
 
 export const ticketDetails: TicketDetails = {
-  id: 'AGT-008',
-  title: 'Enterprise Agent Planning',
+  id: 'AGT-009',
+  title: 'Enterprise Agent Execution',
   status: 'DONE',
   priority: 'CRITICAL',
   author: 'SBB Principal Architect',
   assignee: 'shraddha.revdikar@gmail.com',
-  objective: 'Build the foundational Agent Planning responsible for Analyzing Goals, Building Plans, Evaluating Alternatives, Assessing Risks, Optimizing Plans, and Submitting Plans for Gated Approval in a secure, policy-compliant, and multi-tenant aware framework.',
-  modulePath: 'packages/agent-planning/src/core/agent-planning.ts',
+  objective: 'Build the foundational Agent Execution responsible for Starting Execution, Executing Approved Plans, Coordinating Execution, Tracking Progress, Handling Failures, and Completing Executions in a secure, policy-compliant, and multi-tenant aware framework.',
+  modulePath: 'packages/agent-execution/src/core/agent-execution.ts',
   requirements: [
-    'Establish the AgentPlanning contract supporting AnalyzeGoal, BuildPlan, EvaluateAlternatives, AssessRisk, OptimizePlan, and SubmitForApproval operations.',
-    'Model Goal, Objective Analysis, Execution Plan, Phases, Steps, and Decision Branches to represent digital employee cognitive orchestration.',
-    'Formulate risk assessment structures (Risk Assessment, Mitigation Strategy, Contingency Plan) and dynamic trigger conditions.',
-    'Design optimization algorithms models (Timeline optimizations, Over-allocation Resource leveling, and CHF Cost optimizations).',
-    'Incorporate multi-signature approval models (Plan Reviews, Approval Gates, and Revision Feedback).',
-    'Specify planning policies, immutable audits, and multi-tenant scopes.',
-    'Track planning quality metrics, plan generation efficiency, and broadcast started, created, approved, and completed domain events.'
+    'Establish the AgentExecution contract supporting StartExecution, ExecuteApprovedPlan, CoordinateExecution, TrackProgress, HandleFailure, and CompleteExecution operations.',
+    'Model Execution Session, Approved Plan Reference, Execution Strategy, Progress, and Checkpoints to represent digital employee execution flows.',
+    'Formulate recovery structures (Retry Policies, Rollback Plans, Recovery Strategies) and Compensating Steps.',
+    'Design coordination dispatcher contracts (Runtime Coordinator, Workflow Dispatcher, Task Dispatcher, Approval Dispatcher).',
+    'Incorporate health and metrics trackers (Execution Status, SLA lag monitors, success rates, recovery success ratio).',
+    'Specify execution policies, audit log entries, and multi-tenant scopes.',
+    'Track performance duration metrics and broadcast started, checkpoint completed, failed, and completed domain events.'
   ],
   responsibilities: [
-    { title: 'Governance Planning Contracts', description: 'Deploys AgentPlanning contract, objective analysis trace files, active planning session leases, and traceability contexts.', status: 'Completed & Verified' },
-    { title: 'Plans, Alternatives & Decisions', description: 'Models four key priority levels, execution phase sequences, multi-condition decision branches, and quantitative alternative tradeoff scores.', status: 'Completed & Verified' },
-    { title: 'Risks, Optimizations & Approvals', description: 'Enforces preventative mitigations, automatic contingency fallbacks, timeline/cost optimizations, and multi-gated approval checks.', status: 'Completed & Verified' },
-    { title: 'Domain Events & Metrics', description: 'Tracks goal coverage accuracy ratios, plan generation latency, and broadcasts planning started, plan created, approved, and completed events.', status: 'Completed & Verified' }
+    { title: 'Governance Execution Contracts', description: 'Deploys AgentExecution contract, execution trace files, active execution session leases, and traceability contexts.', status: 'Completed & Verified' },
+    { title: 'Strategies, Dispatchers & Steps', description: 'Models five key execution states, strategy profiles, runtime environment binders, task queues, and manual intervention gates.', status: 'Completed & Verified' },
+    { title: 'Checkpoints, Recovery & Policies', description: 'Enforces progress checkpoints, retry backoff limits, transactional rollback compensating actions, and duration boundary policies.', status: 'Completed & Verified' },
+    { title: 'Domain Events & Metrics', description: 'Tracks SLA latency offsets, coordinator resource overhead, and broadcasts execution started, checkpointed, completed, and failed events.', status: 'Completed & Verified' }
   ]
 };
 
@@ -8012,6 +8012,80 @@ export interface RiskAssessment {
     content: `# Enterprise Agent Planning (AGT-008)
 
 The Enterprise Agent Planning module defines how SBB's Digital Employees transform business goals into structured, governable execution plans.`
+  },
+  {
+    name: 'agent-execution.ts',
+    path: 'packages/agent-execution/src/core/agent-execution.ts',
+    language: 'typescript',
+    role: 'Execution Platform Contract',
+    description: 'Declares the core AgentExecution interface, starting execution sessions, dispatcher bindings, and failure recovery policies.',
+    content: `import { ExecutionContext } from './execution-context.js';
+import { ExecutionSession } from './execution-session.js';
+import { ExecutionId } from '../identity/execution-id.js';
+import { ExecutionProgress } from '../steps/execution-progress.js';
+import { RecoveryStrategy } from '../recovery/recovery-strategy.js';
+import { ExecutionStrategy } from '../strategy/execution-strategy.js';
+
+export interface AgentExecution {
+  startExecution(tenantId: string, approvedPlanId: string, strategy: ExecutionStrategy, context: ExecutionContext): Promise<ExecutionSession>;
+  executeApprovedPlan(tenantId: string, executionId: ExecutionId, context: ExecutionContext): Promise<void>;
+  coordinateExecution(tenantId: string, executionId: ExecutionId, context: ExecutionContext): Promise<ExecutionSession>;
+  trackProgress(tenantId: string, executionId: ExecutionId, context: ExecutionContext): Promise<ExecutionProgress>;
+  handleFailure(tenantId: string, executionId: ExecutionId, failingStepId: string, failureCode: string, context: ExecutionContext): Promise<RecoveryStrategy>;
+  completeExecution(tenantId: string, executionId: ExecutionId, context: ExecutionContext): Promise<void>;
+}`
+  },
+  {
+    name: 'execution-session.ts',
+    path: 'packages/agent-execution/src/core/execution-session.ts',
+    language: 'typescript',
+    role: 'Execution Session Model',
+    description: 'Models active execution runs, current phase tracker, and start/last modification timestamps.',
+    content: `import { ExecutionSessionId } from '../identity/execution-session-id.js';
+import { ExecutionId } from '../identity/execution-id.js';
+import { ExecutionLifecycleState } from './execution-lifecycle.js';
+
+export interface ExecutionSession {
+  readonly sessionId: ExecutionSessionId;
+  readonly executionId: ExecutionId;
+  readonly tenantId: string;
+  readonly approvedPlanId: string;
+  readonly currentState: ExecutionLifecycleState;
+  readonly currentPhaseId?: string;
+  readonly currentStepId?: string;
+  readonly startedAt: Date;
+  readonly lastUpdatedAt: Date;
+}`
+  },
+  {
+    name: 'recovery-strategy.ts',
+    path: 'packages/agent-execution/src/recovery/recovery-strategy.ts',
+    language: 'typescript',
+    role: 'Recovery Decisions Model',
+    description: 'Models recovery actions (retry, rollback, skip, or manual intervention halt) triggered on failure code matches.',
+    content: `import { RetryPolicy } from './retry-policy.js';
+import { RollbackPlan } from './rollback-plan.js';
+
+export interface RecoveryStrategy {
+  readonly strategyId: string;
+  readonly targetExecutionId: string;
+  readonly triggerFailureCode: string;
+  readonly actionToTake: 'RETRY' | 'ROLLBACK_AND_FAIL' | 'IGNORE_AND_SKIP' | 'RESUME_FROM_CHECKPOINT' | 'HALT_FOR_MANUAL_INTERVENTION';
+  readonly associatedRetryPolicy?: RetryPolicy;
+  readonly associatedRollbackPlan?: RollbackPlan;
+  readonly targetCheckpointIdToResumeFrom?: string;
+  readonly notesText: string;
+}`
+  },
+  {
+    name: 'README.md',
+    path: 'packages/agent-execution/README.md',
+    language: 'markdown',
+    role: 'Architectural Specs',
+    description: 'Detailed specifications for AGT-009 Enterprise Agent Execution module.',
+    content: `# Enterprise Agent Execution (AGT-009)
+
+The Enterprise Agent Execution module defines how multiple Digital Employees coordinate the execution of approved business plans.`
   }
 ];
 

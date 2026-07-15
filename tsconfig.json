@@ -105,6 +105,9 @@
       ],
       "@sbb/agent-planning": [
         "./packages/agent-planning/src/index.ts"
+      ],
+      "@sbb/agent-execution": [
+        "./packages/agent-execution/src/index.ts"
       ]
     },
     "allowImportingTsExtensions": true,
