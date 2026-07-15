@@ -84,6 +84,9 @@
       ],
       "@sbb/agent-framework": [
         "./packages/agent-framework/src/index.ts"
+      ],
+      "@sbb/agent-registry": [
+        "./packages/agent-registry/src/index.ts"
       ]
     },
     "allowImportingTsExtensions": true,

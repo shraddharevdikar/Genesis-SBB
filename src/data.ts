@@ -1,29 +1,29 @@
 import { TicketDetails, FileNode, FutureTicket } from './types';
 
 export const ticketDetails: TicketDetails = {
-  id: 'AGT-001',
-  title: 'Enterprise Agent Foundation',
+  id: 'AGT-002',
+  title: 'Enterprise Agent Registry',
   status: 'DONE',
   priority: 'CRITICAL',
   author: 'SBB Principal Architect',
   assignee: 'shraddha.revdikar@gmail.com',
-  objective: 'Build the foundational Agent Framework defining what a Digital Employee is, including contracts, roles, capabilities, skills, goals, memory, knowledge, and governance structures.',
-  modulePath: 'packages/agent-framework/src/core/enterprise-agent.ts',
+  objective: 'Build the foundational Agent Registry responsible for discovering, registering, organizing, governing and managing all Digital Employees within SBB.',
+  modulePath: 'packages/agent-registry/src/core/agent-registry.ts',
   requirements: [
-    'Establish the EnterpriseAgent contract supporting activate, deactivate, executeGoal, acquireSkill, evaluateCapability, accessMemory, and accessRuntime.',
-    'Model Agent Definition, Agent Instance, Agent Context, and Agent Lifecycle to decouple design-time templates from active running states.',
-    'Formulate agent roles, corporate objectives, job responsibilities, capabilitiesSets, and skills catalog mappings.',
-    'Incorporate hierarchical Goal decomposition trackers with success criteria compliance checks.',
-    'Specify memory profiles, short-term and long-term vector sync configurations, knowledge profiles, and runtime capabilities accesses.',
-    'Determine permission profiles, permission sets, human-in-the-loop governance limits, financial spending budgets, and auditable registers.',
-    'Track agent status, health telemetries, and productivity, quality alignment, and cognitive learning metrics.',
-    'Broadcast key agent lifecycle domain events: AgentCreated, AgentActivated, AgentDeactivated, and CapabilityAdded.'
+    'Establish the AgentRegistry contract supporting RegisterAgent, DiscoverAgent, FindBySkill, FindByCapability, AssignManager, TransferDepartment, and RetireAgent.',
+    'Model Registry Entry, Registry Context, Registry Lifecycle, and Employee Number to decouple directory entries from execution engines.',
+    'Formulate organizational units, departments, reporting lines, and supervising manager references.',
+    'Design index search capabilities mapping skills and capabilities to registered digital employees.',
+    'Incorporate employment profiles tracking status, assignment history, hire date, and retirement milestones.',
+    'Determine classification controls covering categories, specializations, and compliance certification levels.',
+    'Specify availability states, working hours, scheduled downtime, and concurrency capacity limits.',
+    'Track workforce metrics, utilization metrics, and broadcast agent registered, assigned, retired, and registry updated events.'
   ],
   responsibilities: [
-    { title: 'Enterprise Agent Contracts', description: 'Deploys EnterpriseAgent contract, definition blueprints, execution instances, context headers, and lifecycle state managers.', status: 'Completed & Verified' },
-    { title: 'Roles, Skills & Goals Systems', description: 'Models corporate job descriptions, cognitive/operational tool catalogs, hierarchical goals, and success criteria checkpoints.', status: 'Completed & Verified' },
-    { title: 'Memory, Permissions & Governance', description: 'Enforces GDPR compliance, classified vector scopes, permission matrices, and human-in-the-loop autonomous budget limits.', status: 'Completed & Verified' },
-    { title: 'Domain Events & Metrics', description: 'Tracks quality alignment indices, self-correction counts, heartbeats, and broadcasts created, activated, deactivated, and capability-added events.', status: 'Completed & Verified' }
+    { title: 'Workforce Directory Contracts', description: 'Deploys AgentRegistry contract, registration lifecycles, and context parameters.', status: 'Completed & Verified' },
+    { title: 'Directory Relationships & Profiles', description: 'Models SBB organization units, departments, reporting manager links, and employment assignment logs.', status: 'Completed & Verified' },
+    { title: 'Discovery Search & Classification', description: 'Enforces capability/skill index mappings, availability schedules, certification clearances, and concurrent load capacity profiles.', status: 'Completed & Verified' },
+    { title: 'Domain Events & Metrics', description: 'Tracks workforce distribution, total capacity metrics, and broadcasts registered, assigned, retired, and updated lifecycle events.', status: 'Completed & Verified' }
   ]
 };
 
