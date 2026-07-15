@@ -78,6 +78,9 @@
       ],
       "@sbb/runtime-monitoring": [
         "./packages/runtime-monitoring/src/index.ts"
+      ],
+      "@sbb/runtime-api": [
+        "./packages/runtime-api/src/index.ts"
       ]
     },
     "allowImportingTsExtensions": true,

@@ -1,29 +1,29 @@
 import { TicketDetails, FileNode, FutureTicket } from './types';
 
 export const ticketDetails: TicketDetails = {
-  id: 'RUN-009',
-  title: 'Enterprise Runtime Monitoring Foundation',
+  id: 'RUN-010',
+  title: 'Enterprise Runtime API Foundation',
   status: 'DONE',
   priority: 'CRITICAL',
   author: 'SBB Principal Architect',
   assignee: 'shraddha.revdikar@gmail.com',
-  objective: 'Build the foundational Runtime Monitoring responsible for defining, governing, and coordinating business health observability and SLA compliance checks across SBB.',
-  modulePath: 'packages/runtime-monitoring/src/core/runtime-monitoring.ts',
+  objective: 'Build the foundational Runtime API responsible for serving as the single canonical internal gateway for accessing all SBB Enterprise Runtime services.',
+  modulePath: 'packages/runtime-api/src/core/runtime-api.ts',
   requirements: [
-    'Establish the RuntimeMonitoring contract supporting monitoring, evaluating health and SLAs, detecting anomalies, raising alerts, and publishing monitoring events.',
-    'Model Monitoring Context, Monitoring Session, Monitoring State, and Health Checks to decouple active telemetry sampling from target engine execution.',
-    'Formulate detailed health schemas covering Workflow, Approval, Task, Scheduling, Notification, Event, and Policy engines.',
-    'Incorporate operational SLA evaluation tracking warning and critical threshold boundaries, violations, and escalations.',
-    'Specify performance metrics tracking throughput operations per window, P50/P95/P99 latency profiles, raw execution times, and queue depths.',
-    'Determine compliance governance controls covering sampling rates, alert buffers limits, GDPR masked tracers, and immutable monitoring audit logs.',
-    'Track overall business, operational, and regulatory compliance metrics.',
-    'Broadcast key monitoring lifecycle domain events: HealthDegraded, SLAViolated, AlertTriggered, and MonitoringStarted.'
+    'Establish the RuntimeAPI contract supporting executeCommand, executeQuery, resolveService, validateRequest, authorizeRequest, and publishRuntimeEvent.',
+    'Model Runtime Context, Runtime Request, and Runtime Response to isolate internal execution payloads from target service consumers.',
+    'Formulate command, query, and result contract types covering mutation and idempotent read operations.',
+    'Design service gate interfaces decoupled from target engines, including Workflow, Approval, Task, Scheduling, Notification, Events, Policies, and Monitoring.',
+    'Incorporate operational router orchestration with service registry resolution capabilities.',
+    'Determine compliance governance controls covering api policies, authorization policies, multi-tenant isolation, and auditable api registers.',
+    'Track API health parameters, connections workloads, success rates, and P-value performance latencies.',
+    'Broadcast key api invocation lifecycle domain events: RuntimeRequested, RuntimeCompleted, and RuntimeFailed.'
   ],
   responsibilities: [
-    { title: 'Runtime Monitoring Contracts', description: 'Deploys RuntimeMonitoring contract, context, session, state, and health check aggregates.', status: 'Completed & Verified' },
-    { title: 'Component Health & SLA Tracking', description: 'Models seven distinct engine health structures with warning/critical threshold warning checks, violations, and role escalations.', status: 'Completed & Verified' },
-    { title: 'Performance, Governance & Dashboards', description: 'Enforces sampling speeds, alert buffers, P-level latency profiles, queue depths, executive/operations dashboards, and audit logs.', status: 'Completed & Verified' },
-    { title: 'Domain Events & Metrics', description: 'Tracks financial milestones, operational loads, compliance ratios, and broadcasts health degraded, SLA violated, alert triggered, and monitoring started events.', status: 'Completed & Verified' }
+    { title: 'Runtime API Contracts', description: 'Deploys RuntimeAPI contract, command/query envelopes, custom response models, and metadata context headers.', status: 'Completed & Verified' },
+    { title: 'Isolated Service Gateways', description: 'Models independent service interfaces decoupling clients from underlying orchestrators and scheduling mechanisms.', status: 'Completed & Verified' },
+    { title: 'Routing & Multi-Tenant Governance', description: 'Enforces routing maps, service registries, rate limit controls, role access lists, and GDPR masked transactional log structures.', status: 'Completed & Verified' },
+    { title: 'Domain Events & Metrics', description: 'Tracks connection rates, authorization failure metrics, P-level latency profiles, and broadcasts requested, completed, and failed execution events.', status: 'Completed & Verified' }
   ]
 };
 
