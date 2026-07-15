@@ -1,28 +1,28 @@
 import { TicketDetails, FileNode, FutureTicket } from './types';
 
 export const ticketDetails: TicketDetails = {
-  id: 'AGT-007',
-  title: 'Enterprise Agent Collaboration',
+  id: 'AGT-008',
+  title: 'Enterprise Agent Planning',
   status: 'DONE',
   priority: 'CRITICAL',
   author: 'SBB Principal Architect',
   assignee: 'shraddha.revdikar@gmail.com',
-  objective: 'Build the foundational Agent Collaboration responsible for Starting Collaborations, Adding Participants, Assigning Responsibilities, Coordinating Work, Resolving Conflicts, and Completing Collaborations in a secure, policy-compliant, and multi-tenant aware framework.',
-  modulePath: 'packages/agent-collaboration/src/core/agent-collaboration.ts',
+  objective: 'Build the foundational Agent Planning responsible for Analyzing Goals, Building Plans, Evaluating Alternatives, Assessing Risks, Optimizing Plans, and Submitting Plans for Gated Approval in a secure, policy-compliant, and multi-tenant aware framework.',
+  modulePath: 'packages/agent-planning/src/core/agent-planning.ts',
   requirements: [
-    'Establish the AgentCollaboration contract supporting StartCollaboration, AddParticipant, AssignResponsibility, CoordinateWork, ResolveConflict, and CompleteCollaboration operations.',
-    'Model Team, Participants, Roles, Responsibilities, Dependencies, and Shared Objectives structures to represent digital employee teamwork flows.',
-    'Formulate coordination models (Work Allocation, Synchronization Points, Dependency Tracking, Milestone Management) and synchronization points.',
-    'Design decision models (Consensus-based voting, Human Overrides, Escalations, and Shared Decisions).',
-    'Incorporate shared knowledge models (Shared Memory References, Shared Artifacts, Shared Workspace Context).',
-    'Specify collaboration, participation, and escalation policies with multi-tenant scopes and audit logs.',
-    'Track collaboration health, team productivity, coordination efficiency, and broadcast started, added, achieved, and completed domain events.'
+    'Establish the AgentPlanning contract supporting AnalyzeGoal, BuildPlan, EvaluateAlternatives, AssessRisk, OptimizePlan, and SubmitForApproval operations.',
+    'Model Goal, Objective Analysis, Execution Plan, Phases, Steps, and Decision Branches to represent digital employee cognitive orchestration.',
+    'Formulate risk assessment structures (Risk Assessment, Mitigation Strategy, Contingency Plan) and dynamic trigger conditions.',
+    'Design optimization algorithms models (Timeline optimizations, Over-allocation Resource leveling, and CHF Cost optimizations).',
+    'Incorporate multi-signature approval models (Plan Reviews, Approval Gates, and Revision Feedback).',
+    'Specify planning policies, immutable audits, and multi-tenant scopes.',
+    'Track planning quality metrics, plan generation efficiency, and broadcast started, created, approved, and completed domain events.'
   ],
   responsibilities: [
-    { title: 'Governance Collaborations Contracts', description: 'Deploys AgentCollaboration contract, workspace synchronization pools, active collaboration session leases, and traceability contexts.', status: 'Completed & Verified' },
-    { title: 'Teams, Objectives & Decisions', description: 'Models five key team roles, multi-priority objectives, consensus-based voting protocols, and automatic conflict resolution models.', status: 'Completed & Verified' },
-    { title: 'Coordination, Knowledge & Policies', description: 'Enforces work allocation blocks, synchronization points, shared memory references, and dynamic escalation structures.', status: 'Completed & Verified' },
-    { title: 'Domain Events & Metrics', description: 'Tracks collaboration health, team productivity indicators, coordination efficiency rates, and broadcasts started, participant added, milestone achieved, and completed events.', status: 'Completed & Verified' }
+    { title: 'Governance Planning Contracts', description: 'Deploys AgentPlanning contract, objective analysis trace files, active planning session leases, and traceability contexts.', status: 'Completed & Verified' },
+    { title: 'Plans, Alternatives & Decisions', description: 'Models four key priority levels, execution phase sequences, multi-condition decision branches, and quantitative alternative tradeoff scores.', status: 'Completed & Verified' },
+    { title: 'Risks, Optimizations & Approvals', description: 'Enforces preventative mitigations, automatic contingency fallbacks, timeline/cost optimizations, and multi-gated approval checks.', status: 'Completed & Verified' },
+    { title: 'Domain Events & Metrics', description: 'Tracks goal coverage accuracy ratios, plan generation latency, and broadcasts planning started, plan created, approved, and completed events.', status: 'Completed & Verified' }
   ]
 };
 
@@ -7927,6 +7927,91 @@ export interface CollaborationWorkspace {
     content: `# Enterprise Agent Collaboration (AGT-007)
 
 The Enterprise Agent Collaboration module defines how multiple Digital Employees work together toward shared business goals under strict corporate governance rules.`
+  },
+  {
+    name: 'agent-planning.ts',
+    path: 'packages/agent-planning/src/core/agent-planning.ts',
+    language: 'typescript',
+    role: 'Planning Platform Contract',
+    description: 'Declares the core AgentPlanning interface, goal decomposition, risk analysis, and gated reviews.',
+    content: `import { BusinessGoal } from '../goals/business-goal.js';
+import { ObjectiveAnalysis } from '../goals/objective-analysis.js';
+import { ExecutionPlan } from '../planning/execution-plan.js';
+import { PlanId } from '../identity/plan-id.js';
+import { AlternativePlan } from '../planning/alternative-plan.js';
+import { RiskAssessment } from '../risk/risk-assessment.js';
+import { ResourceOptimization } from '../optimization/resource-optimization.js';
+import { TimelineOptimization } from '../optimization/timeline-optimization.js';
+import { CostOptimization } from '../optimization/cost-optimization.js';
+import { ApprovalGate } from '../approval/approval-gate.js';
+import { PlanningContext } from './planning-context.js';
+
+export interface AgentPlanning {
+  analyzeGoal(tenantId: string, goal: BusinessGoal, context: PlanningContext): Promise<ObjectiveAnalysis>;
+  buildPlan(tenantId: string, goalId: string, analysisId: string, context: PlanningContext): Promise<ExecutionPlan>;
+  evaluateAlternatives(tenantId: string, basePlanId: PlanId, context: PlanningContext): Promise<AlternativePlan[]>;
+  assessRisk(tenantId: string, planId: PlanId, context: PlanningContext): Promise<RiskAssessment[]>;
+  optimizePlan(tenantId: string, planId: PlanId, context: PlanningContext): Promise<{
+    readonly resource: ResourceOptimization;
+    readonly timeline: TimelineOptimization;
+    readonly cost: CostOptimization;
+  }>;
+  submitForApproval(tenantId: string, planId: PlanId, gateId: string, context: PlanningContext): Promise<ApprovalGate>;
+}`
+  },
+  {
+    name: 'execution-plan.ts',
+    path: 'packages/agent-planning/src/planning/execution-plan.ts',
+    language: 'typescript',
+    role: 'Plan Generation Model',
+    description: 'Models execution sequences, dependency phases, dynamic steps, and branching logic.',
+    content: `import { PlanId } from '../identity/plan-id.js';
+import { ExecutionPhase } from './execution-phase.js';
+import { DecisionBranch } from './decision-branch.js';
+
+export interface ExecutionPlan {
+  readonly planId: PlanId;
+  readonly tenantId: string;
+  readonly businessGoalId: string;
+  readonly title: string;
+  readonly phasesList: ExecutionPhase[];
+  readonly branchingDecisionsList: DecisionBranch[];
+  readonly estimatedTotalDurationMinutes: number;
+  readonly estimatedCostChf: number;
+  readonly versionNumber: number;
+  readonly createdAt: Date;
+}`
+  },
+  {
+    name: 'risk-assessment.ts',
+    path: 'packages/agent-planning/src/risk/risk-assessment.ts',
+    language: 'typescript',
+    role: 'Risk Assessment Model',
+    description: 'Tracks potential plan failures, preventative strategies, and active triggers.',
+    content: `import { MitigationStrategy } from './mitigation-strategy.js';
+import { ContingencyPlan } from './contingency-plan.js';
+
+export interface RiskAssessment {
+  readonly assessmentId: string;
+  readonly targetPlanId: string;
+  readonly identifiedRiskDescription: string;
+  readonly probabilityScore: number;
+  readonly impactScore: number;
+  readonly severityScore: number;
+  readonly activeMitigation: MitigationStrategy;
+  readonly contingency: ContingencyPlan;
+  readonly assessedAt: Date;
+}`
+  },
+  {
+    name: 'README.md',
+    path: 'packages/agent-planning/README.md',
+    language: 'markdown',
+    role: 'Architectural Specs',
+    description: 'Detailed specifications for AGT-008 Enterprise Agent Planning module.',
+    content: `# Enterprise Agent Planning (AGT-008)
+
+The Enterprise Agent Planning module defines how SBB's Digital Employees transform business goals into structured, governable execution plans.`
   }
 ];
 

@@ -102,6 +102,9 @@
       ],
       "@sbb/agent-collaboration": [
         "./packages/agent-collaboration/src/index.ts"
+      ],
+      "@sbb/agent-planning": [
+        "./packages/agent-planning/src/index.ts"
       ]
     },
     "allowImportingTsExtensions": true,
