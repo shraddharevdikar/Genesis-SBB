@@ -1,28 +1,28 @@
 import { TicketDetails, FileNode, FutureTicket } from './types';
 
 export const ticketDetails: TicketDetails = {
-  id: 'AGT-012',
-  title: 'Enterprise Agent Marketplace',
+  id: 'AGT-013',
+  title: 'Enterprise Agent Monitoring',
   status: 'DONE',
   priority: 'CRITICAL',
   author: 'SBB Principal Architect',
   assignee: 'shraddha.revdikar@gmail.com',
-  objective: 'Build the foundational Agent Marketplace responsible for Publishing Packages, Searching Marketplace listings, Installing packages with resolved dependencies, Updating installed packages, Verifying Compatibility, and Retiring deprecating packages in a secure, policy-compliant, and multi-tenant aware framework.',
-  modulePath: 'packages/agent-marketplace/src/core/agent-marketplace.ts',
+  objective: 'Build the foundational Agent Monitoring responsible for observing operational health, tracking execution steps, evaluating business KPIs, detecting compliance risks, generating threshold-triggered alerts, and publishing dashboards in a secure, policy-compliant, and multi-tenant aware framework.',
+  modulePath: 'packages/agent-monitoring/src/core/agent-monitoring.ts',
   requirements: [
-    'Establish the AgentMarketplace contract supporting PublishPackage, SearchMarketplace, InstallPackage, UpdatePackage, VerifyCompatibility, and RetirePackage operations.',
-    'Model Marketplace Session, Marketplace Context, Package Lifecycle States, and Identity models representing publishing and install boundaries.',
-    'Formulate catalog structures (Categories, Card Listings, Featured collections, and Publisher policies).',
-    'Design registry and version structures including Package Manifests, Package Versions, Dependency manifests, and Verification statuses.',
-    'Incorporate solutions and packs (Department packs, Industry packs, and complete Business solutions).',
-    'Specify installation plans, installation profiles, license profiles, entitlements, and certification policies.',
-    'Track adoption metrics and broadcast package published, package installed, package updated, and package retired domain events.'
+    'Establish the AgentMonitoring contract supporting ObserveHealth, MonitorExecution, EvaluateBusinessKPIs, DetectRisk, GenerateAlerts, and PublishDashboard operations.',
+    'Model Monitoring Session, Monitoring Context, Monitoring Lifecycle States, and Identity models representing monitoring and observation boundaries.',
+    'Formulate health structures (Agent Health, Department Health, and global Enterprise Health).',
+    'Design observability and risk trackers including Execution, Workflow, Collaboration, Policy, Compliance, and Trust indicators.',
+    'Incorporate performance monitors for Productivity throughput, SLA adherence, and resource/financial Utilization.',
+    'Specify threshold rules, severity metrics, and escalation alerts with supervisor notification channels.',
+    'Track business KPIs and broadcast monitoring started, threshold exceeded, alert triggered, and monitoring completed domain events.'
   ],
   responsibilities: [
-    { title: 'Governance Marketplace Contracts', description: 'Deploys AgentMarketplace contract, sessions, verification status getters, and evaluation contexts.', status: 'Completed & Verified' },
-    { title: 'Catalog, Listings & Solutions', description: 'Models categories, card listings, department/industry packs, and verified business solutions.', status: 'Completed & Verified' },
-    { title: 'Dependencies, Licenses & Installs', description: 'Enforces version dependency manifests, license profiles, installation plans, and upgrade rollbacks.', status: 'Completed & Verified' },
-    { title: 'Adoption Metrics & Domain Events', description: 'Tracks installation counts, SLA adherence scores, and broadcasts package published, installed, updated, and retired events.', status: 'Completed & Verified' }
+    { title: 'Operational Health Models', description: 'Deploys AgentMonitoring contract, active tracking sessions, and aggregated department/enterprise health indicators.', status: 'Completed & Verified' },
+    { title: 'Risk & Compliance Observations', description: 'Models regulatory standards audit logs, policy enforcement checks, and real-time agent confidence/trust ratings.', status: 'Completed & Verified' },
+    { title: 'Performance & Alert Dispatches', description: 'Enforces metrics rule evaluations, SLA response times, and dispatches critical escalation notices to supervisors.', status: 'Completed & Verified' },
+    { title: 'Business Impact & Domain Events', description: 'Tracks financial savings indices, continuous learning ratios, and broadcasts monitoring started, threshold exceeded, alert triggered, and completed events.', status: 'Completed & Verified' }
   ]
 };
 
@@ -8337,6 +8337,65 @@ export interface PackageManifest {
     content: `# Enterprise Agent Marketplace (AGT-012)
 
 The Enterprise Agent Marketplace module defines how SBB discovers, installs, governs, versions, and manages Enterprise AI capabilities across a multi-tenant corporate structure.`
+  },
+  {
+    name: 'agent-monitoring.ts',
+    path: 'packages/agent-monitoring/src/core/agent-monitoring.ts',
+    language: 'typescript',
+    role: 'Monitoring Contract',
+    description: 'Declares the core AgentMonitoring interface containing all operational intelligence, KPI tracking, and alert raise contracts.',
+    content: `export interface AgentMonitoring {
+  observeHealth(targetFleetTag: string, context: MonitoringContext): Promise<AgentHealth[]>;
+  monitorExecution(sessionId: string, context: MonitoringContext): Promise<ExecutionObservation[]>;
+  evaluateBusinessKPIs(tenantId: string, context: MonitoringContext): Promise<BusinessMetrics>;
+  detectRisk(tenantId: string, context: MonitoringContext): Promise<TrustObservation[]>;
+  generateAlerts(tenantId: string, context: MonitoringContext): Promise<EscalationNotification[]>;
+  publishDashboard(dashboardType: 'EXECUTIVE' | 'DEPARTMENT' | 'OPERATIONAL', context: MonitoringContext): Promise<ExecutiveDashboard>;
+  startMonitoringSession(tenantId: string, targetFleetsList: string[], context: MonitoringContext): Promise<MonitoringSession>;
+}`
+  },
+  {
+    name: 'monitoring-session.ts',
+    path: 'packages/agent-monitoring/src/core/monitoring-session.ts',
+    language: 'typescript',
+    role: 'Monitoring Session',
+    description: 'Models lease tracks and state progression over monitored fleet sectors.',
+    content: `export interface MonitoringSession {
+  readonly sessionId: string;
+  readonly monitoringId: MonitoringId;
+  readonly tenantId: string;
+  readonly targetFleetsList: string[];
+  readonly state: MonitoringLifecycleState;
+  readonly establishedAt: Date;
+  readonly lastHeartbeatReceivedAt: Date;
+}`
+  },
+  {
+    name: 'agent-health.ts',
+    path: 'packages/agent-monitoring/src/health/agent-health.ts',
+    language: 'typescript',
+    role: 'Agent Health Indicator',
+    description: 'Tracks the individual digital employee heartbeats and health degradation logs.',
+    content: `export interface AgentHealth {
+  readonly agentId: string;
+  readonly tenantId: string;
+  readonly status: HealthStatusType;
+  readonly heartbeatIntervalMs: number;
+  readonly lastHeartbeatTimestamp: Date;
+  readonly activeLeaseId?: string;
+  readonly consecutiveFailuresCount: number;
+  readonly degradationReasonNotes?: string;
+}`
+  },
+  {
+    name: 'README.md',
+    path: 'packages/agent-monitoring/README.md',
+    language: 'markdown',
+    role: 'Architectural Specs',
+    description: 'Detailed specifications for AGT-013 Enterprise Agent Monitoring module.',
+    content: `# Enterprise Agent Monitoring (AGT-013)
+
+The Enterprise Agent Monitoring module defines how SBB observes, registers, audits, and analyzes the operational health, strategic progress, and compliance statuses of its Enterprise AI Workforce.`
   }
 ];
 

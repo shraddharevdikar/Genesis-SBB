@@ -117,6 +117,9 @@
       ],
       "@sbb/agent-marketplace": [
         "./packages/agent-marketplace/src/index.ts"
+      ],
+      "@sbb/agent-monitoring": [
+        "./packages/agent-monitoring/src/index.ts"
       ]
     },
     "allowImportingTsExtensions": true,

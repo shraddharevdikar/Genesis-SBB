@@ -1,0 +1,1 @@
+export type AlertSeverity = 'INFORMATIONAL' | 'WARNING' | 'CRITICAL' | 'EMERGENCY_SHUTDOWN';
