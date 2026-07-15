@@ -1,29 +1,29 @@
 import { TicketDetails, FileNode, FutureTicket } from './types';
 
 export const ticketDetails: TicketDetails = {
-  id: 'RUN-010',
-  title: 'Enterprise Runtime API Foundation',
+  id: 'AGT-001',
+  title: 'Enterprise Agent Foundation',
   status: 'DONE',
   priority: 'CRITICAL',
   author: 'SBB Principal Architect',
   assignee: 'shraddha.revdikar@gmail.com',
-  objective: 'Build the foundational Runtime API responsible for serving as the single canonical internal gateway for accessing all SBB Enterprise Runtime services.',
-  modulePath: 'packages/runtime-api/src/core/runtime-api.ts',
+  objective: 'Build the foundational Agent Framework defining what a Digital Employee is, including contracts, roles, capabilities, skills, goals, memory, knowledge, and governance structures.',
+  modulePath: 'packages/agent-framework/src/core/enterprise-agent.ts',
   requirements: [
-    'Establish the RuntimeAPI contract supporting executeCommand, executeQuery, resolveService, validateRequest, authorizeRequest, and publishRuntimeEvent.',
-    'Model Runtime Context, Runtime Request, and Runtime Response to isolate internal execution payloads from target service consumers.',
-    'Formulate command, query, and result contract types covering mutation and idempotent read operations.',
-    'Design service gate interfaces decoupled from target engines, including Workflow, Approval, Task, Scheduling, Notification, Events, Policies, and Monitoring.',
-    'Incorporate operational router orchestration with service registry resolution capabilities.',
-    'Determine compliance governance controls covering api policies, authorization policies, multi-tenant isolation, and auditable api registers.',
-    'Track API health parameters, connections workloads, success rates, and P-value performance latencies.',
-    'Broadcast key api invocation lifecycle domain events: RuntimeRequested, RuntimeCompleted, and RuntimeFailed.'
+    'Establish the EnterpriseAgent contract supporting activate, deactivate, executeGoal, acquireSkill, evaluateCapability, accessMemory, and accessRuntime.',
+    'Model Agent Definition, Agent Instance, Agent Context, and Agent Lifecycle to decouple design-time templates from active running states.',
+    'Formulate agent roles, corporate objectives, job responsibilities, capabilitiesSets, and skills catalog mappings.',
+    'Incorporate hierarchical Goal decomposition trackers with success criteria compliance checks.',
+    'Specify memory profiles, short-term and long-term vector sync configurations, knowledge profiles, and runtime capabilities accesses.',
+    'Determine permission profiles, permission sets, human-in-the-loop governance limits, financial spending budgets, and auditable registers.',
+    'Track agent status, health telemetries, and productivity, quality alignment, and cognitive learning metrics.',
+    'Broadcast key agent lifecycle domain events: AgentCreated, AgentActivated, AgentDeactivated, and CapabilityAdded.'
   ],
   responsibilities: [
-    { title: 'Runtime API Contracts', description: 'Deploys RuntimeAPI contract, command/query envelopes, custom response models, and metadata context headers.', status: 'Completed & Verified' },
-    { title: 'Isolated Service Gateways', description: 'Models independent service interfaces decoupling clients from underlying orchestrators and scheduling mechanisms.', status: 'Completed & Verified' },
-    { title: 'Routing & Multi-Tenant Governance', description: 'Enforces routing maps, service registries, rate limit controls, role access lists, and GDPR masked transactional log structures.', status: 'Completed & Verified' },
-    { title: 'Domain Events & Metrics', description: 'Tracks connection rates, authorization failure metrics, P-level latency profiles, and broadcasts requested, completed, and failed execution events.', status: 'Completed & Verified' }
+    { title: 'Enterprise Agent Contracts', description: 'Deploys EnterpriseAgent contract, definition blueprints, execution instances, context headers, and lifecycle state managers.', status: 'Completed & Verified' },
+    { title: 'Roles, Skills & Goals Systems', description: 'Models corporate job descriptions, cognitive/operational tool catalogs, hierarchical goals, and success criteria checkpoints.', status: 'Completed & Verified' },
+    { title: 'Memory, Permissions & Governance', description: 'Enforces GDPR compliance, classified vector scopes, permission matrices, and human-in-the-loop autonomous budget limits.', status: 'Completed & Verified' },
+    { title: 'Domain Events & Metrics', description: 'Tracks quality alignment indices, self-correction counts, heartbeats, and broadcasts created, activated, deactivated, and capability-added events.', status: 'Completed & Verified' }
   ]
 };
 

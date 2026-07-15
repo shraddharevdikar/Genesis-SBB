@@ -81,6 +81,9 @@
       ],
       "@sbb/runtime-api": [
         "./packages/runtime-api/src/index.ts"
+      ],
+      "@sbb/agent-framework": [
+        "./packages/agent-framework/src/index.ts"
       ]
     },
     "allowImportingTsExtensions": true,
