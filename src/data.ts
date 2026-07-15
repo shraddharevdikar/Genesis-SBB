@@ -1,28 +1,28 @@
 import { TicketDetails, FileNode, FutureTicket } from './types';
 
 export const ticketDetails: TicketDetails = {
-  id: 'AGT-011',
-  title: 'Enterprise Agent Learning',
+  id: 'AGT-012',
+  title: 'Enterprise Agent Marketplace',
   status: 'DONE',
   priority: 'CRITICAL',
   author: 'SBB Principal Architect',
   assignee: 'shraddha.revdikar@gmail.com',
-  objective: 'Build the foundational Agent Learning responsible for Starting Learning Sessions, Evaluating Outcomes, Capturing Feedback, Analyzing Performance, Generating Improvement Recommendations, Validating Learnings, and Recording Lessons Learned in a secure, policy-compliant, and multi-tenant aware framework.',
-  modulePath: 'packages/agent-learning/src/core/agent-learning.ts',
+  objective: 'Build the foundational Agent Marketplace responsible for Publishing Packages, Searching Marketplace listings, Installing packages with resolved dependencies, Updating installed packages, Verifying Compatibility, and Retiring deprecating packages in a secure, policy-compliant, and multi-tenant aware framework.',
+  modulePath: 'packages/agent-marketplace/src/core/agent-marketplace.ts',
   requirements: [
-    'Establish the AgentLearning contract supporting StartLearningSession, EvaluateOutcome, CaptureFeedback, AnalyzePerformance, GenerateImprovement, ValidateLearning, and RecordLesson operations.',
-    'Model Learning Session, Learning Context, Learning Lifecycle States, and Identity models representing learning decision boundaries.',
-    'Formulate feedback structures (Human Feedback, Automated Feedback, Qualitative Commentary, and Rating Scores).',
-    'Design evaluation and analysis structures including Outcome Analysis divergence, Root-cause error factors, and Performance evaluations.',
-    'Incorporate improvement recommenders for Skills tuning, Planning adjustments, Governance boundaries, and Knowledge pattern reuse.',
-    'Specify learning policies, immutable learning audit logs, and organization-wide continuous improvement metrics.',
-    'Track operational learning effectiveness and broadcast learning started, lesson recorded, improvement approved, and learning completed domain events.'
+    'Establish the AgentMarketplace contract supporting PublishPackage, SearchMarketplace, InstallPackage, UpdatePackage, VerifyCompatibility, and RetirePackage operations.',
+    'Model Marketplace Session, Marketplace Context, Package Lifecycle States, and Identity models representing publishing and install boundaries.',
+    'Formulate catalog structures (Categories, Card Listings, Featured collections, and Publisher policies).',
+    'Design registry and version structures including Package Manifests, Package Versions, Dependency manifests, and Verification statuses.',
+    'Incorporate solutions and packs (Department packs, Industry packs, and complete Business solutions).',
+    'Specify installation plans, installation profiles, license profiles, entitlements, and certification policies.',
+    'Track adoption metrics and broadcast package published, package installed, package updated, and package retired domain events.'
   ],
   responsibilities: [
-    { title: 'Governance Learning Contracts', description: 'Deploys AgentLearning contract, learning sessions, feedback metrics, and evaluation contexts.', status: 'Completed & Verified' },
-    { title: 'Feedback & Outcomes Analysis', description: 'Models human/automated feedback records, plan goal vs actual divergence ratios, and error root-cause analyses.', status: 'Completed & Verified' },
-    { title: 'Improvements & Validations', description: 'Enforces parameter overrides, timeline optimizations, and simulator-based safety validations before active integration.', status: 'Completed & Verified' },
-    { title: 'Knowledge Base & Domain Events', description: 'Tracks continuous pattern reuse rates, lessons learned registers, and broadcasts learning started, lesson recorded, and completed events.', status: 'Completed & Verified' }
+    { title: 'Governance Marketplace Contracts', description: 'Deploys AgentMarketplace contract, sessions, verification status getters, and evaluation contexts.', status: 'Completed & Verified' },
+    { title: 'Catalog, Listings & Solutions', description: 'Models categories, card listings, department/industry packs, and verified business solutions.', status: 'Completed & Verified' },
+    { title: 'Dependencies, Licenses & Installs', description: 'Enforces version dependency manifests, license profiles, installation plans, and upgrade rollbacks.', status: 'Completed & Verified' },
+    { title: 'Adoption Metrics & Domain Events', description: 'Tracks installation counts, SLA adherence scores, and broadcasts package published, installed, updated, and retired events.', status: 'Completed & Verified' }
   ]
 };
 
@@ -8264,6 +8264,79 @@ export interface LessonLearned {
     content: `# Enterprise Agent Learning (AGT-011)
 
 The Enterprise Agent Learning module defines how SBB\'s Digital Employees continuously improve their operational efficiency, planning sequences, skill parameters, and decision accuracy over time through governed organizational learning.`
+  },
+  {
+    name: 'agent-marketplace.ts',
+    path: 'packages/agent-marketplace/src/core/agent-marketplace.ts',
+    language: 'typescript',
+    role: 'Marketplace Platform Contract',
+    description: 'Declares the core AgentMarketplace interface, publishing workflows, search catalogs, and capability installation/compatibility routines.',
+    content: `import { MarketplaceContext } from './marketplace-context.js';
+import { MarketplaceSession } from './marketplace-session.js';
+import { PackageId } from '../identity/package-id.js';
+import { PublisherId } from '../identity/publisher-id.js';
+import { MarketplacePackage } from '../packages/marketplace-package.js';
+import { PackageVersion } from '../packages/package-version.js';
+import { MarketplaceCatalog } from '../catalog/marketplace-catalog.js';
+import { CompatibilityCheck } from '../installation/compatibility-check.js';
+import { InstallationPlan } from '../installation/installation-plan.js';
+import { VerificationStatus } from '../reviews/verification-status.js';
+
+export interface AgentMarketplace {
+  publishPackage(publisherId: PublisherId, manifestJson: string, version: PackageVersion, context: MarketplaceContext): Promise<MarketplacePackage>;
+  searchMarketplace(queryText: string, filtersList: string[], context: MarketplaceContext): Promise<MarketplaceCatalog>;
+  installPackage(tenantId: string, packageId: PackageId, versionString: string, context: MarketplaceContext): Promise<InstallationPlan>;
+  updatePackage(tenantId: string, packageId: PackageId, targetVersionString: string, context: MarketplaceContext): Promise<InstallationPlan>;
+  verifyCompatibility(tenantId: string, packageId: PackageId, proposedVersionString: string, context: MarketplaceContext): Promise<CompatibilityCheck>;
+  retirePackage(packageId: PackageId, retirementReasonNotes: string, context: MarketplaceContext): Promise<void>;
+  getVerificationStatus(packageId: PackageId, versionString: string, context: MarketplaceContext): Promise<VerificationStatus>;
+  startMarketplaceSession(tenantId: string, context: MarketplaceContext): Promise<MarketplaceSession>;
+}`
+  },
+  {
+    name: 'package-manifest.ts',
+    path: 'packages/agent-marketplace/src/packages/package-manifest.ts',
+    language: 'typescript',
+    role: 'Package Manifest Schema',
+    description: 'Models standard manifest headers, framework prerequisites, and multi-tenant capabilities declarations.',
+    content: `import { MarketplaceCategoryCode } from '../catalog/category.js';
+
+export interface PackageManifest {
+  readonly schemaVersion: string;
+  readonly uniquePackageName: string;
+  readonly displayTitle: string;
+  readonly publisherName: string;
+  readonly category: MarketplaceCategoryCode;
+  readonly supportsMultiTenancy: boolean;
+  readonly requiredFrameworkVersion: string;
+}`
+  },
+  {
+    name: 'marketplace-policy.ts',
+    path: 'packages/agent-marketplace/src/governance/marketplace-policy.ts',
+    language: 'typescript',
+    role: 'Marketplace Governance Policy',
+    description: 'Enforces publishing security settings, verified publisher domains, and certification levels.',
+    content: `export interface MarketplacePolicy {
+  readonly policyId: string;
+  readonly tenantId: string;
+  readonly code: string;
+  readonly requireMfaForPublishing: boolean;
+  readonly allowedPublisherDomainsList: string[];
+  readonly enforceAutomaticSecurityScans: boolean;
+  readonly blockNonCertifiedPackages: boolean;
+  readonly isActive: boolean;
+}`
+  },
+  {
+    name: 'README.md',
+    path: 'packages/agent-marketplace/README.md',
+    language: 'markdown',
+    role: 'Architectural Specs',
+    description: 'Detailed specifications for AGT-012 Enterprise Agent Marketplace module.',
+    content: `# Enterprise Agent Marketplace (AGT-012)
+
+The Enterprise Agent Marketplace module defines how SBB discovers, installs, governs, versions, and manages Enterprise AI capabilities across a multi-tenant corporate structure.`
   }
 ];
 

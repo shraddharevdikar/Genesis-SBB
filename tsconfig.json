@@ -114,6 +114,9 @@
       ],
       "@sbb/agent-learning": [
         "./packages/agent-learning/src/index.ts"
+      ],
+      "@sbb/agent-marketplace": [
+        "./packages/agent-marketplace/src/index.ts"
       ]
     },
     "allowImportingTsExtensions": true,
