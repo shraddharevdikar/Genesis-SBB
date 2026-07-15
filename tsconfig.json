@@ -111,6 +111,9 @@
       ],
       "@sbb/agent-governance": [
         "./packages/agent-governance/src/index.ts"
+      ],
+      "@sbb/agent-learning": [
+        "./packages/agent-learning/src/index.ts"
       ]
     },
     "allowImportingTsExtensions": true,

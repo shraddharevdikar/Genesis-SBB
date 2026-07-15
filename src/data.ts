@@ -1,28 +1,28 @@
 import { TicketDetails, FileNode, FutureTicket } from './types';
 
 export const ticketDetails: TicketDetails = {
-  id: 'AGT-010',
-  title: 'Enterprise Agent Governance',
+  id: 'AGT-011',
+  title: 'Enterprise Agent Learning',
   status: 'DONE',
   priority: 'CRITICAL',
   author: 'SBB Principal Architect',
   assignee: 'shraddha.revdikar@gmail.com',
-  objective: 'Build the foundational Agent Governance responsible for Evaluating Policies, Assessing Risks, Determining Autonomy, Requiring Approvals, Validating Compliance, and Recording Governance Decisions in a secure, policy-compliant, and multi-tenant aware framework.',
-  modulePath: 'packages/agent-governance/src/core/agent-governance.ts',
+  objective: 'Build the foundational Agent Learning responsible for Starting Learning Sessions, Evaluating Outcomes, Capturing Feedback, Analyzing Performance, Generating Improvement Recommendations, Validating Learnings, and Recording Lessons Learned in a secure, policy-compliant, and multi-tenant aware framework.',
+  modulePath: 'packages/agent-learning/src/core/agent-learning.ts',
   requirements: [
-    'Establish the AgentGovernance contract supporting EvaluatePolicy, AssessRisk, DetermineAutonomy, RequireApproval, ValidateCompliance, and RecordGovernanceDecision operations.',
-    'Model Governance Session, Governance Context, Governance Lifecycle States, and Identity models representing agent decision boundaries.',
-    'Formulate policy classifications (Business, Operational, Security, Regulatory Policies) and Autonomy Levels with Decision Limits.',
-    'Design approvals structures including Approval Matrix rules, Escalation paths, and authority Delegation Chains.',
-    'Incorporate risk and trust monitors (Risk Profiles, Risk Classifications, Trust Scores, and Human Oversight record lists).',
-    'Specify compliance frameworks with audit requirements and regulatory policy dynamic mappings (GDPR, SOC 2, ISO 27001).',
-    'Track operational evaluation latency metrics and broadcast evaluated, approval required, autonomy updated, and policy modified domain events.'
+    'Establish the AgentLearning contract supporting StartLearningSession, EvaluateOutcome, CaptureFeedback, AnalyzePerformance, GenerateImprovement, ValidateLearning, and RecordLesson operations.',
+    'Model Learning Session, Learning Context, Learning Lifecycle States, and Identity models representing learning decision boundaries.',
+    'Formulate feedback structures (Human Feedback, Automated Feedback, Qualitative Commentary, and Rating Scores).',
+    'Design evaluation and analysis structures including Outcome Analysis divergence, Root-cause error factors, and Performance evaluations.',
+    'Incorporate improvement recommenders for Skills tuning, Planning adjustments, Governance boundaries, and Knowledge pattern reuse.',
+    'Specify learning policies, immutable learning audit logs, and organization-wide continuous improvement metrics.',
+    'Track operational learning effectiveness and broadcast learning started, lesson recorded, improvement approved, and learning completed domain events.'
   ],
   responsibilities: [
-    { title: 'Governance Decision Contracts', description: 'Deploys AgentGovernance contract, execution trace files, active governance session leases, and validation contexts.', status: 'Completed & Verified' },
-    { title: 'Policies, Autonomy & Limits', description: 'Models five key autonomy levels, business discretion caps, operational parallel thresholds, and security clearance barriers.', status: 'Completed & Verified' },
-    { title: 'Approvals, Chains & Risks', description: 'Enforces approval matrices, automatic supervisor escalations, downstream delegation chains, and multi-category risk profiles.', status: 'Completed & Verified' },
-    { title: 'Domain Events & Compliance', description: 'Tracks compliance ratings, trust scores, and broadcasts governance evaluated, approval required, autonomy updated, and policy updated events.', status: 'Completed & Verified' }
+    { title: 'Governance Learning Contracts', description: 'Deploys AgentLearning contract, learning sessions, feedback metrics, and evaluation contexts.', status: 'Completed & Verified' },
+    { title: 'Feedback & Outcomes Analysis', description: 'Models human/automated feedback records, plan goal vs actual divergence ratios, and error root-cause analyses.', status: 'Completed & Verified' },
+    { title: 'Improvements & Validations', description: 'Enforces parameter overrides, timeline optimizations, and simulator-based safety validations before active integration.', status: 'Completed & Verified' },
+    { title: 'Knowledge Base & Domain Events', description: 'Tracks continuous pattern reuse rates, lessons learned registers, and broadcasts learning started, lesson recorded, and completed events.', status: 'Completed & Verified' }
   ]
 };
 
@@ -8190,6 +8190,80 @@ export interface AutonomyLevel {
     content: `# Enterprise Agent Governance (AGT-010)
 
 The Enterprise Agent Governance module defines the constitutional rules, multi-level autonomy, delegation chains, risk evaluation criteria, and compliance auditing frameworks that govern SBB's Digital Employees.`
+  },
+  {
+    name: 'agent-learning.ts',
+    path: 'packages/agent-learning/src/core/agent-learning.ts',
+    language: 'typescript',
+    role: 'Learning Platform Contract',
+    description: 'Declares the core AgentLearning interface, starting learning sessions, outcome analytics, and capability improvements.',
+    content: `import { LearningContext } from './learning-context.js';
+import { LearningSession } from './learning-session.js';
+import { FeedbackRecord } from '../feedback/feedback-record.js';
+import { PerformanceEvaluation } from '../evaluation/performance-evaluation.js';
+import { OutcomeAnalysis } from '../evaluation/outcome-analysis.js';
+import { ImprovementRecommendation } from '../improvement/improvement-recommendation.js';
+import { LessonLearned } from '../knowledge/lesson-learned.js';
+import { LearningValidation } from '../validation/learning-validation.js';
+import { LearningId } from '../identity/learning-id.js';
+
+export interface AgentLearning {
+  startLearningSession(tenantId: string, targetResourceId: string, context: LearningContext): Promise<LearningSession>;
+  evaluateOutcome(tenantId: string, targetResourceId: string, context: LearningContext): Promise<OutcomeAnalysis>;
+  captureFeedback(tenantId: string, feedback: FeedbackRecord, context: LearningContext): Promise<void>;
+  analyzePerformance(tenantId: string, agentId: string, executionSessionId: string, context: LearningContext): Promise<PerformanceEvaluation>;
+  generateImprovement(tenantId: string, learningId: LearningId, context: LearningContext): Promise<ImprovementRecommendation[]>;
+  validateLearning(tenantId: string, recommendationId: string, context: LearningContext): Promise<LearningValidation>;
+  recordLesson(tenantId: string, lesson: LessonLearned, context: LearningContext): Promise<void>;
+  completeLearningSession(tenantId: string, learningId: LearningId, context: LearningContext): Promise<void>;
+}`
+  },
+  {
+    name: 'lesson-learned.ts',
+    path: 'packages/agent-learning/src/knowledge/lesson-learned.ts',
+    language: 'typescript',
+    role: 'Lesson Learned Model',
+    description: 'Models contextual takeaways, underlying issues, core takeaways, and validity ratings.',
+    content: `import { LessonId } from '../identity/lesson-id.js';
+
+export interface LessonLearned {
+  readonly lessonId: LessonId;
+  readonly tenantId: string;
+  readonly contextExecutionId: string;
+  readonly categoryTagCode: string;
+  readonly contextDescription: string;
+  readonly underlyingIssueNotes: string;
+  readonly coreTakeawayText: string;
+  readonly validityRatingScore: number;
+  readonly recordedAt: Date;
+}`
+  },
+  {
+    name: 'learning-policy.ts',
+    path: 'packages/agent-learning/src/governance/learning-policy.ts',
+    language: 'typescript',
+    role: 'Learning Governance Policy',
+    description: 'Enforces system learning boundaries, automatic updates allowances, and keyword bans.',
+    content: `export interface LearningPolicy {
+  readonly policyId: string;
+  readonly tenantId: string;
+  readonly code: string;
+  readonly allowAutomaticKnowledgeBaseUpdates: boolean;
+  readonly allowAutomaticSkillDefaultsUpdates: boolean;
+  readonly mandatoryHumanApprovalForAutonomyElevations: boolean;
+  readonly forbiddenLearningKeywordsList: string[];
+  readonly isActive: boolean;
+}`
+  },
+  {
+    name: 'README.md',
+    path: 'packages/agent-learning/README.md',
+    language: 'markdown',
+    role: 'Architectural Specs',
+    description: 'Detailed specifications for AGT-011 Enterprise Agent Learning module.',
+    content: `# Enterprise Agent Learning (AGT-011)
+
+The Enterprise Agent Learning module defines how SBB\'s Digital Employees continuously improve their operational efficiency, planning sequences, skill parameters, and decision accuracy over time through governed organizational learning.`
   }
 ];
 
