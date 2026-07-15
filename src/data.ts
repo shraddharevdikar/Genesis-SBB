@@ -1,29 +1,28 @@
 import { TicketDetails, FileNode, FutureTicket } from './types';
 
 export const ticketDetails: TicketDetails = {
-  id: 'AGT-005',
-  title: 'Enterprise Agent Memory',
+  id: 'AGT-006',
+  title: 'Enterprise Agent Communication',
   status: 'DONE',
   priority: 'CRITICAL',
   author: 'SBB Principal Architect',
   assignee: 'shraddha.revdikar@gmail.com',
-  objective: 'Build the foundational Agent Memory responsible for access, context retrieval, contributions, permissions, and auditing of SBB Enterprise Memory resources.',
-  modulePath: 'packages/agent-memory/src/core/agent-memory.ts',
+  objective: 'Build the foundational Agent Communication responsible for Starting Conversations, Sending/Receiving Messages, Routing Communications, Escalating, and Completing Conversations in a governed, auditable, and secure manner.',
+  modulePath: 'packages/agent-communication/src/core/agent-communication.ts',
   requirements: [
-    'Establish the AgentMemory contract supporting AccessMemory, SearchMemory, RetrieveContext, ContributeMemory, AttributeContribution, and ValidateAccess operations.',
-    'Model Memory Session, Memory Context, and Memory Access to decouple tenant request flows from system permissions and scopes.',
-    'Formulate seven distinct memory domains including Organizational, Customer, Employee, Project, Workflow, Decision, and Conversation.',
-    'Design semantic, keyword, and hybrid retrieval search queries bound to relevance and chronological decay policies.',
-    'Incorporate validation, confidence scores, duplicate check contribution metrics, and attribution tracking linked to SBB human supervisors.',
-    'Specify permissions modeling department, role, agent, tenant, and confidential scopes.',
-    'Determine retention and privacy governance limits tracking sensitive Swiss data classifications (e.g. AHV numbers).',
-    'Track memory freshness, cache hit-ratios, and broadcast accessed, contributed, updated, and retired domain events.'
+    'Establish the AgentCommunication contract supporting StartConversation, SendMessage, ReceiveMessage, RouteCommunication, EscalateConversation, and CompleteConversation operations.',
+    'Model Conversation, Session, Participants, Messages, Attachments, and Business Context structures to represent digital employee collaborative flows.',
+    'Formulate communication intents (Information, Request, Approval, Assignment, Notification, Escalation, Decision) and extracted entities validation rules.',
+    'Design direct, department, team, executive, workflow, and broadcast routing policies.',
+    'Incorporate security classifications (Public, Internal SBB, Restricted Department, Secret Cognitive, Confidential Legacy) with GDPR automatic redactions.',
+    'Specify immutable ledger audit logs and retention duration compliance limits.',
+    'Track response times, SLA resolution latency metrics, outcome sentiment, and broadcast started, sent, received, and completed domain events.'
   ],
   responsibilities: [
-    { title: 'Enterprise Memory Contracts', description: 'Deploys AgentMemory contract, auditable session leases, trace contexts, and security validation structures.', status: 'Completed & Verified' },
-    { title: 'Granular Domain Profiles', description: 'Models seven key SBB corporate memory sub-domains: Organizational, Customer, Employee, Project, Workflow, Decision, and Conversational.', status: 'Completed & Verified' },
-    { title: 'Audited Policies & Permissions', description: 'Enforces department-level scopes, strict GDPR/PII masking, dual-signature requirements, and immutable ledger triggers.', status: 'Completed & Verified' },
-    { title: 'Domain Events & Quality', description: 'Tracks informational freshness, cache hit-ratios, and broadcasts memory accessed, contributed, updated, and retired lifecycle events.', status: 'Completed & Verified' }
+    { title: 'Governance Collaborations Contracts', description: 'Deploys AgentCommunication contract, conversational thread logs, active communication session leases, and traceability contexts.', status: 'Completed & Verified' },
+    { title: 'Intents Extraction & Priorities', description: 'Models seven distinct intent category classifications, priority structures, and secure multi-format business artifacts reference models.', status: 'Completed & Verified' },
+    { title: 'Sandboxed Security & Routing', description: 'Enforces department-level load balancing queues, SLA escalation step sequences, and dynamic privacy redactions limits.', status: 'Completed & Verified' },
+    { title: 'Domain Events & Performance', description: 'Tracks SLA resolution velocities, human interaction durations, and broadcasts conversation started, sent, received, and completed events.', status: 'Completed & Verified' }
   ]
 };
 
@@ -7806,80 +7805,70 @@ All notable changes to the \`@sbb/ui\` package will be documented in this file.
 - Implemented **Alert banner**: Full accessibility, built-in indicator glyphs, title lines, and error/success messaging frames.`
   },
   {
-    name: 'agent-memory.ts',
-    path: 'packages/agent-memory/src/core/agent-memory.ts',
+    name: 'agent-communication.ts',
+    path: 'packages/agent-communication/src/core/agent-communication.ts',
     language: 'typescript',
-    role: 'Memory Platform Contract',
-    description: 'Declares the core AgentMemory interface, indexing, retrieval, and attribution controls.',
+    role: 'Communication Platform Contract',
+    description: 'Declares the core AgentCommunication interface, participant, routing, and escalation controls.',
     content: `import { AgentId } from '@sbb/agent-framework';
-import { MemoryContext } from './memory-context.js';
-import { MemoryAccess } from './memory-access.js';
-import { MemoryReferenceId } from '../identity/memory-reference-id.js';
-import { MemoryQuery } from '../retrieval/memory-query.js';
-import { MemoryContribution } from '../contribution/memory-contribution.js';
-import { MemoryAttribution } from '../contribution/memory-attribution.js';
+import { ConversationId } from '../identity/conversation-id.js';
+import { CommunicationMessage } from '../messages/communication-message.js';
+import { Participant } from '../participants/participant.js';
+import { InteractionContext } from './interaction-context.js';
+import { Conversation } from './conversation.js';
 
-export interface AgentMemory {
-  accessMemory(tenantId: string, agentId: AgentId, references: MemoryReferenceId[], context: MemoryContext): Promise<MemoryAccess>;
-  searchMemory(tenantId: string, query: MemoryQuery, context: MemoryContext): Promise<MemoryReferenceId[]>;
-  retrieveContext(tenantId: string, agentId: AgentId, query: MemoryQuery, tokenLimit: number): Promise<{ readonly formattedContext: string; readonly totalTokensEstimated: number; readonly referencesUsed: MemoryReferenceId[] }>;
-  contributeMemory(tenantId: string, agentId: AgentId, contribution: MemoryContribution, context: MemoryContext): Promise<MemoryReferenceId>;
-  attributeContribution(tenantId: string, referenceId: MemoryReferenceId, attribution: MemoryAttribution, context: MemoryContext): Promise<MemoryAttribution>;
-  validateAccess(tenantId: string, agentId: AgentId, targetScope: string): Promise<{ readonly isAuthorized: boolean; readonly activePermissionTokenId?: string; readonly restrictionDetails?: string }>;
+export interface AgentCommunication {
+  startConversation(tenantId: string, participants: Participant[], context: InteractionContext): Promise<Conversation>;
+  sendMessage(tenantId: string, conversationId: ConversationId, message: CommunicationMessage, context: InteractionContext): Promise<CommunicationMessage>;
+  receiveMessage(tenantId: string, conversationId: ConversationId, message: CommunicationMessage, context: InteractionContext): Promise<CommunicationMessage>;
+  routeCommunication(tenantId: string, conversationId: ConversationId, targetScopeCode: string, context: InteractionContext): Promise<void>;
+  escalateConversation(tenantId: string, conversationId: ConversationId, escalationPathId: string, reason: string, context: InteractionContext): Promise<Conversation>;
+  completeConversation(tenantId: string, conversationId: ConversationId, context: InteractionContext): Promise<void>;
 }`
   },
   {
-    name: 'memory-session.ts',
-    path: 'packages/agent-memory/src/core/memory-session.ts',
+    name: 'communication-session.ts',
+    path: 'packages/agent-communication/src/core/communication-session.ts',
     language: 'typescript',
     role: 'Session Management',
-    description: 'Tracks state, leases, and access scopes mapped to active agent session execution bounds.',
-    content: `import { MemoryAccessId } from '../identity/memory-access-id.js';
-import { AgentId } from '@sbb/agent-framework';
+    description: 'Tracks state, leases, and conversation associations of active agent communication channel leases.',
+    content: `import { CommunicationId } from '../identity/communication-id.js';
+import { ConversationId } from '../identity/conversation-id.js';
 
-export type MemorySessionState = 'ESTABLISHED' | 'ACTIVE' | 'COMMITTED' | 'EXPIRED' | 'REVOKED';
+export type CommunicationSessionState = 'ESTABLISHED' | 'ACTIVE' | 'ON_HOLD' | 'COMPLETED' | 'TERMINATED';
 
-export interface MemorySession {
+export interface CommunicationSession {
   readonly sessionId: string;
-  readonly agentId: AgentId;
+  readonly communicationId: CommunicationId;
+  readonly conversationId: ConversationId;
   readonly tenantId: string;
-  readonly state: MemorySessionState;
-  readonly activeLeaseDurationMs: number;
-  readonly memoryAccessIds: MemoryAccessId[];
+  readonly state: CommunicationSessionState;
+  readonly lastInteractionAt: Date;
   readonly establishedAt: Date;
-  readonly expiresAt: Date;
 }`
   },
   {
-    name: 'memory-scope.ts',
-    path: 'packages/agent-memory/src/permissions/memory-scope.ts',
+    name: 'confidentiality-level.ts',
+    path: 'packages/agent-communication/src/security/confidentiality-level.ts',
     language: 'typescript',
-    role: 'Privacy Scoping',
-    description: 'Models department, role, agent, tenant, and strictly confidential access scopes.',
-    content: `export type ScopeClassification = 
-  | 'TENANT_ALL'
-  | 'DEPARTMENT_COHORT'
-  | 'ROLE_CLASSIFIED'
-  | 'AGENT_OWNED'
-  | 'STRICT_CONFIDENTIAL';
-
-export interface MemoryScope {
-  readonly scopeId: string;
-  readonly scopeCode: string;
-  readonly classification: ScopeClassification;
-  readonly encryptionKeyReferenceId?: string;
-  readonly activeSupervisorSignoffsCount: number;
-}`
+    role: 'Confidentiality Scoping',
+    description: 'Models data privacy levels from public to highly confidential secret scopes.',
+    content: `export type ConfidentialityLevelType = 
+  | 'PUBLIC'
+  | 'INTERNAL_SBB'
+  | 'RESTRICTED_DEPARTMENT'
+  | 'SECRET_COGNITIVE'
+  | 'CONFIDENTIAL_LEGACY';`
   },
   {
     name: 'README.md',
-    path: 'packages/agent-memory/README.md',
+    path: 'packages/agent-communication/README.md',
     language: 'markdown',
     role: 'Architectural Specs',
-    description: 'Detailed specifications for AGT-005 Enterprise Agent Memory module.',
-    content: `# Enterprise Agent Memory (AGT-005)
+    description: 'Detailed specifications for AGT-006 Enterprise Agent Communication module.',
+    content: `# Enterprise Agent Communication (AGT-006)
 
-The Enterprise Agent Memory module structures how Digital Employees running on the SBB platform query, contribute to, and validate corporate information stores under strict compliance policies.`
+The Enterprise Agent Communication module defines how SBB's Digital Employees interact, coordinate, and collaborate with human supervisors, internal corporate systems, and external commuters under strict enterprise compliance rules.`
   }
 ];
 

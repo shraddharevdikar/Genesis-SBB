@@ -96,6 +96,9 @@
       ],
       "@sbb/agent-memory": [
         "./packages/agent-memory/src/index.ts"
+      ],
+      "@sbb/agent-communication": [
+        "./packages/agent-communication/src/index.ts"
       ]
     },
     "allowImportingTsExtensions": true,
