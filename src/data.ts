@@ -1,28 +1,28 @@
 import { TicketDetails, FileNode, FutureTicket } from './types';
 
 export const ticketDetails: TicketDetails = {
-  id: 'AGT-009',
-  title: 'Enterprise Agent Execution',
+  id: 'AGT-010',
+  title: 'Enterprise Agent Governance',
   status: 'DONE',
   priority: 'CRITICAL',
   author: 'SBB Principal Architect',
   assignee: 'shraddha.revdikar@gmail.com',
-  objective: 'Build the foundational Agent Execution responsible for Starting Execution, Executing Approved Plans, Coordinating Execution, Tracking Progress, Handling Failures, and Completing Executions in a secure, policy-compliant, and multi-tenant aware framework.',
-  modulePath: 'packages/agent-execution/src/core/agent-execution.ts',
+  objective: 'Build the foundational Agent Governance responsible for Evaluating Policies, Assessing Risks, Determining Autonomy, Requiring Approvals, Validating Compliance, and Recording Governance Decisions in a secure, policy-compliant, and multi-tenant aware framework.',
+  modulePath: 'packages/agent-governance/src/core/agent-governance.ts',
   requirements: [
-    'Establish the AgentExecution contract supporting StartExecution, ExecuteApprovedPlan, CoordinateExecution, TrackProgress, HandleFailure, and CompleteExecution operations.',
-    'Model Execution Session, Approved Plan Reference, Execution Strategy, Progress, and Checkpoints to represent digital employee execution flows.',
-    'Formulate recovery structures (Retry Policies, Rollback Plans, Recovery Strategies) and Compensating Steps.',
-    'Design coordination dispatcher contracts (Runtime Coordinator, Workflow Dispatcher, Task Dispatcher, Approval Dispatcher).',
-    'Incorporate health and metrics trackers (Execution Status, SLA lag monitors, success rates, recovery success ratio).',
-    'Specify execution policies, audit log entries, and multi-tenant scopes.',
-    'Track performance duration metrics and broadcast started, checkpoint completed, failed, and completed domain events.'
+    'Establish the AgentGovernance contract supporting EvaluatePolicy, AssessRisk, DetermineAutonomy, RequireApproval, ValidateCompliance, and RecordGovernanceDecision operations.',
+    'Model Governance Session, Governance Context, Governance Lifecycle States, and Identity models representing agent decision boundaries.',
+    'Formulate policy classifications (Business, Operational, Security, Regulatory Policies) and Autonomy Levels with Decision Limits.',
+    'Design approvals structures including Approval Matrix rules, Escalation paths, and authority Delegation Chains.',
+    'Incorporate risk and trust monitors (Risk Profiles, Risk Classifications, Trust Scores, and Human Oversight record lists).',
+    'Specify compliance frameworks with audit requirements and regulatory policy dynamic mappings (GDPR, SOC 2, ISO 27001).',
+    'Track operational evaluation latency metrics and broadcast evaluated, approval required, autonomy updated, and policy modified domain events.'
   ],
   responsibilities: [
-    { title: 'Governance Execution Contracts', description: 'Deploys AgentExecution contract, execution trace files, active execution session leases, and traceability contexts.', status: 'Completed & Verified' },
-    { title: 'Strategies, Dispatchers & Steps', description: 'Models five key execution states, strategy profiles, runtime environment binders, task queues, and manual intervention gates.', status: 'Completed & Verified' },
-    { title: 'Checkpoints, Recovery & Policies', description: 'Enforces progress checkpoints, retry backoff limits, transactional rollback compensating actions, and duration boundary policies.', status: 'Completed & Verified' },
-    { title: 'Domain Events & Metrics', description: 'Tracks SLA latency offsets, coordinator resource overhead, and broadcasts execution started, checkpointed, completed, and failed events.', status: 'Completed & Verified' }
+    { title: 'Governance Decision Contracts', description: 'Deploys AgentGovernance contract, execution trace files, active governance session leases, and validation contexts.', status: 'Completed & Verified' },
+    { title: 'Policies, Autonomy & Limits', description: 'Models five key autonomy levels, business discretion caps, operational parallel thresholds, and security clearance barriers.', status: 'Completed & Verified' },
+    { title: 'Approvals, Chains & Risks', description: 'Enforces approval matrices, automatic supervisor escalations, downstream delegation chains, and multi-category risk profiles.', status: 'Completed & Verified' },
+    { title: 'Domain Events & Compliance', description: 'Tracks compliance ratings, trust scores, and broadcasts governance evaluated, approval required, autonomy updated, and policy updated events.', status: 'Completed & Verified' }
   ]
 };
 
@@ -8086,6 +8086,110 @@ export interface RecoveryStrategy {
     content: `# Enterprise Agent Execution (AGT-009)
 
 The Enterprise Agent Execution module defines how multiple Digital Employees coordinate the execution of approved business plans.`
+  },
+  {
+    name: 'agent-governance.ts',
+    path: 'packages/agent-governance/src/core/agent-governance.ts',
+    language: 'typescript',
+    role: 'Governance Platform Contract',
+    description: 'Declares the core AgentGovernance interface, evaluation contexts, decision recorders, and policy/risk estimators.',
+    content: `import { GovernanceContext } from './governance-context.js';
+import { GovernanceSession } from './governance-session.js';
+import { GovernanceId } from '../identity/governance-id.js';
+import { RiskProfile } from '../risk/risk-profile.js';
+import { AutonomyProfile } from '../autonomy/autonomy-profile.js';
+
+export interface GovernanceDecisionRecord {
+  readonly decisionId: string;
+  readonly governanceId: GovernanceId;
+  readonly tenantId: string;
+  readonly targetResourceId: string;
+  readonly decisionCode: 'ALLOW' | 'REJECT' | 'PENDING_APPROVAL_GATE';
+  readonly reasoningText: string;
+  readonly appliedPoliciesCodesList: string[];
+  readonly riskLevelText: 'NONE' | 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
+  readonly requiredApprovalsRolesList: string[];
+  readonly auditReferenceId: string;
+  readonly decidedAt: Date;
+}
+
+export interface AgentGovernance {
+  evaluatePolicy(tenantId: string, targetResourceId: string, context: GovernanceContext): Promise<{ isApproved: boolean, reasoningText: string, appliedPolicyCodesList: string[] }>;
+  assessRisk(tenantId: string, targetResourceId: string, context: GovernanceContext): Promise<RiskProfile>;
+  determineAutonomy(tenantId: string, agentId: string, context: GovernanceContext): Promise<AutonomyProfile>;
+  requireApproval(tenantId: string, targetResourceId: string, context: GovernanceContext): Promise<{ approvalRequired: boolean, requiredRolesList: string[], triggeredRuleId?: string }>;
+  validateCompliance(tenantId: string, targetResourceId: string, context: GovernanceContext): Promise<{ isCompliant: boolean, regulatoryViolationsList: string[], auditLogReferenceId: string }>;
+  recordGovernanceDecision(tenantId: string, decision: GovernanceDecisionRecord, context: GovernanceContext): Promise<void>;
+  startGovernanceSession(tenantId: string, targetResourceId: string, context: GovernanceContext): Promise<GovernanceSession>;
+}`
+  },
+  {
+    name: 'governance-policy.ts',
+    path: 'packages/agent-governance/src/policies/governance-policy.ts',
+    language: 'typescript',
+    role: 'Base Governance Policy',
+    description: 'Models standard governance baseline, classification, mandatory flags, and status structures.',
+    content: `import { PolicyId } from '../identity/policy-id.js';
+
+export type PolicyCategory = 'BUSINESS' | 'OPERATIONAL' | 'SECURITY' | 'REGULATORY';
+
+export interface GovernancePolicy {
+  readonly policyId: PolicyId;
+  readonly tenantId: string;
+  readonly category: PolicyCategory;
+  readonly code: string;
+  readonly displayName: string;
+  readonly description: string;
+  readonly isMandatory: boolean;
+  readonly isActive: boolean;
+  readonly versionNumber: number;
+}`
+  },
+  {
+    name: 'autonomy-level.ts',
+    path: 'packages/agent-governance/src/autonomy/autonomy-level.ts',
+    language: 'typescript',
+    role: 'Autonomy Definitions',
+    description: 'Models multi-tier operational autonomy levels (Manual, Assisted, Exception Only, High/Full Autonomy) for Digital Employees.',
+    content: `export type AutonomyLevelCode =
+  | 'LEVEL_0_MANUAL'
+  | 'LEVEL_1_ASSISTED'
+  | 'LEVEL_2_CONDITIONAL_AUTO'
+  | 'LEVEL_3_EXCEPTION_ONLY'
+  | 'LEVEL_4_HIGH_AUTONOMY'
+  | 'LEVEL_5_FULL_AUTONOMY';
+
+export interface AutonomyLevel {
+  readonly code: AutonomyLevelCode;
+  readonly displayName: string;
+  readonly description: string;
+  readonly requiresHeartbeatVerification: boolean;
+}`
+  },
+  {
+    name: 'regulatory-policy.ts',
+    path: 'packages/agent-governance/src/compliance/regulatory-policy.ts',
+    language: 'typescript',
+    role: 'Regulatory Rules Mapping',
+    description: 'Defines checks for standards like GDPR, SOC 2, or ISO 27001 dynamically without hardcoding regulations.',
+    content: `export interface RegulatoryPolicy {
+  readonly regulatoryId: string;
+  readonly authorityBodyName: string;
+  readonly standardName: string;
+  readonly clauseIdentifierCode: string;
+  readonly checkExpressionText: string;
+  readonly complianceSeverityRating: 'INFORMATIONAL' | 'STANDARDS_VIOLATED' | 'CRITICAL_LEGAL_BREACH';
+}`
+  },
+  {
+    name: 'README.md',
+    path: 'packages/agent-governance/README.md',
+    language: 'markdown',
+    role: 'Architectural Specs',
+    description: 'Detailed specifications for AGT-010 Enterprise Agent Governance module.',
+    content: `# Enterprise Agent Governance (AGT-010)
+
+The Enterprise Agent Governance module defines the constitutional rules, multi-level autonomy, delegation chains, risk evaluation criteria, and compliance auditing frameworks that govern SBB's Digital Employees.`
   }
 ];
 

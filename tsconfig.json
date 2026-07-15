@@ -108,6 +108,9 @@
       ],
       "@sbb/agent-execution": [
         "./packages/agent-execution/src/index.ts"
+      ],
+      "@sbb/agent-governance": [
+        "./packages/agent-governance/src/index.ts"
       ]
     },
     "allowImportingTsExtensions": true,

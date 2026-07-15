@@ -1,0 +1,31 @@
+{
+  "name": "@sbb/agent-governance",
+  "version": "1.0.0",
+  "description": "Foundational constitutional rules, multi-level autonomy, delegation chains, compliance checking, risk grading, and trust profiling for SBB Digital Employees",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@sbb/shared": "^1.0.0",
+    "@sbb/runtime-platform": "^1.0.0",
+    "@sbb/runtime-api": "^1.0.0",
+    "@sbb/agent-framework": "^1.0.0",
+    "@sbb/agent-registry": "^1.0.0",
+    "@sbb/agent-runtime": "^1.0.0",
+    "@sbb/agent-skills": "^1.0.0",
+    "@sbb/agent-memory": "^1.0.0",
+    "@sbb/agent-communication": "^1.0.0",
+    "@sbb/agent-collaboration": "^1.0.0",
+    "@sbb/agent-planning": "^1.0.0",
+    "@sbb/agent-execution": "^1.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.5",
+    "@types/node": "^20.12.12"
+  },
+  "publishConfig": {
+    "access": "restricted"
+  }
+}
