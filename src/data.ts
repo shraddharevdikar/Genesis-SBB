@@ -1,29 +1,29 @@
 import { TicketDetails, FileNode, FutureTicket } from './types';
 
 export const ticketDetails: TicketDetails = {
-  id: 'AGT-002',
-  title: 'Enterprise Agent Registry',
+  id: 'AGT-003',
+  title: 'Enterprise Agent Runtime',
   status: 'DONE',
   priority: 'CRITICAL',
   author: 'SBB Principal Architect',
   assignee: 'shraddha.revdikar@gmail.com',
-  objective: 'Build the foundational Agent Registry responsible for discovering, registering, organizing, governing and managing all Digital Employees within SBB.',
-  modulePath: 'packages/agent-registry/src/core/agent-registry.ts',
+  objective: 'Build the foundational Agent Runtime responsible for coordinating and orchestrating the execution lifecycle of Enterprise Digital Employees.',
+  modulePath: 'packages/agent-runtime/src/core/agent-runtime.ts',
   requirements: [
-    'Establish the AgentRegistry contract supporting RegisterAgent, DiscoverAgent, FindBySkill, FindByCapability, AssignManager, TransferDepartment, and RetireAgent.',
-    'Model Registry Entry, Registry Context, Registry Lifecycle, and Employee Number to decouple directory entries from execution engines.',
-    'Formulate organizational units, departments, reporting lines, and supervising manager references.',
-    'Design index search capabilities mapping skills and capabilities to registered digital employees.',
-    'Incorporate employment profiles tracking status, assignment history, hire date, and retirement milestones.',
-    'Determine classification controls covering categories, specializations, and compliance certification levels.',
-    'Specify availability states, working hours, scheduled downtime, and concurrency capacity limits.',
-    'Track workforce metrics, utilization metrics, and broadcast agent registered, assigned, retired, and registry updated events.'
+    'Establish the AgentRuntime contract supporting StartSession, PauseSession, ResumeSession, StopSession, ExecuteGoal, BuildContext, CoordinateExecution, and EvaluateDecision.',
+    'Model Runtime Session, Goal Session, Context, Decision Point, Execution Plan, and Execution Result to represent digital employee run states.',
+    'Formulate workflow, task, approval, and notification coordination leveraging decoupled SBB Runtime API engine contracts.',
+    'Design contextual token window builders with sensitive keyword filters and GDPR compliant redaction mask systems.',
+    'Incorporate execution steps, queued request models, structured outcome results, and status stages.',
+    'Determine runtime session policies, compliance safety guardrails, and multi-manager approval escalations for restricted actions.',
+    'Specify system resource heath meters (CPU/Memory/Thread loads) and execution latency checks.',
+    'Track operational throughput performance metrics, productivity indices, and broadcast started, paused, completed, and failed execution events.'
   ],
   responsibilities: [
-    { title: 'Workforce Directory Contracts', description: 'Deploys AgentRegistry contract, registration lifecycles, and context parameters.', status: 'Completed & Verified' },
-    { title: 'Directory Relationships & Profiles', description: 'Models SBB organization units, departments, reporting manager links, and employment assignment logs.', status: 'Completed & Verified' },
-    { title: 'Discovery Search & Classification', description: 'Enforces capability/skill index mappings, availability schedules, certification clearances, and concurrent load capacity profiles.', status: 'Completed & Verified' },
-    { title: 'Domain Events & Metrics', description: 'Tracks workforce distribution, total capacity metrics, and broadcasts registered, assigned, retired, and updated lifecycle events.', status: 'Completed & Verified' }
+    { title: 'Agent Runtime Contracts', description: 'Deploys AgentRuntime contract, session lifecycle controls, execution environments, and trace context structures.', status: 'Completed & Verified' },
+    { title: 'Contextual Builders & Plans', description: 'Models token budget estimators, sensitive GDPR filtering, execution steps decomposition, and conditional decision points.', status: 'Completed & Verified' },
+    { title: 'Decoupled Service Coordinators', description: 'Integrates secure routing coordinator proxies mapping Workflow, Task, Approval, and Notification runtime requests.', status: 'Completed & Verified' },
+    { title: 'Governance Guardrails & Telemetry', description: 'Enforces human-in-the-loop oversight claims, safety compliance policies, system resources health tracking, and performance metrics.', status: 'Completed & Verified' }
   ]
 };
 
@@ -7804,6 +7804,86 @@ All notable changes to the \`@sbb/ui\` package will be documented in this file.
 - Implemented **Badge tag**: Multiple semantic status colorways and custom rounded options.
 - Implemented **Spinner indicator**: Fluid CSS keyframe animations, scale sizes, and lightweight inline SVG path.
 - Implemented **Alert banner**: Full accessibility, built-in indicator glyphs, title lines, and error/success messaging frames.`
+  },
+  {
+    name: 'agent-runtime.ts',
+    path: 'packages/agent-runtime/src/core/agent-runtime.ts',
+    language: 'typescript',
+    role: 'Runtime Operations Contract',
+    description: 'Declares the core AgentRuntime interface and coordination controls.',
+    content: `import { AgentId } from '@sbb/agent-framework';
+import { RuntimeId } from '../identity/runtime-id.js';
+import { SessionId } from '../identity/session-id.js';
+import { RuntimeSession } from './runtime-session.js';
+import { RuntimeContext } from './runtime-context.js';
+import { ExecutionContext } from './execution-context.js';
+import { Goal } from '@sbb/agent-framework';
+import { GoalSession } from '../goals/goal-session.js';
+import { ContextWindow } from '../context/context-window.js';
+import { ExecutionStep } from '../planning/execution-step.js';
+import { ExecutionResult } from '../execution/execution-result.js';
+import { DecisionPoint } from '../planning/decision-point.js';
+
+export interface AgentRuntime {
+  startSession(tenantId: string, agentId: AgentId, context: RuntimeContext): Promise<RuntimeSession>;
+  pauseSession(tenantId: string, sessionId: SessionId, reason: string, context: RuntimeContext): Promise<RuntimeSession>;
+  resumeSession(tenantId: string, sessionId: SessionId, reason: string, context: RuntimeContext): Promise<RuntimeSession>;
+  stopSession(tenantId: string, sessionId: SessionId, reason: string, context: RuntimeContext): Promise<RuntimeSession>;
+  executeGoal(tenantId: string, sessionId: SessionId, goal: Goal, context: RuntimeContext): Promise<GoalSession>;
+  buildContext(tenantId: string, sessionId: SessionId, options: { readonly redactPII: boolean; readonly tokenLimit: number }): Promise<ContextWindow>;
+  coordinateExecution(tenantId: string, sessionId: SessionId, step: ExecutionStep, executionContext: ExecutionContext): Promise<ExecutionResult>;
+  evaluateDecision(tenantId: string, sessionId: SessionId, decisionPoint: DecisionPoint, context: RuntimeContext): Promise<DecisionPoint>;
+}`
+  },
+  {
+    name: 'runtime-session.ts',
+    path: 'packages/agent-runtime/src/core/runtime-session.ts',
+    language: 'typescript',
+    role: 'Session Models',
+    description: 'Tracks the state and timestamps of an active execution session.',
+    content: `import { SessionId } from '../identity/session-id.js';
+import { AgentId } from '@sbb/agent-framework';
+import { RuntimeContext } from './runtime-context.js';
+
+export type SessionState = 'INITIALIZING' | 'ACTIVE' | 'PAUSED' | 'COMPLETED' | 'FAILED' | 'TERMINATED';
+
+export interface RuntimeSession {
+  readonly sessionId: SessionId;
+  readonly agentId: AgentId;
+  readonly tenantId: string;
+  readonly state: SessionState;
+  readonly context: RuntimeContext;
+  readonly startedAt: Date;
+  readonly pausedAt?: Date;
+  readonly completedAt?: Date;
+  readonly errorDetails?: string;
+}`
+  },
+  {
+    name: 'workflow-coordinator.ts',
+    path: 'packages/agent-runtime/src/coordination/workflow-coordinator.ts',
+    language: 'typescript',
+    role: 'Decoupled Coordinators',
+    description: 'Decoupled orchestration proxies routing execution to Workflow, Task, Approval, and Notification engines.',
+    content: `import { WorkflowService } from '@sbb/runtime-api';
+import { RuntimeContext } from '../core/runtime-context.js';
+import { ExecutionStep } from '../planning/execution-step.js';
+import { ExecutionResult } from '../execution/execution-result.js';
+
+export interface WorkflowCoordinator {
+  readonly workflowService: WorkflowService;
+  coordinateWorkflowStep(tenantId: string, context: RuntimeContext, step: ExecutionStep): Promise<ExecutionResult>;
+}`
+  },
+  {
+    name: 'README.md',
+    path: 'packages/agent-runtime/README.md',
+    language: 'markdown',
+    role: 'Architectural Specs',
+    description: 'Detailed specifications for AGT-003 Enterprise Agent Runtime module.',
+    content: `# Enterprise Agent Runtime (AGT-003)
+
+The Enterprise Agent Runtime module provides the core execution, coordination, planning, and guardrailing abstractions for operating Digital Employees across SBB.`
   }
 ];
 

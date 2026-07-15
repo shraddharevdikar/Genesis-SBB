@@ -87,6 +87,9 @@
       ],
       "@sbb/agent-registry": [
         "./packages/agent-registry/src/index.ts"
+      ],
+      "@sbb/agent-runtime": [
+        "./packages/agent-runtime/src/index.ts"
       ]
     },
     "allowImportingTsExtensions": true,
