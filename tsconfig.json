@@ -99,6 +99,9 @@
       ],
       "@sbb/agent-communication": [
         "./packages/agent-communication/src/index.ts"
+      ],
+      "@sbb/agent-collaboration": [
+        "./packages/agent-collaboration/src/index.ts"
       ]
     },
     "allowImportingTsExtensions": true,

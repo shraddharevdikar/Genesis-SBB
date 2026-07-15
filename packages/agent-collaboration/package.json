@@ -1,0 +1,28 @@
+{
+  "name": "@sbb/agent-collaboration",
+  "version": "1.0.0",
+  "description": "Foundational multi-agent collaboration, team assignment, consensus decisioning, and shared objectives tracing for SBB Digital Employees",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@sbb/shared": "^1.0.0",
+    "@sbb/runtime-platform": "^1.0.0",
+    "@sbb/runtime-api": "^1.0.0",
+    "@sbb/agent-framework": "^1.0.0",
+    "@sbb/agent-registry": "^1.0.0",
+    "@sbb/agent-runtime": "^1.0.0",
+    "@sbb/agent-skills": "^1.0.0",
+    "@sbb/agent-memory": "^1.0.0",
+    "@sbb/agent-communication": "^1.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.5",
+    "@types/node": "^20.12.12"
+  },
+  "publishConfig": {
+    "access": "restricted"
+  }
+}

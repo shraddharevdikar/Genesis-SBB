@@ -1,28 +1,28 @@
 import { TicketDetails, FileNode, FutureTicket } from './types';
 
 export const ticketDetails: TicketDetails = {
-  id: 'AGT-006',
-  title: 'Enterprise Agent Communication',
+  id: 'AGT-007',
+  title: 'Enterprise Agent Collaboration',
   status: 'DONE',
   priority: 'CRITICAL',
   author: 'SBB Principal Architect',
   assignee: 'shraddha.revdikar@gmail.com',
-  objective: 'Build the foundational Agent Communication responsible for Starting Conversations, Sending/Receiving Messages, Routing Communications, Escalating, and Completing Conversations in a governed, auditable, and secure manner.',
-  modulePath: 'packages/agent-communication/src/core/agent-communication.ts',
+  objective: 'Build the foundational Agent Collaboration responsible for Starting Collaborations, Adding Participants, Assigning Responsibilities, Coordinating Work, Resolving Conflicts, and Completing Collaborations in a secure, policy-compliant, and multi-tenant aware framework.',
+  modulePath: 'packages/agent-collaboration/src/core/agent-collaboration.ts',
   requirements: [
-    'Establish the AgentCommunication contract supporting StartConversation, SendMessage, ReceiveMessage, RouteCommunication, EscalateConversation, and CompleteConversation operations.',
-    'Model Conversation, Session, Participants, Messages, Attachments, and Business Context structures to represent digital employee collaborative flows.',
-    'Formulate communication intents (Information, Request, Approval, Assignment, Notification, Escalation, Decision) and extracted entities validation rules.',
-    'Design direct, department, team, executive, workflow, and broadcast routing policies.',
-    'Incorporate security classifications (Public, Internal SBB, Restricted Department, Secret Cognitive, Confidential Legacy) with GDPR automatic redactions.',
-    'Specify immutable ledger audit logs and retention duration compliance limits.',
-    'Track response times, SLA resolution latency metrics, outcome sentiment, and broadcast started, sent, received, and completed domain events.'
+    'Establish the AgentCollaboration contract supporting StartCollaboration, AddParticipant, AssignResponsibility, CoordinateWork, ResolveConflict, and CompleteCollaboration operations.',
+    'Model Team, Participants, Roles, Responsibilities, Dependencies, and Shared Objectives structures to represent digital employee teamwork flows.',
+    'Formulate coordination models (Work Allocation, Synchronization Points, Dependency Tracking, Milestone Management) and synchronization points.',
+    'Design decision models (Consensus-based voting, Human Overrides, Escalations, and Shared Decisions).',
+    'Incorporate shared knowledge models (Shared Memory References, Shared Artifacts, Shared Workspace Context).',
+    'Specify collaboration, participation, and escalation policies with multi-tenant scopes and audit logs.',
+    'Track collaboration health, team productivity, coordination efficiency, and broadcast started, added, achieved, and completed domain events.'
   ],
   responsibilities: [
-    { title: 'Governance Collaborations Contracts', description: 'Deploys AgentCommunication contract, conversational thread logs, active communication session leases, and traceability contexts.', status: 'Completed & Verified' },
-    { title: 'Intents Extraction & Priorities', description: 'Models seven distinct intent category classifications, priority structures, and secure multi-format business artifacts reference models.', status: 'Completed & Verified' },
-    { title: 'Sandboxed Security & Routing', description: 'Enforces department-level load balancing queues, SLA escalation step sequences, and dynamic privacy redactions limits.', status: 'Completed & Verified' },
-    { title: 'Domain Events & Performance', description: 'Tracks SLA resolution velocities, human interaction durations, and broadcasts conversation started, sent, received, and completed events.', status: 'Completed & Verified' }
+    { title: 'Governance Collaborations Contracts', description: 'Deploys AgentCollaboration contract, workspace synchronization pools, active collaboration session leases, and traceability contexts.', status: 'Completed & Verified' },
+    { title: 'Teams, Objectives & Decisions', description: 'Models five key team roles, multi-priority objectives, consensus-based voting protocols, and automatic conflict resolution models.', status: 'Completed & Verified' },
+    { title: 'Coordination, Knowledge & Policies', description: 'Enforces work allocation blocks, synchronization points, shared memory references, and dynamic escalation structures.', status: 'Completed & Verified' },
+    { title: 'Domain Events & Metrics', description: 'Tracks collaboration health, team productivity indicators, coordination efficiency rates, and broadcasts started, participant added, milestone achieved, and completed events.', status: 'Completed & Verified' }
   ]
 };
 
@@ -7861,14 +7861,72 @@ export interface CommunicationSession {
   | 'CONFIDENTIAL_LEGACY';`
   },
   {
+    name: 'agent-collaboration.ts',
+    path: 'packages/agent-collaboration/src/core/agent-collaboration.ts',
+    language: 'typescript',
+    role: 'Collaboration Platform Contract',
+    description: 'Declares the core AgentCollaboration interface, coordination, workspace, and resolution controls.',
+    content: `import { CollaborationId } from '../identity/collaboration-id.js';
+import { WorkspaceId } from '../identity/workspace-id.js';
+import { CollaborationContext } from './collaboration-context.js';
+import { CollaborationSession } from './collaboration-session.js';
+import { ParticipantAssignment } from '../teams/participant-assignment.js';
+import { WorkAllocation } from '../coordination/work-allocation.js';
+import { SharedDecision } from '../decision/shared-decision.js';
+
+export interface AgentCollaboration {
+  startCollaboration(tenantId: string, initialWorkspaceId: WorkspaceId, context: CollaborationContext): Promise<CollaborationSession>;
+  addParticipant(tenantId: string, collaborationId: CollaborationId, assignment: ParticipantAssignment, context: CollaborationContext): Promise<ParticipantAssignment>;
+  assignResponsibility(tenantId: string, collaborationId: CollaborationId, assignmentId: string, responsibilityDescription: string, context: CollaborationContext): Promise<ParticipantAssignment>;
+  coordinateWork(tenantId: string, collaborationId: CollaborationId, allocation: WorkAllocation, context: CollaborationContext): Promise<WorkAllocation>;
+  resolveConflict(tenantId: string, collaborationId: CollaborationId, conflictId: string, decision: SharedDecision, context: CollaborationContext): Promise<SharedDecision>;
+  completeCollaboration(tenantId: string, collaborationId: CollaborationId, context: CollaborationContext): Promise<void>;
+}`
+  },
+  {
+    name: 'collaboration-workspace.ts',
+    path: 'packages/agent-collaboration/src/core/collaboration-workspace.ts',
+    language: 'typescript',
+    role: 'Workspace Management',
+    description: 'Tracks state, objectives, and artifact distributions of active teamwork workspaces.',
+    content: `import { WorkspaceId } from '../identity/workspace-id.js';
+import { CollaborationId } from '../identity/collaboration-id.js';
+import { SharedObjective } from '../objectives/shared-objective.js';
+import { SharedArtifact } from '../knowledge/shared-artifact.js';
+
+export interface CollaborationWorkspace {
+  readonly workspaceId: WorkspaceId;
+  readonly collaborationId: CollaborationId;
+  readonly tenantId: string;
+  readonly displayName: string;
+  readonly activeObjectivesList: SharedObjective[];
+  readonly sharedArtifactsList: SharedArtifact[];
+  readonly lastSynchronizedAt: Date;
+  readonly createdAt: Date;
+}`
+  },
+  {
+    name: 'consensus-model.ts',
+    path: 'packages/agent-collaboration/src/decision/consensus-model.ts',
+    language: 'typescript',
+    role: 'Consensus Decisioning',
+    description: 'Models multi-agent consensus protocols and voting classifications.',
+    content: `export type ConsensusModelType = 
+  | 'UNANIMOUS'
+  | 'MAJORITY_SIMPLE'
+  | 'MAJORITY_QUALIFIED'
+  | 'SUPERVISOR_LEADER'
+  | 'HUMAN_OVERRIDE_ONLY';`
+  },
+  {
     name: 'README.md',
-    path: 'packages/agent-communication/README.md',
+    path: 'packages/agent-collaboration/README.md',
     language: 'markdown',
     role: 'Architectural Specs',
-    description: 'Detailed specifications for AGT-006 Enterprise Agent Communication module.',
-    content: `# Enterprise Agent Communication (AGT-006)
+    description: 'Detailed specifications for AGT-007 Enterprise Agent Collaboration module.',
+    content: `# Enterprise Agent Collaboration (AGT-007)
 
-The Enterprise Agent Communication module defines how SBB's Digital Employees interact, coordinate, and collaborate with human supervisors, internal corporate systems, and external commuters under strict enterprise compliance rules.`
+The Enterprise Agent Collaboration module defines how multiple Digital Employees work together toward shared business goals under strict corporate governance rules.`
   }
 ];
 
