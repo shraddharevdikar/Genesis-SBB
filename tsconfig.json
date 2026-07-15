@@ -90,6 +90,9 @@
       ],
       "@sbb/agent-runtime": [
         "./packages/agent-runtime/src/index.ts"
+      ],
+      "@sbb/agent-skills": [
+        "./packages/agent-skills/src/index.ts"
       ]
     },
     "allowImportingTsExtensions": true,

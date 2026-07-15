@@ -1,29 +1,29 @@
 import { TicketDetails, FileNode, FutureTicket } from './types';
 
 export const ticketDetails: TicketDetails = {
-  id: 'AGT-003',
-  title: 'Enterprise Agent Runtime',
+  id: 'AGT-004',
+  title: 'Enterprise Agent Skills',
   status: 'DONE',
   priority: 'CRITICAL',
   author: 'SBB Principal Architect',
   assignee: 'shraddha.revdikar@gmail.com',
-  objective: 'Build the foundational Agent Runtime responsible for coordinating and orchestrating the execution lifecycle of Enterprise Digital Employees.',
-  modulePath: 'packages/agent-runtime/src/core/agent-runtime.ts',
+  objective: 'Build the foundational Agent Skills responsible for defining, proposing, assigning, certifying, and evaluating reusable business capabilities for SBB Digital Employees.',
+  modulePath: 'packages/agent-skills/src/core/agent-skills.ts',
   requirements: [
-    'Establish the AgentRuntime contract supporting StartSession, PauseSession, ResumeSession, StopSession, ExecuteGoal, BuildContext, CoordinateExecution, and EvaluateDecision.',
-    'Model Runtime Session, Goal Session, Context, Decision Point, Execution Plan, and Execution Result to represent digital employee run states.',
-    'Formulate workflow, task, approval, and notification coordination leveraging decoupled SBB Runtime API engine contracts.',
-    'Design contextual token window builders with sensitive keyword filters and GDPR compliant redaction mask systems.',
-    'Incorporate execution steps, queued request models, structured outcome results, and status stages.',
-    'Determine runtime session policies, compliance safety guardrails, and multi-manager approval escalations for restricted actions.',
-    'Specify system resource heath meters (CPU/Memory/Thread loads) and execution latency checks.',
-    'Track operational throughput performance metrics, productivity indices, and broadcast started, paused, completed, and failed execution events.'
+    'Establish the AgentSkills contract supporting RegisterSkill, AssignSkill, RevokeSkill, ValidateSkill, EvaluateProficiency, and CertifySkill operations.',
+    'Model Skill Definition, Skill Instance, Skill Lifecycle, and Skill Context to decouple reusable skill declarations from execution profiles.',
+    'Formulate functional categories (Financial, Logistics, CX, Security, Admin) and dynamic catalog lookup engines.',
+    'Design capability requirements checking min-assurance security clearances prior to skill assignments.',
+    'Incorporate dependencies tree tracking prerequisite skills, required proficiencies, and required knowledge pack references.',
+    'Specify runtime execution requirements detailing RAM limits, timeout budgets, and sandboxed network boundaries.',
+    'Determine compliance skill policies, supervisor certification rules, and human dual-approvers escalation pathways.',
+    'Track performance success ratios, quantitative saved hours indices, and broadcast skill created, assigned, certified, and retired domain events.'
   ],
   responsibilities: [
-    { title: 'Agent Runtime Contracts', description: 'Deploys AgentRuntime contract, session lifecycle controls, execution environments, and trace context structures.', status: 'Completed & Verified' },
-    { title: 'Contextual Builders & Plans', description: 'Models token budget estimators, sensitive GDPR filtering, execution steps decomposition, and conditional decision points.', status: 'Completed & Verified' },
-    { title: 'Decoupled Service Coordinators', description: 'Integrates secure routing coordinator proxies mapping Workflow, Task, Approval, and Notification runtime requests.', status: 'Completed & Verified' },
-    { title: 'Governance Guardrails & Telemetry', description: 'Enforces human-in-the-loop oversight claims, safety compliance policies, system resources health tracking, and performance metrics.', status: 'Completed & Verified' }
+    { title: 'Workforce Skills Contracts', description: 'Deploys AgentSkills contract, skill definitions blueprints, active instances, and compliance lifecycle structures.', status: 'Completed & Verified' },
+    { title: 'Prerequisites & Dependencies', description: 'Models required framework capabilities mappings, prerequisite skills trees, and official regulatory knowledge pack references.', status: 'Completed & Verified' },
+    { title: 'Runtime Sandbox & Governance', description: 'Enforces execution resource constraints, compliance skill policies, certification workflows, and dual-approvers threshold levels.', status: 'Completed & Verified' },
+    { title: 'Domain Events & Performance', description: 'Tracks success ratios, operational saved-hours indices, and broadcasts skill created, assigned, certified, and retired lifecycle events.', status: 'Completed & Verified' }
   ]
 };
 
@@ -7806,84 +7806,83 @@ All notable changes to the \`@sbb/ui\` package will be documented in this file.
 - Implemented **Alert banner**: Full accessibility, built-in indicator glyphs, title lines, and error/success messaging frames.`
   },
   {
-    name: 'agent-runtime.ts',
-    path: 'packages/agent-runtime/src/core/agent-runtime.ts',
+    name: 'agent-skills.ts',
+    path: 'packages/agent-skills/src/core/agent-skills.ts',
     language: 'typescript',
-    role: 'Runtime Operations Contract',
-    description: 'Declares the core AgentRuntime interface and coordination controls.',
-    content: `import { AgentId } from '@sbb/agent-framework';
-import { RuntimeId } from '../identity/runtime-id.js';
-import { SessionId } from '../identity/session-id.js';
-import { RuntimeSession } from './runtime-session.js';
-import { RuntimeContext } from './runtime-context.js';
-import { ExecutionContext } from './execution-context.js';
-import { Goal } from '@sbb/agent-framework';
-import { GoalSession } from '../goals/goal-session.js';
-import { ContextWindow } from '../context/context-window.js';
-import { ExecutionStep } from '../planning/execution-step.js';
-import { ExecutionResult } from '../execution/execution-result.js';
-import { DecisionPoint } from '../planning/decision-point.js';
-
-export interface AgentRuntime {
-  startSession(tenantId: string, agentId: AgentId, context: RuntimeContext): Promise<RuntimeSession>;
-  pauseSession(tenantId: string, sessionId: SessionId, reason: string, context: RuntimeContext): Promise<RuntimeSession>;
-  resumeSession(tenantId: string, sessionId: SessionId, reason: string, context: RuntimeContext): Promise<RuntimeSession>;
-  stopSession(tenantId: string, sessionId: SessionId, reason: string, context: RuntimeContext): Promise<RuntimeSession>;
-  executeGoal(tenantId: string, sessionId: SessionId, goal: Goal, context: RuntimeContext): Promise<GoalSession>;
-  buildContext(tenantId: string, sessionId: SessionId, options: { readonly redactPII: boolean; readonly tokenLimit: number }): Promise<ContextWindow>;
-  coordinateExecution(tenantId: string, sessionId: SessionId, step: ExecutionStep, executionContext: ExecutionContext): Promise<ExecutionResult>;
-  evaluateDecision(tenantId: string, sessionId: SessionId, decisionPoint: DecisionPoint, context: RuntimeContext): Promise<DecisionPoint>;
-}`
-  },
-  {
-    name: 'runtime-session.ts',
-    path: 'packages/agent-runtime/src/core/runtime-session.ts',
-    language: 'typescript',
-    role: 'Session Models',
-    description: 'Tracks the state and timestamps of an active execution session.',
-    content: `import { SessionId } from '../identity/session-id.js';
+    role: 'Workforce Skills Contract',
+    description: 'Declares the core AgentSkills interface, assignment operations, and proficiency checks.',
+    content: `import { SkillId } from '../identity/skill-id.js';
+import { SkillVersionId } from '../identity/skill-version-id.js';
+import { SkillDefinition } from './skill-definition.js';
+import { SkillContext } from './skill-context.js';
 import { AgentId } from '@sbb/agent-framework';
-import { RuntimeContext } from './runtime-context.js';
+import { SkillAssignment } from '../assignment/skill-assignment.js';
+import { ProficiencyLevel } from '../assignment/proficiency-level.js';
 
-export type SessionState = 'INITIALIZING' | 'ACTIVE' | 'PAUSED' | 'COMPLETED' | 'FAILED' | 'TERMINATED';
-
-export interface RuntimeSession {
-  readonly sessionId: SessionId;
-  readonly agentId: AgentId;
-  readonly tenantId: string;
-  readonly state: SessionState;
-  readonly context: RuntimeContext;
-  readonly startedAt: Date;
-  readonly pausedAt?: Date;
-  readonly completedAt?: Date;
-  readonly errorDetails?: string;
+export interface AgentSkills {
+  registerSkill(tenantId: string, skill: SkillDefinition, context: SkillContext): Promise<SkillDefinition>;
+  assignSkill(tenantId: string, agentId: AgentId, skillId: SkillId, versionId: SkillVersionId, proficiency: ProficiencyLevel, context: SkillContext): Promise<SkillAssignment>;
+  revokeSkill(tenantId: string, agentId: AgentId, skillId: SkillId, reason: string, context: SkillContext): Promise<void>;
+  validateSkill(tenantId: string, agentId: AgentId, skillId: SkillId, versionId: SkillVersionId): Promise<{ readonly isValid: boolean; readonly missingPrerequisites: string[]; readonly policyViolations: string[] }>;
+  evaluateProficiency(tenantId: string, agentId: AgentId, skillId: SkillId): Promise<ProficiencyLevel>;
+  certifySkill(tenantId: string, agentId: AgentId, skillId: SkillId, certifiedByRoleId: string, context: SkillContext): Promise<SkillAssignment>;
 }`
   },
   {
-    name: 'workflow-coordinator.ts',
-    path: 'packages/agent-runtime/src/coordination/workflow-coordinator.ts',
+    name: 'skill-definition.ts',
+    path: 'packages/agent-skills/src/core/skill-definition.ts',
     language: 'typescript',
-    role: 'Decoupled Coordinators',
-    description: 'Decoupled orchestration proxies routing execution to Workflow, Task, Approval, and Notification engines.',
-    content: `import { WorkflowService } from '@sbb/runtime-api';
-import { RuntimeContext } from '../core/runtime-context.js';
-import { ExecutionStep } from '../planning/execution-step.js';
-import { ExecutionResult } from '../execution/execution-result.js';
+    role: 'Skill Model Specs',
+    description: 'Models reusable, versioned business capability schemas.',
+    content: `import { SkillId } from '../identity/skill-id.js';
+import { SkillVersionId } from '../identity/skill-version-id.js';
 
-export interface WorkflowCoordinator {
-  readonly workflowService: WorkflowService;
-  coordinateWorkflowStep(tenantId: string, context: RuntimeContext, step: ExecutionStep): Promise<ExecutionResult>;
+export interface SkillDefinition {
+  readonly skillId: SkillId;
+  readonly versionId: SkillVersionId;
+  readonly name: string;
+  readonly description: string;
+  readonly category: string;
+  readonly tags: string[];
+  readonly isDeprecated: boolean;
+  readonly schemaInputJson: string;
+  readonly schemaOutputJson: string;
+  readonly lastModifiedAt: Date;
+}`
+  },
+  {
+    name: 'skill-assignment.ts',
+    path: 'packages/agent-skills/src/assignment/skill-assignment.ts',
+    language: 'typescript',
+    role: 'Assignment Trackers',
+    description: 'Tracks the tenure, proficiency levels, and certification of assigned skills.',
+    content: `import { SkillId } from '../identity/skill-id.js';
+import { SkillVersionId } from '../identity/skill-version-id.js';
+import { AgentId } from '@sbb/agent-framework';
+import { ProficiencyLevel } from './proficiency-level.js';
+
+export interface SkillAssignment {
+  readonly assignmentId: string;
+  readonly agentId: AgentId;
+  readonly skillId: SkillId;
+  readonly assignedVersionId: SkillVersionId;
+  readonly proficiencyLevel: ProficiencyLevel;
+  readonly isCertified: boolean;
+  readonly certifiedByRoleId?: string;
+  readonly certifiedAt?: Date;
+  readonly assignedAt: Date;
+  readonly expiresAt?: Date;
 }`
   },
   {
     name: 'README.md',
-    path: 'packages/agent-runtime/README.md',
+    path: 'packages/agent-skills/README.md',
     language: 'markdown',
     role: 'Architectural Specs',
-    description: 'Detailed specifications for AGT-003 Enterprise Agent Runtime module.',
-    content: `# Enterprise Agent Runtime (AGT-003)
+    description: 'Detailed specifications for AGT-004 Enterprise Agent Skills module.',
+    content: `# Enterprise Agent Skills (AGT-004)
 
-The Enterprise Agent Runtime module provides the core execution, coordination, planning, and guardrailing abstractions for operating Digital Employees across SBB.`
+The Enterprise Agent Skills module delivers versioned, reusable, and governed business capabilities that can be assigned, revoked, and measured across Digital Employees running across SBB.`
   }
 ];
 
