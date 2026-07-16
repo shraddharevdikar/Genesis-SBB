@@ -1,28 +1,27 @@
 import { TicketDetails, FileNode, FutureTicket } from './types';
 
 export const ticketDetails: TicketDetails = {
-  id: 'AGT-015',
-  title: 'Enterprise Agent API',
+  id: 'BOSF-001',
+  title: 'Enterprise Business Foundation',
   status: 'DONE',
   priority: 'CRITICAL',
   author: 'SBB Principal Architect',
   assignee: 'shraddha.revdikar@gmail.com',
-  objective: 'Build the foundational Agent API responsible for exposing high-level business capabilities (Planning, Execution, Governance, Monitoring, Marketplace) via secure, structured Commands, Queries, Responses, and Events in a secure, multi-tenant aware framework.',
-  modulePath: 'packages/agent-api/src/core/agent-api.ts',
+  objective: 'Build the foundational Business Operating System Framework core domain model shared by every Business Operating System (MarketingOS, SalesOS, FinanceOS, HR, Legal, Healthcare, Manufacturing) representing structural, relational, and capability models in a secure, multi-tenant aware framework.',
+  modulePath: 'packages/business-foundation/src/core/business-foundation.ts',
   requirements: [
-    'Establish the AgentAPI contract supporting ExecuteCommand, ExecuteQuery, PublishEvent, RegisterIntegration, ValidateRequest, and NegotiateVersion operations.',
-    'Model API Session, API Context, Dynamic Capability Gateway, and Identity models representing request and session boundaries.',
-    'Formulate CQRS structures (Command Contract, Query Contract, Event Contract, and Response Contract).',
-    'Design capability contracts including Planning, Execution, Governance, Monitoring, and Marketplace gateways.',
-    'Incorporate security adapters for Client Authentication, Multi-tenant Authorization checks, Rate Limiting, and Cryptographic Policies.',
-    'Specify semantic versioning policies, backwards-compatibility matrix, sunset deprecation paths, and external webhook callbacks.',
-    'Track capability utilization and broadcast api requested, capability invoked, api version released, and integration registered domain events.'
+    'Establish the BusinessFoundation contract supporting CreateBusiness, CreateDepartment, RegisterCapability, AssignBusinessRole, EvaluateBusinessHealth, and RetireBusiness operations.',
+    'Model Business Unit, Division, Department, Team, and Identity structures.',
+    'Formulate extensibility role and authority levels representing Executive, Director, Manager, Specialist, Analyst, Coordinator tiers.',
+    'Design strategic business capability matrices, departmental ownership scopes, and capability groups.',
+    'Incorporate governance references, compliance guidelines, playbooks, and Standard Operating Procedures (SOPs).',
+    'Track operational maturity indices, health scores, and broadcast business created, retired, and capability added events.'
   ],
   responsibilities: [
-    { title: 'Capability Gateway Contracts', description: 'Deploys AgentAPI contract, interactive partner sessions, and dynamic capability-invocation gateways.', status: 'Completed & Verified' },
-    { title: 'CQRS & Business Boundaries', description: 'Models query filters, command payloads, secure asynchronous callbacks, and real-time response objects.', status: 'Completed & Verified' },
-    { title: 'Security & Versioning Adapters', description: 'Enforces authorization policies, client token authenticators, rate limiters, and deprecation sunset timelines.', status: 'Completed & Verified' },
-    { title: 'Adoption Analytics & Domain Events', description: 'Tracks transaction usage, processing latencies, and broadcasts api requested, invoked, and integration registered events.', status: 'Completed & Verified' }
+    { title: 'Organizational Blueprint Contracts', description: 'Deploys BusinessFoundation contract, active context logs, and modular company-division-department entity profiles.', status: 'Completed & Verified' },
+    { title: 'Roles & Authority Tiers', description: 'Models dynamic authority levels, financial signature limits, and multi-tenant custom business roles.', status: 'Completed & Verified' },
+    { title: 'Strategic Capability & Governance', description: 'Enforces business guidelines compliance profiles, playbook SOP steps, and capability maturity indicators.', status: 'Completed & Verified' },
+    { title: 'Ecosystem Analytics & Domain Events', description: 'Tracks company operational health ratios, stage audits, and broadcasts business created, retired, and capability added events.', status: 'Completed & Verified' }
   ]
 };
 
@@ -8532,6 +8531,82 @@ export interface CommandContract {
     content: `# Enterprise Agent API (AGT-015)
 
 The Enterprise Agent API module defines SBB's official business capability gateway and communication interface contracts for interacting with its Enterprise AI Workforce.`
+  },
+  {
+    name: 'business-foundation.ts',
+    path: 'packages/business-foundation/src/core/business-foundation.ts',
+    language: 'typescript',
+    role: 'Business Foundation Contract',
+    description: 'Declares the core BusinessFoundation interface containing all tenant company-setup, role allocations, capability registration, and retiring operations.',
+    content: `import { BusinessId } from '../identity/business-id.js';
+import { DepartmentId } from '../identity/department-id.js';
+import { BusinessContext } from './business-context.js';
+import { BusinessDomainTypeCode } from './business-domain.js';
+import { BusinessUnit } from '../organization/business-unit.js';
+import { Department } from '../organization/department.js';
+import { BusinessRole } from '../roles/business-role.js';
+import { BusinessCapability } from '../capabilities/business-capability.js';
+import { BusinessHealth } from '../metrics/business-health.js';
+
+export interface BusinessFoundation {
+  createBusiness(name: string, targetDomain: BusinessDomainTypeCode, context: BusinessContext): Promise<BusinessUnit>;
+  createDepartment(businessId: BusinessId, name: string, divisionCode: string, context: BusinessContext): Promise<Department>;
+  registerCapability(capability: BusinessCapability, context: BusinessContext): Promise<void>;
+  assignBusinessRole(participantId: string, role: BusinessRole, context: BusinessContext): Promise<void>;
+  evaluateBusinessHealth(businessId: BusinessId, context: BusinessContext): Promise<BusinessHealth>;
+  retireBusiness(businessId: BusinessId, context: BusinessContext): Promise<void>;
+}`
+  },
+  {
+    name: 'business-domain.ts',
+    path: 'packages/business-foundation/src/core/business-domain.ts',
+    language: 'typescript',
+    role: 'Universal Operating Systems Classifications',
+    description: 'Models predefined and custom sub-systems such as MarketingOS, SalesOS, and FinanceOS.',
+    content: `export type BusinessDomainTypeCode =
+  | 'MARKETING_OS'
+  | 'SALES_OS'
+  | 'FINANCE_OS'
+  | 'HR_OS'
+  | 'LEGAL_OS'
+  | 'HEALTHCARE_OS'
+  | 'REAL_ESTATE_OS'
+  | 'MANUFACTURING_OS';
+
+export interface BusinessDomain {
+  readonly domainCode: BusinessDomainTypeCode;
+  readonly name: string;
+  readonly descriptionText: string;
+  readonly supportedCapabilitiesList: string[];
+}`
+  },
+  {
+    name: 'business-role.ts',
+    path: 'packages/business-foundation/src/roles/business-role.ts',
+    language: 'typescript',
+    role: 'Custom Roles Domain Model',
+    description: 'Extensible role profile bindings combining custom tiers, signature spending limits, and organizational tasks.',
+    content: `import { AuthorityLevel } from './authority-level.js';
+import { Responsibility } from './responsibility.js';
+
+export interface BusinessRole {
+  readonly roleId: string;
+  readonly roleTitleCode: string;
+  readonly displayName: string;
+  readonly authority: AuthorityLevel;
+  readonly coreResponsibilitiesList: Responsibility[];
+  readonly isMultiTenantRole: boolean;
+}`
+  },
+  {
+    name: 'README.md',
+    path: 'packages/business-foundation/README.md',
+    language: 'markdown',
+    role: 'Architectural Specs',
+    description: 'Detailed specifications for BOSF-001 Enterprise Business Foundation.',
+    content: `# Enterprise Business Foundation (BOSF-001)
+
+The Enterprise Business Foundation module defines SBB's core domain models, shared operating schemas, and business contracts of the Business Operating System Framework (BOSF).`
   }
 ];
 

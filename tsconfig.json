@@ -126,6 +126,9 @@
       ],
       "@sbb/agent-api": [
         "./packages/agent-api/src/index.ts"
+      ],
+      "@sbb/business-foundation": [
+        "./packages/business-foundation/src/index.ts"
       ]
     },
     "allowImportingTsExtensions": true,
