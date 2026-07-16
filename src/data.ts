@@ -8396,6 +8396,77 @@ The Enterprise Agent Marketplace module defines how SBB discovers, installs, gov
     content: `# Enterprise Agent Monitoring (AGT-013)
 
 The Enterprise Agent Monitoring module defines how SBB observes, registers, audits, and analyzes the operational health, strategic progress, and compliance statuses of its Enterprise AI Workforce.`
+  },
+  {
+    name: 'agent-sdk.ts',
+    path: 'packages/agent-sdk/src/core/agent-sdk.ts',
+    language: 'typescript',
+    role: 'Agent SDK Main Contract',
+    description: 'Declares the core AgentSDK interface containing all extension scaffolding, validation, packaging, and publishing operations.',
+    content: `import { SdkContext } from './sdk-context.js';
+import { SdkSession } from './sdk-session.js';
+import { ExtensionId } from '../identity/extension-id.js';
+import { ExtensionContract } from '../extensions/extension-contract.js';
+import { ExtensionManifest } from '../extensions/extension-manifest.js';
+import { ValidationIssue } from '../validation/contract-validator.js';
+import { SdkTestResult } from '../testing/sdk-test-harness.js';
+import { PackageSignature } from '../packaging/package-signature.js';
+
+export interface AgentSDK {
+  createExtension(templateCode: string, projectName: string, context: SdkContext): Promise<SdkSession>;
+  validateExtension(extensionId: ExtensionId, manifest: ExtensionManifest, contractInstance: ExtensionContract, context: SdkContext): Promise<ValidationIssue[]>;
+  testExtension(extensionId: ExtensionId, contractInstance: ExtensionContract, testPayloadsList: string[], context: SdkContext): Promise<SdkTestResult[]>;
+  packageExtension(extensionId: ExtensionId, sourceDirectoryPath: string, context: SdkContext): Promise<{ readonly payload: ArrayBuffer; readonly signature: PackageSignature }>;
+  publishExtension(extensionId: ExtensionId, packagePayload: ArrayBuffer, signature: PackageSignature, context: SdkContext): Promise<void>;
+  verifyCompatibility(extensionId: ExtensionId, proposedVersionString: string, context: SdkContext): Promise<{ readonly isCompatible: boolean; readonly detectedConflictsList: string[] }>;
+}`
+  },
+  {
+    name: 'extension-contract.ts',
+    path: 'packages/agent-sdk/src/extensions/extension-contract.ts',
+    language: 'typescript',
+    role: 'Extension Execution Hook',
+    description: 'Models stable extension initialization, execution, and destruction lifecycles.',
+    content: `import { ExtensionId } from '../identity/extension-id.js';
+
+export interface ExtensionContract {
+  readonly extensionId: ExtensionId;
+  readonly name: string;
+  readonly version: string;
+  readonly supportedCapabilitiesList: string[];
+  onInitialize(runtimeConfigJson: string): Promise<void>;
+  onExecute(payloadJson: string): Promise<string>;
+  onDestroy(): Promise<void>;
+}`
+  },
+  {
+    name: 'agent-builder.ts',
+    path: 'packages/agent-sdk/src/builders/agent-builder.ts',
+    language: 'typescript',
+    role: 'Digital Employee Config Builder',
+    description: 'Declarative programmatic builder for customizing and assembling virtual agents.',
+    content: `import { ExtensionId } from '../identity/extension-id.js';
+
+export interface AgentBuilder {
+  readonly builderId: string;
+  readonly targetAgentName: string;
+  setBaseModel(modelNameString: string): this;
+  setSystemInstructions(instructionsList: string[]): this;
+  addSkillExtension(skillExtensionId: ExtensionId): this;
+  addKnowledgeExtension(knowledgeExtensionId: ExtensionId): this;
+  setMultiTenancyEnabled(enabled: boolean): this;
+  buildManifestJson(): string;
+}`
+  },
+  {
+    name: 'README.md',
+    path: 'packages/agent-sdk/README.md',
+    language: 'markdown',
+    role: 'Architectural Specs',
+    description: 'Detailed specifications for AGT-014 Enterprise Agent SDK module.',
+    content: `# Enterprise Agent SDK (AGT-014)
+
+The Enterprise Agent SDK module defines the official developer experience and stable public contracts for extending SBB's Enterprise AI Platform.`
   }
 ];
 

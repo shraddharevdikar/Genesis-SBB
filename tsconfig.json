@@ -120,6 +120,9 @@
       ],
       "@sbb/agent-monitoring": [
         "./packages/agent-monitoring/src/index.ts"
+      ],
+      "@sbb/agent-sdk": [
+        "./packages/agent-sdk/src/index.ts"
       ]
     },
     "allowImportingTsExtensions": true,
