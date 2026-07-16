@@ -1,28 +1,28 @@
 import { TicketDetails, FileNode, FutureTicket } from './types';
 
 export const ticketDetails: TicketDetails = {
-  id: 'AGT-013',
-  title: 'Enterprise Agent Monitoring',
+  id: 'AGT-015',
+  title: 'Enterprise Agent API',
   status: 'DONE',
   priority: 'CRITICAL',
   author: 'SBB Principal Architect',
   assignee: 'shraddha.revdikar@gmail.com',
-  objective: 'Build the foundational Agent Monitoring responsible for observing operational health, tracking execution steps, evaluating business KPIs, detecting compliance risks, generating threshold-triggered alerts, and publishing dashboards in a secure, policy-compliant, and multi-tenant aware framework.',
-  modulePath: 'packages/agent-monitoring/src/core/agent-monitoring.ts',
+  objective: 'Build the foundational Agent API responsible for exposing high-level business capabilities (Planning, Execution, Governance, Monitoring, Marketplace) via secure, structured Commands, Queries, Responses, and Events in a secure, multi-tenant aware framework.',
+  modulePath: 'packages/agent-api/src/core/agent-api.ts',
   requirements: [
-    'Establish the AgentMonitoring contract supporting ObserveHealth, MonitorExecution, EvaluateBusinessKPIs, DetectRisk, GenerateAlerts, and PublishDashboard operations.',
-    'Model Monitoring Session, Monitoring Context, Monitoring Lifecycle States, and Identity models representing monitoring and observation boundaries.',
-    'Formulate health structures (Agent Health, Department Health, and global Enterprise Health).',
-    'Design observability and risk trackers including Execution, Workflow, Collaboration, Policy, Compliance, and Trust indicators.',
-    'Incorporate performance monitors for Productivity throughput, SLA adherence, and resource/financial Utilization.',
-    'Specify threshold rules, severity metrics, and escalation alerts with supervisor notification channels.',
-    'Track business KPIs and broadcast monitoring started, threshold exceeded, alert triggered, and monitoring completed domain events.'
+    'Establish the AgentAPI contract supporting ExecuteCommand, ExecuteQuery, PublishEvent, RegisterIntegration, ValidateRequest, and NegotiateVersion operations.',
+    'Model API Session, API Context, Dynamic Capability Gateway, and Identity models representing request and session boundaries.',
+    'Formulate CQRS structures (Command Contract, Query Contract, Event Contract, and Response Contract).',
+    'Design capability contracts including Planning, Execution, Governance, Monitoring, and Marketplace gateways.',
+    'Incorporate security adapters for Client Authentication, Multi-tenant Authorization checks, Rate Limiting, and Cryptographic Policies.',
+    'Specify semantic versioning policies, backwards-compatibility matrix, sunset deprecation paths, and external webhook callbacks.',
+    'Track capability utilization and broadcast api requested, capability invoked, api version released, and integration registered domain events.'
   ],
   responsibilities: [
-    { title: 'Operational Health Models', description: 'Deploys AgentMonitoring contract, active tracking sessions, and aggregated department/enterprise health indicators.', status: 'Completed & Verified' },
-    { title: 'Risk & Compliance Observations', description: 'Models regulatory standards audit logs, policy enforcement checks, and real-time agent confidence/trust ratings.', status: 'Completed & Verified' },
-    { title: 'Performance & Alert Dispatches', description: 'Enforces metrics rule evaluations, SLA response times, and dispatches critical escalation notices to supervisors.', status: 'Completed & Verified' },
-    { title: 'Business Impact & Domain Events', description: 'Tracks financial savings indices, continuous learning ratios, and broadcasts monitoring started, threshold exceeded, alert triggered, and completed events.', status: 'Completed & Verified' }
+    { title: 'Capability Gateway Contracts', description: 'Deploys AgentAPI contract, interactive partner sessions, and dynamic capability-invocation gateways.', status: 'Completed & Verified' },
+    { title: 'CQRS & Business Boundaries', description: 'Models query filters, command payloads, secure asynchronous callbacks, and real-time response objects.', status: 'Completed & Verified' },
+    { title: 'Security & Versioning Adapters', description: 'Enforces authorization policies, client token authenticators, rate limiters, and deprecation sunset timelines.', status: 'Completed & Verified' },
+    { title: 'Adoption Analytics & Domain Events', description: 'Tracks transaction usage, processing latencies, and broadcasts api requested, invoked, and integration registered events.', status: 'Completed & Verified' }
   ]
 };
 
@@ -8467,6 +8467,71 @@ export interface AgentBuilder {
     content: `# Enterprise Agent SDK (AGT-014)
 
 The Enterprise Agent SDK module defines the official developer experience and stable public contracts for extending SBB's Enterprise AI Platform.`
+  },
+  {
+    name: 'agent-api.ts',
+    path: 'packages/agent-api/src/core/agent-api.ts',
+    language: 'typescript',
+    role: 'API Main Contract',
+    description: 'Declares the core AgentAPI interface containing all capability-execution, registration, and version-negotiating operations.',
+    content: `import { ApiContext } from './api-context.js';
+import { ApiSession } from './api-session.js';
+import { CommandContract } from '../contracts/command-contract.js';
+import { QueryContract } from '../contracts/query-contract.js';
+import { EventContract } from '../contracts/event-contract.js';
+import { ResponseContract } from '../contracts/response-contract.js';
+import { ExternalSystemContract } from '../integration/external-system-contract.js';
+import { ApiVersion } from '../versioning/api-version.js';
+
+export interface AgentAPI {
+  executeCommand(command: CommandContract, context: ApiContext): Promise<ResponseContract>;
+  executeQuery(query: QueryContract, context: ApiContext): Promise<ResponseContract>;
+  publishEvent(event: EventContract, context: ApiContext): Promise<void>;
+  registerIntegration(integration: ExternalSystemContract, context: ApiContext): Promise<ApiSession>;
+  validateRequest(payloadJson: string, schemaJson: string, context: ApiContext): Promise<{ readonly isValid: boolean; readonly detectedViolationsList: string[] }>;
+  negotiateVersion(requestedVersion: ApiVersion, context: ApiContext): Promise<{ readonly negotiatedVersion: ApiVersion; readonly isSupported: boolean }>;
+}`
+  },
+  {
+    name: 'capability-gateway.ts',
+    path: 'packages/agent-api/src/core/capability-gateway.ts',
+    language: 'typescript',
+    role: 'Capability Gateway Router',
+    description: 'Dynamic interface to safely route queries and execution instructions to internal services.',
+    content: `import { ApiContext } from './api-context.js';
+
+export interface CapabilityGateway {
+  readonly gatewayId: string;
+  readonly supportedCapabilityNamesList: string[];
+  invokeCapability(capabilityName: string, actionPayloadJson: string, context: ApiContext): Promise<string>;
+}`
+  },
+  {
+    name: 'command-contract.ts',
+    path: 'packages/agent-api/src/contracts/command-contract.ts',
+    language: 'typescript',
+    role: 'CQRS Command Format',
+    description: 'Enforces parameters, target entities, priority metrics, and expiration criteria on platform state changes.',
+    content: `import { ApiRequestId } from '../identity/api-request-id.js';
+
+export interface CommandContract {
+  readonly requestId: ApiRequestId;
+  readonly commandTypeCode: string;
+  readonly executingTargetId: string;
+  readonly parametersPayloadJson: string;
+  readonly priorityValue: 'LOW' | 'NORMAL' | 'HIGH' | 'CRITICAL';
+  readonly expiresAt?: Date;
+}`
+  },
+  {
+    name: 'README.md',
+    path: 'packages/agent-api/README.md',
+    language: 'markdown',
+    role: 'Architectural Specs',
+    description: 'Detailed specifications for AGT-015 Enterprise Agent API module.',
+    content: `# Enterprise Agent API (AGT-015)
+
+The Enterprise Agent API module defines SBB's official business capability gateway and communication interface contracts for interacting with its Enterprise AI Workforce.`
   }
 ];
 

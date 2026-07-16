@@ -123,6 +123,9 @@
       ],
       "@sbb/agent-sdk": [
         "./packages/agent-sdk/src/index.ts"
+      ],
+      "@sbb/agent-api": [
+        "./packages/agent-api/src/index.ts"
       ]
     },
     "allowImportingTsExtensions": true,
