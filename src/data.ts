@@ -1,28 +1,28 @@
 import { TicketDetails, FileNode, FutureTicket } from './types';
 
 export const ticketDetails: TicketDetails = {
-  id: 'BOSF-006',
-  title: 'Enterprise Business Workflows Framework',
+  id: 'BOSF-007',
+  title: 'Enterprise KPI & OKR Framework',
   status: 'DONE',
   priority: 'CRITICAL',
   author: 'SBB Principal Architect',
   assignee: 'shraddha.revdikar@gmail.com',
-  objective: 'Build the foundational Business Workflows Framework responsible for defining reusable enterprise workflow models, stages, steps, transitions, execution plan mechanics, tasks allocation models, multi-level approvals, automation rules, and compliance-conformance audits.',
-  modulePath: 'packages/business-workflows/src/core/workflow-framework.ts',
+  objective: 'Build the foundational KPI & OKR Framework responsible for defining reusable enterprise strategic measurements, objective/key-results hierarchies, cascading alignment maps, mathematical metric aggregations, multi-layer KPIs, and measurement policy validations.',
+  modulePath: 'packages/business-performance/src/core/performance-framework.ts',
   requirements: [
-    'Establish the WorkflowFramework contract supporting CreateWorkflow, DefineWorkflowStep, PublishWorkflow, ExecuteWorkflow, MonitorWorkflowHealth, and RetireWorkflow operations.',
-    'Model Business Workflow, Stages, Steps, Transitions, Parallel Paths, and Conditional routing branches.',
-    'Formulate Execution Context, State trackers, compensation actions, and robust retry strategies.',
-    'Design human, cognitive AI, and collaborative hybrid task staffing configurations with flexible completion rules.',
-    'Incorporate multi-tiered approval chains with spending limit conditions, delegation permissions, and backup escalation rules.',
-    'Enforce automation triggers (event, schedule, kpi, or rules), execution rule engines, and automated action lists.',
-    'Track performance metrics, SLA compliance conformance scores, bottleneck congestion, policies, and broadcast workflow status domain events.'
+    'Establish the PerformanceFramework contract supporting CreateObjective, DefineKeyResult, RegisterKPI, LinkObjectiveToCapability, EvaluatePerformance, and RetireObjective operations.',
+    'Model strategic, operational, departmental, and team objectives with target timeline bounds.',
+    'Formulate Key Results with numeric values, confidence ratings, and achievement states.',
+    'Design multi-layer KPIs spanning business, department, role, process, workflow, and AI workforce metrics.',
+    'Incorporate metrics definitions with custom aggregation rules (Sum, Mean, Standard Deviation) and frequencies.',
+    'Enforce executive, department, and business scorecard hierarchies.',
+    'Track capability mappings, alignment weight scores, CFO approval guidelines, and broadcast domain performance events.'
   ],
   responsibilities: [
-    { title: 'Workflow Orchestration Blueprints', description: 'Deploys WorkflowFramework contracts, multi-tenant session records, semantic versions, and lifecycle status checks.', status: 'Completed & Verified' },
-    { title: 'Execution States & Hybrid Staffing', description: 'Models active state variables, compensating recovery rollbacks, retry behaviors, and human/AI agent task bindings.', status: 'Completed & Verified' },
-    { title: 'Governance Gates & Automations', description: 'Enforces multi-level approval chain conditions, event/cron automation rule listeners, and continuous logging policies.', status: 'Completed & Verified' },
-    { title: 'SLA Analysis & Dispatch Events', description: 'Tracks success statistics, latency metrics, bottleneck congestion, and broadcasts template created, executed, and retired domain events.', status: 'Completed & Verified' }
+    { title: 'OKR Performance Blueprints', description: 'Deploys PerformanceFramework contract, multi-tenant session records, and measurement lifecycle states.', status: 'Completed & Verified' },
+    { title: 'Key Results & Scorecards', description: 'Models target numeric bounds, confidence rankings, achievement states, and department/executive scorecards.', status: 'Completed & Verified' },
+    { title: 'Unified KPIs & Aggregations', description: 'Supports business, department, role, workflow, and AI agents KPIs, continuous Cron/Real-time frequencies, and mathematical aggregations.', status: 'Completed & Verified' },
+    { title: 'Governance Alignments & Events', description: 'Enforces weighted cascading alignments, capabilities mappings, CFO approval controls, and broadcasts objective created and retired events.', status: 'Completed & Verified' }
   ]
 };
 
@@ -8994,6 +8994,99 @@ export interface WorkflowStep {
     content: `# Enterprise Business Workflows Framework (BOSF-006)
 
 The Enterprise Business Workflows Framework module defines SBB's core repeatable company execution models, multi-stage state transitions, human/AI hybrid tasks, multi-tiered approval chains, event/rule automations, and live performance monitoring of the Business Operating System Framework (BOSF).`
+  },
+  {
+    name: 'performance-framework.ts',
+    path: 'packages/business-performance/src/core/performance-framework.ts',
+    language: 'typescript',
+    role: 'Performance Framework Contract',
+    description: 'Declares the PerformanceFramework contract defining objective creation, key result bindings, KPI registration, and strategic capabilities alignment.',
+    content: `import { ObjectiveId } from '../identity/objective-id.js';
+import { KeyResultId } from '../identity/key-result-id.js';
+import { KpiId } from '../identity/kpi-id.js';
+import { PerformanceContext } from './performance-context.js';
+import { Objective, ObjectiveClassificationCode } from '../objectives/objective.js';
+import { KeyResult } from '../key-results/key-result.js';
+import { BusinessKpi } from '../kpis/business-kpi.js';
+
+export interface PerformanceFramework {
+  createObjective(uniqueObjectiveCode: string, classification: ObjectiveClassificationCode, displayName: string, descriptionNotes: string, targetCompletionDate: Date, context: PerformanceContext): Promise<Objective>;
+  defineKeyResult(objectiveId: ObjectiveId, keyResult: KeyResult, context: PerformanceContext): Promise<KeyResultId>;
+  registerKPI(kpi: BusinessKpi, context: PerformanceContext): Promise<KpiId>;
+  linkObjectiveToCapability(objectiveId: ObjectiveId, enterpriseCoreCapabilityCode: string, context: PerformanceContext): Promise<void>;
+  evaluatePerformance(objectiveId: ObjectiveId, context: PerformanceContext): Promise<Objective>;
+  retireObjective(objectiveId: ObjectiveId, context: PerformanceContext): Promise<void>;
+}`
+  },
+  {
+    name: 'objective.ts',
+    path: 'packages/business-performance/src/objectives/objective.ts',
+    language: 'typescript',
+    role: 'Strategic Objective Model',
+    description: 'Models multi-tenant target outcomes, structural classifications, and links to departments and teams.',
+    content: `import { ObjectiveId } from '../identity/objective-id.js';
+import { MeasurementLifecycle } from '../core/measurement-lifecycle.js';
+import { KeyResult } from '../key-results/key-result.js';
+
+export type ObjectiveClassificationCode =
+  | 'STRATEGIC'
+  | 'OPERATIONAL'
+  | 'DEPARTMENTAL'
+  | 'TEAM';
+
+export interface Objective {
+  readonly objectiveId: ObjectiveId;
+  readonly tenantId: string;
+  readonly uniqueObjectiveCode: string;
+  readonly displayName: string;
+  readonly descriptionNotes: string;
+  readonly classification: ObjectiveClassificationCode;
+  readonly targetCompletionDate: Date;
+  readonly associatedDepartmentIdString?: string;
+  readonly associatedTeamIdString?: string;
+  readonly keyResultsList: KeyResult[];
+  readonly lifecycle: MeasurementLifecycle;
+}`
+  },
+  {
+    name: 'business-kpi.ts',
+    path: 'packages/business-performance/src/kpis/business-kpi.ts',
+    language: 'typescript',
+    role: 'Corporate KPI Model',
+    description: 'Defines multi-layer metrics boundaries, mathematical indicators, and violation alarms.',
+    content: `import { KpiId } from '../identity/kpi-id.js';
+import { MetricId } from '../identity/metric-id.js';
+
+export type KpiClassificationCode =
+  | 'ENTERPRISE_BUSINESS'
+  | 'DEPARTMENTAL'
+  | 'ROLE_PERFORMANCE'
+  | 'PROCESS_FLOW'
+  | 'WORKFLOW_FLOW'
+  | 'AI_WORKFORCE_EFFICIENCY';
+
+export interface BusinessKpi {
+  readonly kpiId: KpiId;
+  readonly uniqueKpiCode: string;
+  readonly displayName: string;
+  readonly classification: KpiClassificationCode;
+  readonly targetMetricId: MetricId;
+  readonly currentMeasuredValue: number;
+  readonly minimumTargetValue: number;
+  readonly acceptableRangeMaximumWarningThreshold: number;
+  readonly criticalViolationThreshold: number;
+  readonly isUnderViolatedThreshold: boolean;
+}`
+  },
+  {
+    name: 'README.md',
+    path: 'packages/business-performance/README.md',
+    language: 'markdown',
+    role: 'Architectural Specs',
+    description: 'Detailed specifications for BOSF-007 Enterprise KPI & OKR Framework.',
+    content: `# Enterprise KPI & OKR Framework (BOSF-007)
+
+The Enterprise KPI & OKR Framework module defines SBB's core strategic metrics, mathematical aggregation rules, OKR progress tracking structures, performance scorecards, capability alignment mappings, and continuous measurement policies of the Business Operating System Framework (BOSF).`
   }
 ];
 

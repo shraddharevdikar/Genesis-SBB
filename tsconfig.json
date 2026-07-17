@@ -144,6 +144,9 @@
       ],
       "@sbb/business-workflows": [
         "./packages/business-workflows/src/index.ts"
+      ],
+      "@sbb/business-performance": [
+        "./packages/business-performance/src/index.ts"
       ]
     },
     "allowImportingTsExtensions": true,
