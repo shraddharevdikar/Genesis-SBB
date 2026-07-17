@@ -1,28 +1,28 @@
 import { TicketDetails, FileNode, FutureTicket } from './types';
 
 export const ticketDetails: TicketDetails = {
-  id: 'BOSF-007',
-  title: 'Enterprise KPI & OKR Framework',
+  id: 'BOSF-008',
+  title: 'Enterprise Business Policies Framework',
   status: 'DONE',
   priority: 'CRITICAL',
   author: 'SBB Principal Architect',
   assignee: 'shraddha.revdikar@gmail.com',
-  objective: 'Build the foundational KPI & OKR Framework responsible for defining reusable enterprise strategic measurements, objective/key-results hierarchies, cascading alignment maps, mathematical metric aggregations, multi-layer KPIs, and measurement policy validations.',
-  modulePath: 'packages/business-performance/src/core/performance-framework.ts',
+  objective: 'Build the foundational Business Policies Framework responsible for defining reusable enterprise policy structures, rule configurations, compliance evaluation schemas, emergency exceptions overrides, policy review cycles, and target applicability scopes.',
+  modulePath: 'packages/business-policies/src/core/policy-framework.ts',
   requirements: [
-    'Establish the PerformanceFramework contract supporting CreateObjective, DefineKeyResult, RegisterKPI, LinkObjectiveToCapability, EvaluatePerformance, and RetireObjective operations.',
-    'Model strategic, operational, departmental, and team objectives with target timeline bounds.',
-    'Formulate Key Results with numeric values, confidence ratings, and achievement states.',
-    'Design multi-layer KPIs spanning business, department, role, process, workflow, and AI workforce metrics.',
-    'Incorporate metrics definitions with custom aggregation rules (Sum, Mean, Standard Deviation) and frequencies.',
-    'Enforce executive, department, and business scorecard hierarchies.',
-    'Track capability mappings, alignment weight scores, CFO approval guidelines, and broadcast domain performance events.'
+    'Establish the PolicyFramework contract supporting CreatePolicy, DefineRule, PublishPolicy, EvaluateApplicability, ReviewPolicy, and RetirePolicy operations.',
+    'Model Enterprise, Department, Process, and Workflow policies with semantic version logs.',
+    'Formulate Policy Rules with conditions, mathematical decision schemas, required actions, and obligations.',
+    'Design granular Policy Scopes targeting organizations, business units, departments, roles, and AI agents.',
+    'Incorporate compliance requirements matching external authorities (GDPR, FINMA, SOC2) and audit status tracking.',
+    'Enforce exception requests with temporary override parameters and board approval chain checks.',
+    'Track policy owners, recurrent review cycles (e.g. quarterly), version approvals, and broadcast domain policy events.'
   ],
   responsibilities: [
-    { title: 'OKR Performance Blueprints', description: 'Deploys PerformanceFramework contract, multi-tenant session records, and measurement lifecycle states.', status: 'Completed & Verified' },
-    { title: 'Key Results & Scorecards', description: 'Models target numeric bounds, confidence rankings, achievement states, and department/executive scorecards.', status: 'Completed & Verified' },
-    { title: 'Unified KPIs & Aggregations', description: 'Supports business, department, role, workflow, and AI agents KPIs, continuous Cron/Real-time frequencies, and mathematical aggregations.', status: 'Completed & Verified' },
-    { title: 'Governance Alignments & Events', description: 'Enforces weighted cascading alignments, capabilities mappings, CFO approval controls, and broadcasts objective created and retired events.', status: 'Completed & Verified' }
+    { title: 'Governance Policy Blueprints', description: 'Deploys PolicyFramework contract, multi-tenant session contexts, semantic versions, and lifecycle status checks.', status: 'Completed & Verified' },
+    { title: 'Rule Conditions & Scopes', description: 'Models JMESPath conditions, restriction/obligation actions, decision variables schema, and organization/role scopes.', status: 'Completed & Verified' },
+    { title: 'Audited Exception Override Gates', description: 'Enforces compliance requirements logs, temporary bypass requests, and emergency overrides approval chains.', status: 'Completed & Verified' },
+    { title: 'Policy Governance & Event Streams', description: 'Tracks owner authorities, quarterly review cycles, version approvals, and broadcasts policy published, updated, and retired events.', status: 'Completed & Verified' }
   ]
 };
 
@@ -9087,6 +9087,102 @@ export interface BusinessKpi {
     content: `# Enterprise KPI & OKR Framework (BOSF-007)
 
 The Enterprise KPI & OKR Framework module defines SBB's core strategic metrics, mathematical aggregation rules, OKR progress tracking structures, performance scorecards, capability alignment mappings, and continuous measurement policies of the Business Operating System Framework (BOSF).`
+  },
+  {
+    name: 'policy-framework.ts',
+    path: 'packages/business-policies/src/core/policy-framework.ts',
+    language: 'typescript',
+    role: 'Policy Framework Contract',
+    description: 'Declares the main PolicyFramework contract interface supporting creation, rule definitions, applicability checks, reviews, and sunsetting.',
+    content: `import { PolicyId } from '../identity/policy-id.js';
+import { PolicyRuleId } from '../identity/policy-rule-id.js';
+import { PolicyContext } from './policy-context.js';
+import { BusinessPolicy, PolicyCategoryCode } from '../policies/business-policy.js';
+import { BusinessRule } from '../rules/business-rule.js';
+import { PolicyScope } from '../scope/policy-scope.js';
+import { ComplianceEvaluation } from '../compliance/compliance-evaluation.js';
+
+export interface PolicyFramework {
+  createPolicy(uniquePolicyCode: string, category: PolicyCategoryCode, displayName: string, descriptionNotes: string, scope: PolicyScope, context: PolicyContext): Promise<BusinessPolicy>;
+  defineRule(policyId: PolicyId, rule: BusinessRule, context: PolicyContext): Promise<PolicyRuleId>;
+  publishPolicy(policyId: PolicyId, context: PolicyContext): Promise<void>;
+  evaluateApplicability(policyId: PolicyId, targetContextPayloadJsonString: string, context: PolicyContext): Promise<boolean>;
+  reviewPolicy(policyId: PolicyId, context: PolicyContext): Promise<ComplianceEvaluation>;
+  retirePolicy(policyId: PolicyId, context: PolicyContext): Promise<void>;
+}`
+  },
+  {
+    name: 'business-policy.ts',
+    path: 'packages/business-policies/src/policies/business-policy.ts',
+    language: 'typescript',
+    role: 'Business Policy Model',
+    description: 'Models multi-tenant reusable policy scopes, rules collections, and version boundaries.',
+    content: `import { PolicyId } from '../identity/policy-id.js';
+import { PolicyVersion } from '../core/policy-version.js';
+import { PolicyLifecycle } from '../core/policy-lifecycle.js';
+import { PolicyScope } from '../scope/policy-scope.js';
+import { BusinessRule } from '../rules/business-rule.js';
+
+export type PolicyCategoryCode =
+  | 'REGULATORY_COMPLIANCE'
+  | 'FINANCIAL_CONTROL'
+  | 'SECURITY_ACCESS_CONTROL'
+  | 'HUMAN_RESOURCES_CONDUCT'
+  | 'OPERATIONAL_SLA'
+  | 'AI_GOVERNANCE_ETHICS'
+  | 'LEGAL_REPRESENTATION'
+  | 'PROCUREMENT_CONTRACTING';
+
+export interface BusinessPolicy {
+  readonly policyId: PolicyId;
+  readonly tenantId: string;
+  readonly uniquePolicyCode: string;
+  readonly displayName: string;
+  readonly descriptionNotes: string;
+  readonly category: PolicyCategoryCode;
+  readonly scope: PolicyScope;
+  readonly rulesList: BusinessRule[];
+  readonly version: PolicyVersion;
+  readonly lifecycle: PolicyLifecycle;
+  readonly effectiveFromDate: Date;
+  readonly expirationDate?: Date;
+}`
+  },
+  {
+    name: 'business-rule.ts',
+    path: 'packages/business-policies/src/rules/business-rule.ts',
+    language: 'typescript',
+    role: 'Business Rule Model',
+    description: 'Declares executable rule types (obligation, restriction, recommendation), condition trees, and automatic actions lists.',
+    content: `import { PolicyRuleId } from '../identity/policy-rule-id.js';
+import { PolicyCondition } from './policy-condition.js';
+import { PolicyAction } from './policy-action.js';
+
+export type RuleBehaviorCode =
+  | 'OBLIGATION'
+  | 'RESTRICTION'
+  | 'RECOMMENDATION'
+  | 'DECISION_NODE';
+
+export interface BusinessRule {
+  readonly ruleId: PolicyRuleId;
+  readonly uniqueRuleCode: string;
+  readonly displayName: string;
+  readonly behaviorCode: RuleBehaviorCode;
+  readonly targetEvaluationCondition: PolicyCondition;
+  readonly triggeredMandatoryActionsList: PolicyAction[];
+  readonly isOverridableWithApproval: boolean;
+}`
+  },
+  {
+    name: 'README.md',
+    path: 'packages/business-policies/README.md',
+    language: 'markdown',
+    role: 'Architectural Specs',
+    description: 'Detailed specifications for BOSF-008 Enterprise Business Policies Framework.',
+    content: `# Enterprise Business Policies Framework (BOSF-008)
+
+The Enterprise Business Policies Framework module defines SBB's core domain-independent corporate governance policies, mathematical decision and rule constraint parameters, compliance mappings, emergency exception requests, and audit policy review workflows of the Business Operating System Framework (BOSF).`
   }
 ];
 

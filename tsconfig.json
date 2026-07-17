@@ -147,6 +147,9 @@
       ],
       "@sbb/business-performance": [
         "./packages/business-performance/src/index.ts"
+      ],
+      "@sbb/business-policies": [
+        "./packages/business-policies/src/index.ts"
       ]
     },
     "allowImportingTsExtensions": true,
