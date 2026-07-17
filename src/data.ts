@@ -8675,6 +8675,60 @@ export interface CrossDepartmentDependency {
     content: `# Enterprise Department Framework (BOSF-002)
 
 The Enterprise Department Framework module defines SBB's core domain models, shared operating structures, and operational contracts of the Business Operating System Framework (BOSF) departments.`
+  },
+  {
+    name: 'organization-framework.ts',
+    path: 'packages/business-organization/src/core/organization-framework.ts',
+    language: 'typescript',
+    role: 'Organization Core Contract',
+    description: 'Declares the main OrganizationFramework interface containing operations for legal entity registry, business unit setup, dynamic restructuring and structural auditing.',
+    content: `import { OrganizationId } from '../identity/organization-id.js';
+import { LegalEntityId } from '../identity/legal-entity-id.js';
+import { BusinessUnitId } from '../identity/business-unit-id.js';
+import { OrganizationContext } from './organization-context.js';
+import { Organization } from '../hierarchy/organization.js';
+import { LegalEntity } from '../hierarchy/legal-entity.js';
+import { BusinessUnit } from '../hierarchy/business-unit.js';
+import { ReportingRelationship } from '../structure/reporting-relationship.js';
+import { OrganizationHealth } from '../metrics/organization-health.js';
+
+export interface OrganizationFramework {
+  createOrganization(legalName: string, globalHeadquartersAddressText: string, context: OrganizationContext): Promise<Organization>;
+  registerLegalEntity(organizationId: OrganizationId, commercialName: string, corporateRegistryCode: string, taxId: string, countryCode: string, context: OrganizationContext): Promise<LegalEntity>;
+  createBusinessUnit(legalEntityId: LegalEntityId, name: string, purposeCode: string, regionCode: string, context: OrganizationContext): Promise<BusinessUnit>;
+  establishReportingStructure(relationship: ReportingRelationship, context: OrganizationContext): Promise<void>;
+  evaluateOrganizationHealth(organizationId: OrganizationId, context: OrganizationContext): Promise<OrganizationHealth>;
+  restructureOrganization(organizationId: OrganizationId, restructuringNotes: string, context: OrganizationContext): Promise<void>;
+}`
+  },
+  {
+    name: 'reporting-relationship.ts',
+    path: 'packages/business-organization/src/structure/reporting-relationship.ts',
+    language: 'typescript',
+    role: 'Hierarchical Reporting Lines Model',
+    description: 'Models dynamic Solid-line, Dotted-line, Project-based, and Functional administrative reporting links between workforce personnel.',
+    content: `import { ReportingLineTypeCode } from './reporting-line.js';
+
+export interface ReportingRelationship {
+  readonly relationshipId: string;
+  readonly subordinateParticipantId: string;
+  readonly superiorParticipantId: string;
+  readonly reportingType: ReportingLineTypeCode;
+  readonly allocationPercentageValue: number;
+  readonly isPrimaryLine: boolean;
+  readonly effectiveFrom: Date;
+  readonly effectiveTo?: Date;
+}`
+  },
+  {
+    name: 'README.md',
+    path: 'packages/business-organization/README.md',
+    language: 'markdown',
+    role: 'Architectural Specs',
+    description: 'Detailed specifications for BOSF-003 Enterprise Organization Structure.',
+    content: `# Enterprise Organization Structure (BOSF-003)
+
+The Enterprise Organization Structure module defines SBB's core corporate governance hierarchies, holding structures, reporting lines, regional models, and shared services boundaries of the Business Operating System Framework (BOSF).`
   }
 ];
 

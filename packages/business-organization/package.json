@@ -1,0 +1,39 @@
+{
+  "name": "@sbb/business-organization",
+  "version": "1.0.0",
+  "description": "Multi-tenant company architectures, holding-subsidiary matrices, shared services and global regional organizational hierarchies for SBB BOSF",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@sbb/shared": "^1.0.0",
+    "@sbb/runtime-platform": "^1.0.0",
+    "@sbb/runtime-api": "^1.0.0",
+    "@sbb/agent-framework": "^1.0.0",
+    "@sbb/agent-registry": "^1.0.0",
+    "@sbb/agent-runtime": "^1.0.0",
+    "@sbb/agent-skills": "^1.0.0",
+    "@sbb/agent-memory": "^1.0.0",
+    "@sbb/agent-communication": "^1.0.0",
+    "@sbb/agent-collaboration": "^1.0.0",
+    "@sbb/agent-planning": "^1.0.0",
+    "@sbb/agent-execution": "^1.0.0",
+    "@sbb/agent-governance": "^1.0.0",
+    "@sbb/agent-learning": "^1.0.0",
+    "@sbb/agent-marketplace": "^1.0.0",
+    "@sbb/agent-monitoring": "^1.0.0",
+    "@sbb/agent-sdk": "^1.0.0",
+    "@sbb/agent-api": "^1.0.0",
+    "@sbb/business-foundation": "^1.0.0",
+    "@sbb/business-department": "^1.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.5",
+    "@types/node": "^20.12.12"
+  },
+  "publishConfig": {
+    "access": "restricted"
+  }
+}

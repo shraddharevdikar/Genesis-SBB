@@ -132,6 +132,9 @@
       ],
       "@sbb/business-department": [
         "./packages/business-department/src/index.ts"
+      ],
+      "@sbb/business-organization": [
+        "./packages/business-organization/src/index.ts"
       ]
     },
     "allowImportingTsExtensions": true,
