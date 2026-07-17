@@ -1,28 +1,28 @@
 import { TicketDetails, FileNode, FutureTicket } from './types';
 
 export const ticketDetails: TicketDetails = {
-  id: 'BOSF-005',
-  title: 'Enterprise Business Processes Framework',
+  id: 'BOSF-006',
+  title: 'Enterprise Business Workflows Framework',
   status: 'DONE',
   priority: 'CRITICAL',
   author: 'SBB Principal Architect',
   assignee: 'shraddha.revdikar@gmail.com',
-  objective: 'Build the foundational Business Processes Framework responsible for defining reusable enterprise business processes, sequential stage models, input/output contracts, validation rules, bottleneck indicators, and compliance mappings in a secure, multi-tenant aware framework.',
-  modulePath: 'packages/business-processes/src/core/process-framework.ts',
+  objective: 'Build the foundational Business Workflows Framework responsible for defining reusable enterprise workflow models, stages, steps, transitions, execution plan mechanics, tasks allocation models, multi-level approvals, automation rules, and compliance-conformance audits.',
+  modulePath: 'packages/business-workflows/src/core/workflow-framework.ts',
   requirements: [
-    'Establish the ProcessFramework contract supporting CreateProcess, AddStage, DefineBusinessRule, PublishProcess, EvaluateProcessHealth, and RetireProcess operations.',
-    'Model Business Process, Stage, Objective, Owner, and Upstream/Downstream process dependencies.',
-    'Formulate Input requirement constraints and Output outcome schemas for each individual stage.',
-    'Design decision branching and validation rule checks within sequential stages.',
-    'Incorporate performance parameters including Process KPIs, audit efficiency health, and maturity matrices.',
-    'Specify governance process policy references and regulatory compliance compliance guidelines (e.g. GDPR, HIPAA).',
-    'Track process lifecycle states and broadcast process created, stage added, process published, and process retired domain events.'
+    'Establish the WorkflowFramework contract supporting CreateWorkflow, DefineWorkflowStep, PublishWorkflow, ExecuteWorkflow, MonitorWorkflowHealth, and RetireWorkflow operations.',
+    'Model Business Workflow, Stages, Steps, Transitions, Parallel Paths, and Conditional routing branches.',
+    'Formulate Execution Context, State trackers, compensation actions, and robust retry strategies.',
+    'Design human, cognitive AI, and collaborative hybrid task staffing configurations with flexible completion rules.',
+    'Incorporate multi-tiered approval chains with spending limit conditions, delegation permissions, and backup escalation rules.',
+    'Enforce automation triggers (event, schedule, kpi, or rules), execution rule engines, and automated action lists.',
+    'Track performance metrics, SLA compliance conformance scores, bottleneck congestion, policies, and broadcast workflow status domain events.'
   ],
   responsibilities: [
-    { title: 'Process Blueprints & Contexts', description: 'Deploys ProcessFramework contract, context records, and versioned lifecycle state managers.', status: 'Completed & Verified' },
-    { title: 'Stage-Strap Input & Output Contracts', description: 'Models mandatory input requirements, payload size validation limits, and target outcome definitions.', status: 'Completed & Verified' },
-    { title: 'Decision Branching & Validation Rules', description: 'Enforces compliance rules, decision point branch options, and severity warning constraints.', status: 'Completed & Verified' },
-    { title: 'Health Metrics & Dependency Events', description: 'Tracks conformance ratings, upstream/downstream dependency links, and broadcasts process-created, stage-added and retired events.', status: 'Completed & Verified' }
+    { title: 'Workflow Orchestration Blueprints', description: 'Deploys WorkflowFramework contracts, multi-tenant session records, semantic versions, and lifecycle status checks.', status: 'Completed & Verified' },
+    { title: 'Execution States & Hybrid Staffing', description: 'Models active state variables, compensating recovery rollbacks, retry behaviors, and human/AI agent task bindings.', status: 'Completed & Verified' },
+    { title: 'Governance Gates & Automations', description: 'Enforces multi-level approval chain conditions, event/cron automation rule listeners, and continuous logging policies.', status: 'Completed & Verified' },
+    { title: 'SLA Analysis & Dispatch Events', description: 'Tracks success statistics, latency metrics, bottleneck congestion, and broadcasts template created, executed, and retired domain events.', status: 'Completed & Verified' }
   ]
 };
 
@@ -8893,6 +8893,107 @@ export interface ProcessStage {
     content: `# Enterprise Business Processes Framework (BOSF-005)
 
 The Enterprise Business Processes Framework module defines SBB's core repeatable company process structures, sequential staging models, input/output contracts, validation rules, bottleneck indicators, and compliance mappings of the Business Operating System Framework (BOSF).`
+  },
+  {
+    name: 'workflow-framework.ts',
+    path: 'packages/business-workflows/src/core/workflow-framework.ts',
+    language: 'typescript',
+    role: 'Business Workflows Contract',
+    description: 'Declares the main WorkflowFramework interface for workflow setup, step modeling, version publishing, execution, health auditing, and retirement.',
+    content: `import { WorkflowId } from '../identity/workflow-id.js';
+import { WorkflowStepId } from '../identity/workflow-step-id.js';
+import { WorkflowInstanceId } from '../identity/workflow-instance-id.js';
+import { WorkflowContext } from './workflow-context.js';
+import { BusinessWorkflow, WorkflowDomainCode } from '../workflows/business-workflow.js';
+import { WorkflowStep } from '../workflows/workflow-step.js';
+import { WorkflowHealth } from '../monitoring/workflow-health.js';
+import { ProcessId } from '@sbb/business-processes';
+
+export interface WorkflowFramework {
+  createWorkflow(associatedProcessId: ProcessId, uniqueWorkflowCode: string, domainCode: WorkflowDomainCode, displayName: string, descriptionText: string, context: WorkflowContext): Promise<BusinessWorkflow>;
+  defineWorkflowStep(workflowId: WorkflowId, stageId: string, step: WorkflowStep, context: WorkflowContext): Promise<WorkflowStepId>;
+  publishWorkflow(workflowId: WorkflowId, context: WorkflowContext): Promise<void>;
+  executeWorkflow(workflowId: WorkflowId, initialVariablesPayloadJsonString: string, context: WorkflowContext): Promise<WorkflowInstanceId>;
+  monitorWorkflowHealth(workflowId: WorkflowId, context: WorkflowContext): Promise<WorkflowHealth>;
+  retireWorkflow(workflowId: WorkflowId, context: WorkflowContext): Promise<void>;
+}`
+  },
+  {
+    name: 'business-workflow.ts',
+    path: 'packages/business-workflows/src/workflows/business-workflow.ts',
+    language: 'typescript',
+    role: 'Business Workflow Model',
+    description: 'Models multi-stage graph sequences, versions, lifecycle tracks, and ties them to specific processes.',
+    content: `import { WorkflowId } from '../identity/workflow-id.js';
+import { WorkflowVersion } from '../core/workflow-version.js';
+import { WorkflowLifecycle } from '../core/workflow-lifecycle.js';
+import { WorkflowStage } from './workflow-stage.js';
+import { ProcessId } from '@sbb/business-processes';
+
+export type WorkflowDomainCode =
+  | 'MARKETING'
+  | 'SALES'
+  | 'FINANCE'
+  | 'HR'
+  | 'LEGAL'
+  | 'OPERATIONS'
+  | 'CUSTOMER_SUCCESS'
+  | 'HEALTHCARE'
+  | 'MANUFACTURING'
+  | 'CUSTOM';
+
+export interface BusinessWorkflow {
+  readonly workflowId: WorkflowId;
+  readonly associatedProcessId: ProcessId;
+  readonly tenantId: string;
+  readonly uniqueWorkflowCode: string;
+  readonly domainCode: WorkflowDomainCode;
+  readonly displayName: string;
+  readonly descriptionText: string;
+  readonly version: WorkflowVersion;
+  readonly lifecycle: WorkflowLifecycle;
+  readonly stagesList: WorkflowStage[];
+}`
+  },
+  {
+    name: 'workflow-step.ts',
+    path: 'packages/business-workflows/src/workflows/workflow-step.ts',
+    language: 'typescript',
+    role: 'Workflow Step Model',
+    description: 'Represents execution nodes, manual or AI tasks, approval gates, or automation hooks.',
+    content: `import { WorkflowStepId } from '../identity/workflow-step-id.js';
+
+export type WorkflowStepTypeCode =
+  | 'HUMAN_TASK'
+  | 'AI_AGENT_TASK'
+  | 'HYBRID_COLLABORATIVE_TASK'
+  | 'APPROVAL_GATE'
+  | 'CONDITIONAL_ROUTING_FORK'
+  | 'AUTOMATION_TRIGGER_ACTION'
+  | 'SUB_WORKFLOW_SPAN';
+
+export interface WorkflowStep {
+  readonly stepId: WorkflowStepId;
+  readonly uniqueStepCode: string;
+  readonly displayName: string;
+  readonly descriptionText: string;
+  readonly typeCode: WorkflowStepTypeCode;
+  readonly associatedTaskReferenceIdString?: string;
+  readonly associatedApprovalChainIdString?: string;
+  readonly associatedAutomationRuleIdString?: string;
+  readonly isOptional: boolean;
+  readonly expectedExecutionDurationMinutes: number;
+}`
+  },
+  {
+    name: 'README.md',
+    path: 'packages/business-workflows/README.md',
+    language: 'markdown',
+    role: 'Architectural Specs',
+    description: 'Detailed specifications for BOSF-006 Enterprise Business Workflows Framework.',
+    content: `# Enterprise Business Workflows Framework (BOSF-006)
+
+The Enterprise Business Workflows Framework module defines SBB's core repeatable company execution models, multi-stage state transitions, human/AI hybrid tasks, multi-tiered approval chains, event/rule automations, and live performance monitoring of the Business Operating System Framework (BOSF).`
   }
 ];
 
