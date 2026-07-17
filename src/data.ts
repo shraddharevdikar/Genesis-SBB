@@ -1,28 +1,28 @@
 import { TicketDetails, FileNode, FutureTicket } from './types';
 
 export const ticketDetails: TicketDetails = {
-  id: 'BOSF-008',
-  title: 'Enterprise Business Policies Framework',
+  id: 'BOSF-009',
+  title: 'Enterprise Business Knowledge Framework',
   status: 'DONE',
   priority: 'CRITICAL',
   author: 'SBB Principal Architect',
   assignee: 'shraddha.revdikar@gmail.com',
-  objective: 'Build the foundational Business Policies Framework responsible for defining reusable enterprise policy structures, rule configurations, compliance evaluation schemas, emergency exceptions overrides, policy review cycles, and target applicability scopes.',
-  modulePath: 'packages/business-policies/src/core/policy-framework.ts',
+  objective: 'Build the foundational Business Knowledge Framework responsible for defining reusable business knowledge metadata structures, concept glossaries, verified business facts assertions, semantic graph relationships, multi-level taxonomies, and continuous quality audit validation.',
+  modulePath: 'packages/business-knowledge/src/core/knowledge-framework.ts',
   requirements: [
-    'Establish the PolicyFramework contract supporting CreatePolicy, DefineRule, PublishPolicy, EvaluateApplicability, ReviewPolicy, and RetirePolicy operations.',
-    'Model Enterprise, Department, Process, and Workflow policies with semantic version logs.',
-    'Formulate Policy Rules with conditions, mathematical decision schemas, required actions, and obligations.',
-    'Design granular Policy Scopes targeting organizations, business units, departments, roles, and AI agents.',
-    'Incorporate compliance requirements matching external authorities (GDPR, FINMA, SOC2) and audit status tracking.',
-    'Enforce exception requests with temporary override parameters and board approval chain checks.',
-    'Track policy owners, recurrent review cycles (e.g. quarterly), version approvals, and broadcast domain policy events.'
+    'Establish the KnowledgeFramework contract supporting CreateKnowledgeObject, RegisterBusinessFact, DefineConcept, LinkKnowledge, ValidateKnowledge, and RetireKnowledge operations.',
+    'Model Business, Customer, Product, Organizational, AI, and Compliance knowledge objects with semantic version logs.',
+    'Formulate Concepts with definitions, aliases, and synonyms lists.',
+    'Design semantic Relationships (Parent/Child, Dependency, Association, Ownership, Similarity, Cause/Effect) with weights.',
+    'Incorporate Business Context with organizational, department, workflow, customer, geographic, and temporal scope references.',
+    'Enforce taxonomies hierarchies, node mappings, and classification schemas.',
+    'Track knowledge owners, continuous quality checks, review cycles, and broadcast domain knowledge events.'
   ],
   responsibilities: [
-    { title: 'Governance Policy Blueprints', description: 'Deploys PolicyFramework contract, multi-tenant session contexts, semantic versions, and lifecycle status checks.', status: 'Completed & Verified' },
-    { title: 'Rule Conditions & Scopes', description: 'Models JMESPath conditions, restriction/obligation actions, decision variables schema, and organization/role scopes.', status: 'Completed & Verified' },
-    { title: 'Audited Exception Override Gates', description: 'Enforces compliance requirements logs, temporary bypass requests, and emergency overrides approval chains.', status: 'Completed & Verified' },
-    { title: 'Policy Governance & Event Streams', description: 'Tracks owner authorities, quarterly review cycles, version approvals, and broadcasts policy published, updated, and retired events.', status: 'Completed & Verified' }
+    { title: 'Knowledge Object Blueprints', description: 'Deploys KnowledgeFramework contract, multi-tenant session contexts, semantic versions, and lifecycle status checks.', status: 'Completed & Verified' },
+    { title: 'Concepts & Semantic Relations', description: 'Models glossary definitions, synonym aliases, weighted graph relationships, and causal similarity metrics.', status: 'Completed & Verified' },
+    { title: 'Context scopes & Taxonomies', description: 'Enforces geographic EMEA/APAC scopes, time validities, recursive hierarchical trees, and classification schemas.', status: 'Completed & Verified' },
+    { title: 'Knowledge Quality & Broadcasts', description: 'Tracks owners, completeness ratio scores, quarterly review schedules, and broadcasts knowledge created, updated, validated, and retired events.', status: 'Completed & Verified' }
   ]
 };
 
@@ -9183,6 +9183,93 @@ export interface BusinessRule {
     content: `# Enterprise Business Policies Framework (BOSF-008)
 
 The Enterprise Business Policies Framework module defines SBB's core domain-independent corporate governance policies, mathematical decision and rule constraint parameters, compliance mappings, emergency exception requests, and audit policy review workflows of the Business Operating System Framework (BOSF).`
+  },
+  {
+    name: 'knowledge-framework.ts',
+    path: 'packages/business-knowledge/src/core/knowledge-framework.ts',
+    language: 'typescript',
+    role: 'Knowledge Framework Contract',
+    description: 'Declares the main KnowledgeFramework contract interface supporting creation, concept definitions, fact registry, semantic links, quality validation, and sunsetting.',
+    content: `import { KnowledgeId } from '../identity/knowledge-id.js';
+import { ConceptId } from '../identity/concept-id.js';
+import { FactId } from '../identity/fact-id.js';
+import { RelationshipId } from '../identity/relationship-id.js';
+import { KnowledgeContext } from './knowledge-context.js';
+import { KnowledgeObject } from '../knowledge/knowledge-object.js';
+import { KnowledgeDomainCode } from '../knowledge/knowledge-domain.js';
+import { KnowledgeCategoryCode } from '../knowledge/knowledge-category.js';
+import { KnowledgeSource } from '../knowledge/knowledge-source.js';
+import { BusinessConcept } from '../concepts/business-concept.js';
+import { BusinessFact } from '../facts/business-fact.js';
+import { KnowledgeRelationship } from '../relationships/knowledge-relationship.js';
+import { RelationshipTypeCode } from '../relationships/relationship-type.js';
+import { RelationshipStrength } from '../relationships/relationship-strength.js';
+import { KnowledgeQuality } from '../governance/knowledge-quality.js';
+
+export interface KnowledgeFramework {
+  createKnowledgeObject(uniqueCode: string, domain: KnowledgeDomainCode, category: KnowledgeCategoryCode, displayName: string, summaryDescription: string, source: KnowledgeSource, context: KnowledgeContext): Promise<KnowledgeObject>;
+  registerBusinessFact(knowledgeId: KnowledgeId, fact: BusinessFact, context: KnowledgeContext): Promise<FactId>;
+  defineConcept(knowledgeId: KnowledgeId, concept: BusinessConcept, context: KnowledgeContext): Promise<ConceptId>;
+  linkKnowledge(sourceKnowledgeObjectId: KnowledgeId, targetKnowledgeObjectId: KnowledgeId, relationshipType: RelationshipTypeCode, strength: RelationshipStrength, context: KnowledgeContext): Promise<RelationshipId>;
+  validateKnowledge(knowledgeId: KnowledgeId, context: KnowledgeContext): Promise<KnowledgeQuality>;
+  retireKnowledge(knowledgeId: KnowledgeId, context: KnowledgeContext): Promise<void>;
+}`
+  },
+  {
+    name: 'knowledge-object.ts',
+    path: 'packages/business-knowledge/src/knowledge/knowledge-object.ts',
+    language: 'typescript',
+    role: 'Knowledge Object Model',
+    description: 'Models multi-tenant reusable business knowledge metadata structures and ingest sources.',
+    content: `import { KnowledgeId } from '../identity/knowledge-id.js';
+import { KnowledgeDomainCode } from './knowledge-domain.js';
+import { KnowledgeCategoryCode } from './knowledge-category.js';
+import { KnowledgeSource } from './knowledge-source.js';
+import { KnowledgeLifecycle } from '../core/knowledge-lifecycle.js';
+import { KnowledgeVersion } from '../core/knowledge-version.js';
+
+export interface KnowledgeObject {
+  readonly knowledgeId: KnowledgeId;
+  readonly tenantId: string;
+  readonly uniqueCode: string;
+  readonly displayName: string;
+  readonly summaryDescription: string;
+  readonly domain: KnowledgeDomainCode;
+  readonly category: KnowledgeCategoryCode;
+  readonly source: KnowledgeSource;
+  readonly version: KnowledgeVersion;
+  readonly lifecycle: KnowledgeLifecycle;
+}`
+  },
+  {
+    name: 'business-fact.ts',
+    path: 'packages/business-knowledge/src/facts/business-fact.ts',
+    language: 'typescript',
+    role: 'Business Fact Model',
+    description: 'Declares factual assertions with confidence scoring, evidence tracking lists, and temporal validity periods.',
+    content: `import { FactId } from '../identity/fact-id.js';
+import { FactConfidence } from './fact-confidence.js';
+import { FactValidity } from './fact-validity.js';
+import { EvidenceReference } from './evidence-reference.js';
+
+export interface BusinessFact {
+  readonly factId: FactId;
+  readonly uniqueFactCode: string;
+  readonly statementText: string;
+  readonly confidence: FactConfidence;
+  readonly validity: FactValidity;
+  readonly coreEvidenceReferencesList: EvidenceReference[];
+}`
+  },
+  {
+    name: 'README.md',
+    path: 'packages/business-knowledge/README.md',
+    language: 'markdown',
+    role: 'Architectural Specs',
+    description: 'Detailed specifications for BOSF-009 Enterprise Business Knowledge Framework.',
+    content: `# Enterprise Business Knowledge Framework (BOSF-009)
+
+The Enterprise Business Knowledge Framework module defines SBB's core domain-independent corporate knowledge objects metadata, glossary concept terms, fact assertions with confidence scoring, typed and weighted semantic graph relationships, multi-level hierarchical taxonomies, and continuous validation audits of the Business Operating System Framework (BOSF).`
   }
 ];
 

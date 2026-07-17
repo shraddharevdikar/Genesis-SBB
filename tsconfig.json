@@ -150,6 +150,9 @@
       ],
       "@sbb/business-policies": [
         "./packages/business-policies/src/index.ts"
+      ],
+      "@sbb/business-knowledge": [
+        "./packages/business-knowledge/src/index.ts"
       ]
     },
     "allowImportingTsExtensions": true,
