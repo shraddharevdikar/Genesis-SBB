@@ -138,6 +138,9 @@
       ],
       "@sbb/business-roles": [
         "./packages/business-roles/src/index.ts"
+      ],
+      "@sbb/business-processes": [
+        "./packages/business-processes/src/index.ts"
       ]
     },
     "allowImportingTsExtensions": true,

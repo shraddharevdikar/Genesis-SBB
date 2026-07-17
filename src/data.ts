@@ -1,28 +1,28 @@
 import { TicketDetails, FileNode, FutureTicket } from './types';
 
 export const ticketDetails: TicketDetails = {
-  id: 'BOSF-004',
-  title: 'Enterprise Business Roles Framework',
+  id: 'BOSF-005',
+  title: 'Enterprise Business Processes Framework',
   status: 'DONE',
   priority: 'CRITICAL',
   author: 'SBB Principal Architect',
   assignee: 'shraddha.revdikar@gmail.com',
-  objective: 'Build the foundational Business Roles Framework responsible for defining reusable enterprise business roles, strategic responsibility groups, operational decision rights, required skill/certification competencies, and hybrid workforce assignments in a secure, multi-tenant aware framework.',
-  modulePath: 'packages/business-roles/src/core/role-framework.ts',
+  objective: 'Build the foundational Business Processes Framework responsible for defining reusable enterprise business processes, sequential stage models, input/output contracts, validation rules, bottleneck indicators, and compliance mappings in a secure, multi-tenant aware framework.',
+  modulePath: 'packages/business-processes/src/core/process-framework.ts',
   requirements: [
-    'Establish the RoleFramework contract supporting CreateRole, AssignResponsibility, AssignAuthority, DefineCompetencyRequirements, EvaluateRolePerformance, and RetireRole operations.',
-    'Model Business Role, Responsibility, and Strategic Accountability structures.',
-    'Formulate Joint Hybrid Role Assignee mappings for digital AI personas and human workforce allocations.',
-    'Design Authority frameworks including Decision Rights, Spending Limits, and delegation guidelines.',
-    'Incorporate Competency-level structures, required certifications, and specialized continuous upskilling logs.',
-    'Track performance parameters including Role KPIs, quantitative success metrics, and dual Separation of Duties constraints.',
-    'Broadcast key domain events: role created, responsibility assigned, authority delegated, and role retired.'
+    'Establish the ProcessFramework contract supporting CreateProcess, AddStage, DefineBusinessRule, PublishProcess, EvaluateProcessHealth, and RetireProcess operations.',
+    'Model Business Process, Stage, Objective, Owner, and Upstream/Downstream process dependencies.',
+    'Formulate Input requirement constraints and Output outcome schemas for each individual stage.',
+    'Design decision branching and validation rule checks within sequential stages.',
+    'Incorporate performance parameters including Process KPIs, audit efficiency health, and maturity matrices.',
+    'Specify governance process policy references and regulatory compliance compliance guidelines (e.g. GDPR, HIPAA).',
+    'Track process lifecycle states and broadcast process created, stage added, process published, and process retired domain events.'
   ],
   responsibilities: [
-    { title: 'Organizational Accountability Contracts', description: 'Deploys RoleFramework contracts, multi-tenant role context records, and lifecycle managers.', status: 'Completed & Verified' },
-    { title: 'Workforce Core Competencies', description: 'Models required knowledge playbooks, noviciate-to-master competency indices, and certification validation timers.', status: 'Completed & Verified' },
-    { title: 'Governance & Fiscal Authorities', description: 'Enforces dual-control separation of duties rules, spending authority caps, and role delegation bounds.', status: 'Completed & Verified' },
-    { title: 'Performance Analytics & Events', description: 'Tracks performance profiles, measured outcomes, and broadcasts role created, responsibility assigned, and authority delegated events.', status: 'Completed & Verified' }
+    { title: 'Process Blueprints & Contexts', description: 'Deploys ProcessFramework contract, context records, and versioned lifecycle state managers.', status: 'Completed & Verified' },
+    { title: 'Stage-Strap Input & Output Contracts', description: 'Models mandatory input requirements, payload size validation limits, and target outcome definitions.', status: 'Completed & Verified' },
+    { title: 'Decision Branching & Validation Rules', description: 'Enforces compliance rules, decision point branch options, and severity warning constraints.', status: 'Completed & Verified' },
+    { title: 'Health Metrics & Dependency Events', description: 'Tracks conformance ratings, upstream/downstream dependency links, and broadcasts process-created, stage-added and retired events.', status: 'Completed & Verified' }
   ]
 };
 
@@ -8805,6 +8805,94 @@ export interface BusinessRole {
     content: `# Enterprise Business Roles Framework (BOSF-004)
 
 The Enterprise Business Roles Framework module defines SBB's core corporate accountability roles, strategic responsibility groups, operational decision rights, required skill/certification competencies, and hybrid workforce assignments of the Business Operating System Framework (BOSF).`
+  },
+  {
+    name: 'process-framework.ts',
+    path: 'packages/business-processes/src/core/process-framework.ts',
+    language: 'typescript',
+    role: 'Business Processes Contract',
+    description: 'Declares the main ProcessFramework interface containing process setup, stage addition, rules attachment, publishing, and health evaluation.',
+    content: `import { ProcessId } from '../identity/process-id.js';
+import { ProcessStageId } from '../identity/process-stage-id.js';
+import { ProcessVersionId } from '../identity/process-version-id.js';
+import { ProcessContext } from './process-context.js';
+import { BusinessProcess } from '../processes/business-process.js';
+import { ProcessStage } from '../processes/process-stage.js';
+import { BusinessRule } from '../rules/business-rule.js';
+import { ProcessHealth } from '../performance/process-health.js';
+
+export interface ProcessFramework {
+  createProcess(uniqueProcessCode: string, domainCode: 'MARKETING' | 'SALES' | 'FINANCE' | 'HR' | 'LEGAL' | 'OPERATIONS' | 'CUSTOMER_SUCCESS' | 'HEALTHCARE' | 'MANUFACTURING' | 'CUSTOM', displayName: string, descriptionText: string, context: ProcessContext): Promise<BusinessProcess>;
+  addStage(processId: ProcessId, stage: ProcessStage, context: ProcessContext): Promise<ProcessStageId>;
+  defineBusinessRule(processId: ProcessId, rule: BusinessRule, stageId: ProcessStageId | undefined, context: ProcessContext): Promise<void>;
+  publishProcess(processId: ProcessId, context: ProcessContext): Promise<ProcessVersionId>;
+  evaluateProcessHealth(processId: ProcessId, context: ProcessContext): Promise<ProcessHealth>;
+  retireProcess(processId: ProcessId, context: ProcessContext): Promise<void>;
+}`
+  },
+  {
+    name: 'business-process.ts',
+    path: 'packages/business-processes/src/processes/business-process.ts',
+    language: 'typescript',
+    role: 'Business Process Model',
+    description: 'Represents the core extensible structure linking unique process codes, domain classifications, versioned stage maps, and dependencies.',
+    content: `import { ProcessId } from '../identity/process-id.js';
+import { ProcessVersionId } from '../identity/process-version-id.js';
+import { ProcessLifecycle } from '../core/process-lifecycle.js';
+import { ProcessOwner } from './process-owner.js';
+import { ProcessStage } from './process-stage.js';
+import { ProcessObjective } from './process-objective.js';
+import { ProcessDependency } from '../dependencies/process-dependency.js';
+
+export interface BusinessProcess {
+  readonly processId: ProcessId;
+  readonly activeVersionId: ProcessVersionId;
+  readonly tenantId: string;
+  readonly uniqueProcessCode: string;
+  readonly domainCode: 'MARKETING' | 'SALES' | 'FINANCE' | 'HR' | 'LEGAL' | 'OPERATIONS' | 'CUSTOMER_SUCCESS' | 'HEALTHCARE' | 'MANUFACTURING' | 'CUSTOM';
+  readonly displayName: string;
+  readonly descriptionText: string;
+  readonly owner: ProcessOwner;
+  readonly lifecycle: ProcessLifecycle;
+  readonly processStagesList: ProcessStage[];
+  readonly strategicObjectivesList: ProcessObjective[];
+  readonly dependenciesList: ProcessDependency[];
+}`
+  },
+  {
+    name: 'process-stage.ts',
+    path: 'packages/business-processes/src/processes/process-stage.ts',
+    language: 'typescript',
+    role: 'Process Stage Model',
+    description: 'Defines sequential sub-stage structures grouping mandatory input requirements, validation constraints, decision branches, and success outputs.',
+    content: `import { ProcessStageId } from '../identity/process-stage-id.js';
+import { InputRequirement } from '../inputs/input-requirement.js';
+import { OutcomeDefinition } from '../outputs/outcome-definition.js';
+import { BusinessRule } from '../rules/business-rule.js';
+import { DecisionPoint } from '../rules/decision-point.js';
+import { ValidationRule } from '../rules/validation-rule.js';
+
+export interface ProcessStage {
+  readonly stageId: ProcessStageId;
+  readonly sequenceIndex: number;
+  readonly name: string;
+  readonly functionalPurposeCode: string;
+  readonly inputRequirementsList: InputRequirement[];
+  readonly outcomeDefinitionsList: OutcomeDefinition[];
+  readonly localRulesList: BusinessRule[];
+  readonly validationRulesList: ValidationRule[];
+  readonly decisionPointsList: DecisionPoint[];
+}`
+  },
+  {
+    name: 'README.md',
+    path: 'packages/business-processes/README.md',
+    language: 'markdown',
+    role: 'Architectural Specs',
+    description: 'Detailed specifications for BOSF-005 Enterprise Business Processes Framework.',
+    content: `# Enterprise Business Processes Framework (BOSF-005)
+
+The Enterprise Business Processes Framework module defines SBB's core repeatable company process structures, sequential staging models, input/output contracts, validation rules, bottleneck indicators, and compliance mappings of the Business Operating System Framework (BOSF).`
   }
 ];
 
