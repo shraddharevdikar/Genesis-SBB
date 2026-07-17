@@ -129,6 +129,9 @@
       ],
       "@sbb/business-foundation": [
         "./packages/business-foundation/src/index.ts"
+      ],
+      "@sbb/business-department": [
+        "./packages/business-department/src/index.ts"
       ]
     },
     "allowImportingTsExtensions": true,

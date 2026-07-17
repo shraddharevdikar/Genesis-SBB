@@ -1,27 +1,28 @@
 import { TicketDetails, FileNode, FutureTicket } from './types';
 
 export const ticketDetails: TicketDetails = {
-  id: 'BOSF-001',
-  title: 'Enterprise Business Foundation',
+  id: 'BOSF-002',
+  title: 'Enterprise Department Framework',
   status: 'DONE',
   priority: 'CRITICAL',
   author: 'SBB Principal Architect',
   assignee: 'shraddha.revdikar@gmail.com',
-  objective: 'Build the foundational Business Operating System Framework core domain model shared by every Business Operating System (MarketingOS, SalesOS, FinanceOS, HR, Legal, Healthcare, Manufacturing) representing structural, relational, and capability models in a secure, multi-tenant aware framework.',
-  modulePath: 'packages/business-foundation/src/core/business-foundation.ts',
+  objective: 'Build the foundational Department Framework responsible for defining organizational structure, establishing strategic missions, coordinating hybrid (AI/human) workforces, mapping KPIs, auditing governance policies, and tracking cross-department dependencies in a secure, multi-tenant aware framework.',
+  modulePath: 'packages/business-department/src/core/department-framework.ts',
   requirements: [
-    'Establish the BusinessFoundation contract supporting CreateBusiness, CreateDepartment, RegisterCapability, AssignBusinessRole, EvaluateBusinessHealth, and RetireBusiness operations.',
-    'Model Business Unit, Division, Department, Team, and Identity structures.',
-    'Formulate extensibility role and authority levels representing Executive, Director, Manager, Specialist, Analyst, Coordinator tiers.',
-    'Design strategic business capability matrices, departmental ownership scopes, and capability groups.',
-    'Incorporate governance references, compliance guidelines, playbooks, and Standard Operating Procedures (SOPs).',
-    'Track operational maturity indices, health scores, and broadcast business created, retired, and capability added events.'
+    'Establish the DepartmentFramework contract supporting EstablishDepartment, AssignCapability, AssignWorkforce, EvaluateDepartmentHealth, ManageDepartmentLifecycle, and RetireDepartment operations.',
+    'Model Department Mission, Vision, and Strategic Objective structures.',
+    'Formulate Joint Hybrid Workforce assignment profiles for virtual AI digital agents and traditional human employees.',
+    'Design Department performance monitors, including local KPIs, operational velocity, and health indexes.',
+    'Incorporate budget fiscal allocation, approval tiers, and local policy overrides.',
+    'Specify cross-department relationship profiles, service agreements (SLAs), and capability dependency maps.',
+    'Track department lifecycle states and broadcast department established, retired, workforce updated, and capability assigned domain events.'
   ],
   responsibilities: [
-    { title: 'Organizational Blueprint Contracts', description: 'Deploys BusinessFoundation contract, active context logs, and modular company-division-department entity profiles.', status: 'Completed & Verified' },
-    { title: 'Roles & Authority Tiers', description: 'Models dynamic authority levels, financial signature limits, and multi-tenant custom business roles.', status: 'Completed & Verified' },
-    { title: 'Strategic Capability & Governance', description: 'Enforces business guidelines compliance profiles, playbook SOP steps, and capability maturity indicators.', status: 'Completed & Verified' },
-    { title: 'Ecosystem Analytics & Domain Events', description: 'Tracks company operational health ratios, stage audits, and broadcasts business created, retired, and capability added events.', status: 'Completed & Verified' }
+    { title: 'Organizational Blueprint Contracts', description: 'Deploys DepartmentFramework contract, context records, and lifecycle state managers.', status: 'Completed & Verified' },
+    { title: 'Hybrid Workforce Assignments', description: 'Models joint task assignments, AI persona models/skills, and human authority clearances.', status: 'Completed & Verified' },
+    { title: 'Governance & SLA Relationships', description: 'Enforces budget warning ratios, approval delegation paths, and cross-department dependency links.', status: 'Completed & Verified' },
+    { title: 'Performance Analytics & Events', description: 'Tracks department health ratings, KPI measures, and broadcasts department established, retired, and roster updated events.', status: 'Completed & Verified' }
   ]
 };
 
@@ -8607,6 +8608,73 @@ export interface BusinessRole {
     content: `# Enterprise Business Foundation (BOSF-001)
 
 The Enterprise Business Foundation module defines SBB's core domain models, shared operating schemas, and business contracts of the Business Operating System Framework (BOSF).`
+  },
+  {
+    name: 'department-framework.ts',
+    path: 'packages/business-department/src/core/department-framework.ts',
+    language: 'typescript',
+    role: 'Department Core Contract',
+    description: 'Declares the main DepartmentFramework interface containing all department-setup, capability mapping, hybrid roster assignment, and retirement operations.',
+    content: `import { DepartmentContext } from './department-context.js';
+import { DepartmentLifecycleState } from './department-lifecycle.js';
+import { DepartmentInstanceId } from '../identity/department-instance-id.js';
+import { DepartmentMission } from '../mission/department-mission.js';
+import { DepartmentCapability } from '../capabilities/department-capability.js';
+import { AiWorkforceProfile } from '../workforce/ai-workforce-profile.js';
+import { HumanWorkforceProfile } from '../workforce/human-workforce-profile.js';
+import { DepartmentHealth } from '../performance/department-health.js';
+
+export interface DepartmentFramework {
+  establishDepartment(name: string, costCenterCode: string, mission: DepartmentMission, context: DepartmentContext): Promise<DepartmentInstanceId>;
+  assignCapability(departmentInstanceId: DepartmentInstanceId, capability: DepartmentCapability, context: DepartmentContext): Promise<void>;
+  assignWorkforce(departmentInstanceId: DepartmentInstanceId, aiProfilesList: AiWorkforceProfile[], humanProfilesList: HumanWorkforceProfile[], context: DepartmentContext): Promise<void>;
+  evaluateDepartmentHealth(departmentInstanceId: DepartmentInstanceId, context: DepartmentContext): Promise<DepartmentHealth>;
+  manageDepartmentLifecycle(departmentInstanceId: DepartmentInstanceId, targetState: DepartmentLifecycleState, context: DepartmentContext): Promise<void>;
+  retireDepartment(departmentInstanceId: DepartmentInstanceId, context: DepartmentContext): Promise<void>;
+}`
+  },
+  {
+    name: 'ai-workforce-profile.ts',
+    path: 'packages/business-department/src/workforce/ai-workforce-profile.ts',
+    language: 'typescript',
+    role: 'Digital Agent Personas Model',
+    description: 'Models predefined digital agents combining language model identifiers, memory scopes, and custom trust score criteria.',
+    content: `export interface AiWorkforceProfile {
+  readonly agentProfileId: string;
+  readonly roleTitleString: string;
+  readonly baseModelIdentifier: string;
+  readonly assignedSkillIdentifiersList: string[];
+  readonly memoryScopeCode: 'TRANSIENT' | 'PERSISTENT_SESSION' | 'EPISODIC_LONG_TERM';
+  readonly trustScoreRating: number;
+  readonly maximumConcurrentTaskCapacity: number;
+}`
+  },
+  {
+    name: 'cross-department-dependency.ts',
+    path: 'packages/business-department/src/relationships/cross-department-dependency.ts',
+    language: 'typescript',
+    role: 'Inter-department Dependency Graph',
+    description: 'Models service delivery links, risk levels, and mitigation parameters between different department instances.',
+    content: `import { DepartmentInstanceId } from '../identity/department-instance-id.js';
+
+export interface CrossDepartmentDependency {
+  readonly dependencyId: string;
+  readonly dependentDepartmentId: DepartmentInstanceId;
+  readonly providerDepartmentId: DepartmentInstanceId;
+  readonly requiredCapabilityCode: string;
+  readonly isCriticalPathDependency: boolean;
+  readonly mitigationActionPlanNotes?: string;
+}`
+  },
+  {
+    name: 'README.md',
+    path: 'packages/business-department/README.md',
+    language: 'markdown',
+    role: 'Architectural Specs',
+    description: 'Detailed specifications for BOSF-002 Enterprise Department Framework.',
+    content: `# Enterprise Department Framework (BOSF-002)
+
+The Enterprise Department Framework module defines SBB's core domain models, shared operating structures, and operational contracts of the Business Operating System Framework (BOSF) departments.`
   }
 ];
 
