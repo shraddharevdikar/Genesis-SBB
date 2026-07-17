@@ -135,6 +135,9 @@
       ],
       "@sbb/business-organization": [
         "./packages/business-organization/src/index.ts"
+      ],
+      "@sbb/business-roles": [
+        "./packages/business-roles/src/index.ts"
       ]
     },
     "allowImportingTsExtensions": true,

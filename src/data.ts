@@ -1,28 +1,28 @@
 import { TicketDetails, FileNode, FutureTicket } from './types';
 
 export const ticketDetails: TicketDetails = {
-  id: 'BOSF-002',
-  title: 'Enterprise Department Framework',
+  id: 'BOSF-004',
+  title: 'Enterprise Business Roles Framework',
   status: 'DONE',
   priority: 'CRITICAL',
   author: 'SBB Principal Architect',
   assignee: 'shraddha.revdikar@gmail.com',
-  objective: 'Build the foundational Department Framework responsible for defining organizational structure, establishing strategic missions, coordinating hybrid (AI/human) workforces, mapping KPIs, auditing governance policies, and tracking cross-department dependencies in a secure, multi-tenant aware framework.',
-  modulePath: 'packages/business-department/src/core/department-framework.ts',
+  objective: 'Build the foundational Business Roles Framework responsible for defining reusable enterprise business roles, strategic responsibility groups, operational decision rights, required skill/certification competencies, and hybrid workforce assignments in a secure, multi-tenant aware framework.',
+  modulePath: 'packages/business-roles/src/core/role-framework.ts',
   requirements: [
-    'Establish the DepartmentFramework contract supporting EstablishDepartment, AssignCapability, AssignWorkforce, EvaluateDepartmentHealth, ManageDepartmentLifecycle, and RetireDepartment operations.',
-    'Model Department Mission, Vision, and Strategic Objective structures.',
-    'Formulate Joint Hybrid Workforce assignment profiles for virtual AI digital agents and traditional human employees.',
-    'Design Department performance monitors, including local KPIs, operational velocity, and health indexes.',
-    'Incorporate budget fiscal allocation, approval tiers, and local policy overrides.',
-    'Specify cross-department relationship profiles, service agreements (SLAs), and capability dependency maps.',
-    'Track department lifecycle states and broadcast department established, retired, workforce updated, and capability assigned domain events.'
+    'Establish the RoleFramework contract supporting CreateRole, AssignResponsibility, AssignAuthority, DefineCompetencyRequirements, EvaluateRolePerformance, and RetireRole operations.',
+    'Model Business Role, Responsibility, and Strategic Accountability structures.',
+    'Formulate Joint Hybrid Role Assignee mappings for digital AI personas and human workforce allocations.',
+    'Design Authority frameworks including Decision Rights, Spending Limits, and delegation guidelines.',
+    'Incorporate Competency-level structures, required certifications, and specialized continuous upskilling logs.',
+    'Track performance parameters including Role KPIs, quantitative success metrics, and dual Separation of Duties constraints.',
+    'Broadcast key domain events: role created, responsibility assigned, authority delegated, and role retired.'
   ],
   responsibilities: [
-    { title: 'Organizational Blueprint Contracts', description: 'Deploys DepartmentFramework contract, context records, and lifecycle state managers.', status: 'Completed & Verified' },
-    { title: 'Hybrid Workforce Assignments', description: 'Models joint task assignments, AI persona models/skills, and human authority clearances.', status: 'Completed & Verified' },
-    { title: 'Governance & SLA Relationships', description: 'Enforces budget warning ratios, approval delegation paths, and cross-department dependency links.', status: 'Completed & Verified' },
-    { title: 'Performance Analytics & Events', description: 'Tracks department health ratings, KPI measures, and broadcasts department established, retired, and roster updated events.', status: 'Completed & Verified' }
+    { title: 'Organizational Accountability Contracts', description: 'Deploys RoleFramework contracts, multi-tenant role context records, and lifecycle managers.', status: 'Completed & Verified' },
+    { title: 'Workforce Core Competencies', description: 'Models required knowledge playbooks, noviciate-to-master competency indices, and certification validation timers.', status: 'Completed & Verified' },
+    { title: 'Governance & Fiscal Authorities', description: 'Enforces dual-control separation of duties rules, spending authority caps, and role delegation bounds.', status: 'Completed & Verified' },
+    { title: 'Performance Analytics & Events', description: 'Tracks performance profiles, measured outcomes, and broadcasts role created, responsibility assigned, and authority delegated events.', status: 'Completed & Verified' }
   ]
 };
 
@@ -8729,6 +8729,82 @@ export interface ReportingRelationship {
     content: `# Enterprise Organization Structure (BOSF-003)
 
 The Enterprise Organization Structure module defines SBB's core corporate governance hierarchies, holding structures, reporting lines, regional models, and shared services boundaries of the Business Operating System Framework (BOSF).`
+  },
+  {
+    name: 'role-framework.ts',
+    path: 'packages/business-roles/src/core/role-framework.ts',
+    language: 'typescript',
+    role: 'Business Roles Contract',
+    description: 'Declares the main RoleFramework interface containing all business role, strategic responsibility, authority delegation, and performance-profiling operations.',
+    content: `import { BusinessRoleId } from '../identity/business-role-id.js';
+import { ResponsibilityId } from '../identity/responsibility-id.js';
+import { AuthorityId } from '../identity/authority-id.js';
+import { RoleContext } from './role-context.js';
+import { BusinessRole } from '../roles/business-role.js';
+import { Responsibility } from '../responsibilities/responsibility.js';
+import { Authority } from '../authorities/authority.js';
+import { Competency } from '../competencies/competency.js';
+import { PerformanceProfile } from '../performance/performance-profile.js';
+
+export interface RoleFramework {
+  createRole(uniqueRoleCode: string, displayName: string, classificationCode: 'EXECUTIVE' | 'DIRECTOR' | 'MANAGER' | 'SPECIALIST' | 'ANALYST' | 'CUSTOM', departmentCostCenterCode: string, context: RoleContext): Promise<BusinessRole>;
+  assignResponsibility(roleId: BusinessRoleId, responsibility: Responsibility, context: RoleContext): Promise<ResponsibilityId>;
+  assignAuthority(roleId: BusinessRoleId, authority: Authority, context: RoleContext): Promise<AuthorityId>;
+  defineCompetencyRequirements(roleId: BusinessRoleId, competenciesList: Competency[], context: RoleContext): Promise<void>;
+  evaluateRolePerformance(roleId: BusinessRoleId, context: RoleContext): Promise<PerformanceProfile>;
+  retireRole(roleId: BusinessRoleId, context: RoleContext): Promise<void>;
+}`
+  },
+  {
+    name: 'business-role.ts',
+    path: 'packages/business-roles/src/roles/business-role.ts',
+    language: 'typescript',
+    role: 'Business Role Model',
+    description: 'Represents the core extensible structure linking unique role codes, lifecycle configurations, competency limits, and performance metrics.',
+    content: `import { BusinessRoleId } from '../identity/business-role-id.js';
+import { RoleLifecycle } from '../core/role-lifecycle.js';
+import { Responsibility } from '../responsibilities/responsibility.js';
+import { Authority } from '../authorities/authority.js';
+import { Competency } from '../competencies/competency.js';
+import { PerformanceProfile } from '../performance/performance-profile.js';
+
+export interface BusinessRole {
+  readonly roleId: BusinessRoleId;
+  readonly uniqueRoleCode: string;
+  readonly displayName: string;
+  readonly departmentCostCenterCode: string;
+  readonly classificationCode: 'EXECUTIVE' | 'DIRECTOR' | 'MANAGER' | 'SPECIALIST' | 'ANALYST' | 'CUSTOM';
+  readonly lifecycle: RoleLifecycle;
+  readonly coreResponsibilitiesList: Responsibility[];
+  readonly grantedAuthoritiesList: Authority[];
+  readonly requiredCompetenciesList: Competency[];
+  readonly performanceProfile: PerformanceProfile;
+}`
+  },
+  {
+    name: 'separation-of-duties.ts',
+    path: 'packages/business-roles/src/governance/separation-of-duties.ts',
+    language: 'typescript',
+    role: 'Conflict Prevention Rule Model',
+    description: 'Models strict Separation of Duties constraints preventing identical role profiles from initiating and signing the same critical corporate transaction.',
+    content: `export interface SeparationOfDuties {
+  readonly sodId: string;
+  readonly uniqueRuleCode: string;
+  readonly primaryActionCode: string;
+  readonly conflictingActionCode: string;
+  readonly restrictedRoleTitleCodesList: string[];
+  readonly enforceHardFailureResponse: boolean;
+}`
+  },
+  {
+    name: 'README.md',
+    path: 'packages/business-roles/README.md',
+    language: 'markdown',
+    role: 'Architectural Specs',
+    description: 'Detailed specifications for BOSF-004 Enterprise Business Roles Framework.',
+    content: `# Enterprise Business Roles Framework (BOSF-004)
+
+The Enterprise Business Roles Framework module defines SBB's core corporate accountability roles, strategic responsibility groups, operational decision rights, required skill/certification competencies, and hybrid workforce assignments of the Business Operating System Framework (BOSF).`
   }
 ];
 
