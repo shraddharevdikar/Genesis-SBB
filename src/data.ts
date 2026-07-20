@@ -1,28 +1,28 @@
 import { TicketDetails, FileNode, FutureTicket } from './types';
 
 export const ticketDetails: TicketDetails = {
-  id: 'BOSF-009',
-  title: 'Enterprise Business Knowledge Framework',
+  id: 'BOSF-010',
+  title: 'Enterprise Business Dashboards Framework',
   status: 'DONE',
   priority: 'CRITICAL',
   author: 'SBB Principal Architect',
   assignee: 'shraddha.revdikar@gmail.com',
-  objective: 'Build the foundational Business Knowledge Framework responsible for defining reusable business knowledge metadata structures, concept glossaries, verified business facts assertions, semantic graph relationships, multi-level taxonomies, and continuous quality audit validation.',
-  modulePath: 'packages/business-knowledge/src/core/knowledge-framework.ts',
+  objective: 'Build the foundational Business Dashboards Framework responsible for defining reusable dashboard configurations, layout compositions, widgets data-bindings, personalized profiles, access policies, and navigation flows.',
+  modulePath: 'packages/business-dashboards/src/core/dashboard-framework.ts',
   requirements: [
-    'Establish the KnowledgeFramework contract supporting CreateKnowledgeObject, RegisterBusinessFact, DefineConcept, LinkKnowledge, ValidateKnowledge, and RetireKnowledge operations.',
-    'Model Business, Customer, Product, Organizational, AI, and Compliance knowledge objects with semantic version logs.',
-    'Formulate Concepts with definitions, aliases, and synonyms lists.',
-    'Design semantic Relationships (Parent/Child, Dependency, Association, Ownership, Similarity, Cause/Effect) with weights.',
-    'Incorporate Business Context with organizational, department, workflow, customer, geographic, and temporal scope references.',
-    'Enforce taxonomies hierarchies, node mappings, and classification schemas.',
-    'Track knowledge owners, continuous quality checks, review cycles, and broadcast domain knowledge events.'
+    'Establish the DashboardFramework contract supporting CreateDashboard, DefineDashboardView, RegisterWidget, PublishDashboard, PersonalizeDashboard, and RetireDashboard operations.',
+    'Model Executive, Department, Operational, AI Workforce, and Business Health dashboards with semantic version logs.',
+    'Formulate Dashboard Views with customizable layout styles (fluid grid, bento box gallery, left bar expanded, canvas) and multiple visual sections.',
+    'Design reusable Widgets with definition categories, visual configurations, and external data source bindings (KPI, Knowledge graph, processes).',
+    'Incorporate Personalization with user preferences profiles, saved views, filters operators, and custom display themes (light, dark cosmic).',
+    'Enforce Navigation with multi-level menus, sidebars item structures, interaction drilldown actions, and SBB process shortcuts.',
+    'Track dashboard owners, access policies (allowed and restricted roles), publication audits, and broadcast domain dashboard events.'
   ],
   responsibilities: [
-    { title: 'Knowledge Object Blueprints', description: 'Deploys KnowledgeFramework contract, multi-tenant session contexts, semantic versions, and lifecycle status checks.', status: 'Completed & Verified' },
-    { title: 'Concepts & Semantic Relations', description: 'Models glossary definitions, synonym aliases, weighted graph relationships, and causal similarity metrics.', status: 'Completed & Verified' },
-    { title: 'Context scopes & Taxonomies', description: 'Enforces geographic EMEA/APAC scopes, time validities, recursive hierarchical trees, and classification schemas.', status: 'Completed & Verified' },
-    { title: 'Knowledge Quality & Broadcasts', description: 'Tracks owners, completeness ratio scores, quarterly review schedules, and broadcasts knowledge created, updated, validated, and retired events.', status: 'Completed & Verified' }
+    { title: 'Governance Dashboard Blueprints', description: 'Deploys DashboardFramework contract, multi-tenant session contexts, semantic versions, and lifecycle status checks.', status: 'Completed & Verified' },
+    { title: 'Compositions & Widgets Binding', description: 'Models bento/grid layouts, widget definition types, external data-source bindings, and custom visual configurations.', status: 'Completed & Verified' },
+    { title: 'Personalization & Actions Menu', description: 'Enforces saved filter operators, cosmic dark theme preferences, drilldown action mappings, and sidebar navigation menus.', status: 'Completed & Verified' },
+    { title: 'Dashboard Security & Event Streams', description: 'Tracks owners, access level permissions, publication audits, and broadcasts dashboard created, published, updated, and retired events.', status: 'Completed & Verified' }
   ]
 };
 
@@ -9270,6 +9270,95 @@ export interface BusinessFact {
     content: `# Enterprise Business Knowledge Framework (BOSF-009)
 
 The Enterprise Business Knowledge Framework module defines SBB's core domain-independent corporate knowledge objects metadata, glossary concept terms, fact assertions with confidence scoring, typed and weighted semantic graph relationships, multi-level hierarchical taxonomies, and continuous validation audits of the Business Operating System Framework (BOSF).`
+  },
+  {
+    name: 'dashboard-framework.ts',
+    path: 'packages/business-dashboards/src/core/dashboard-framework.ts',
+    language: 'typescript',
+    role: 'Dashboard Framework Contract',
+    description: 'Declares the main DashboardFramework contract interface supporting creation, views definitions, widget registrations, publishing, user personalization, and sunsetting.',
+    content: `import { DashboardId } from '../identity/dashboard-id.js';
+import { DashboardViewId } from '../identity/dashboard-view-id.js';
+import { WidgetId } from '../identity/widget-id.js';
+import { DashboardContext } from './dashboard-context.js';
+import { BusinessDashboard, DashboardCategoryCode } from '../dashboards/business-dashboard.js';
+import { DashboardView } from '../views/dashboard-view.js';
+import { DashboardWidget } from '../widgets/dashboard-widget.js';
+import { WidgetDefinition } from '../widgets/widget-definition.js';
+import { WidgetBinding } from '../widgets/widget-binding.js';
+import { DashboardProfile } from '../personalization/dashboard-profile.js';
+
+export interface DashboardFramework {
+  createDashboard(uniqueDashboardCode: string, category: DashboardCategoryCode, displayName: string, summaryDescription: string, context: DashboardContext): Promise<BusinessDashboard>;
+  defineDashboardView(dashboardId: DashboardId, view: DashboardView, context: DashboardContext): Promise<DashboardViewId>;
+  registerWidget(uniqueWidgetCode: string, displayName: string, definition: WidgetDefinition, binding: WidgetBinding, context: DashboardContext): Promise<DashboardWidget>;
+  publishDashboard(dashboardId: DashboardId, context: DashboardContext): Promise<void>;
+  personalizeDashboard(dashboardId: DashboardId, profile: DashboardProfile, context: DashboardContext): Promise<DashboardProfile>;
+  retireDashboard(dashboardId: DashboardId, context: DashboardContext): Promise<void>;
+}`
+  },
+  {
+    name: 'business-dashboard.ts',
+    path: 'packages/business-dashboards/src/dashboards/business-dashboard.ts',
+    language: 'typescript',
+    role: 'Business Dashboard Model',
+    description: 'Models multi-tenant reusable business dashboards composed of versioned views, custom display layout categories, and active lifecycles.',
+    content: `import { DashboardId } from '../identity/dashboard-id.js';
+import { DashboardViewId } from '../identity/dashboard-view-id.js';
+import { DashboardView } from '../views/dashboard-view.js';
+import { DashboardLifecycle } from '../core/dashboard-lifecycle.js';
+import { DashboardVersion } from '../core/dashboard-version.js';
+
+export type DashboardCategoryCode =
+  | 'EXECUTIVE_STRATEGY'
+  | 'DEPARTMENT_OPERATIONS'
+  | 'PROCESS_COMPLIANCE'
+  | 'AI_AGENT_WORKFORCE'
+  | 'OPERATIONAL_SLA_REALTIME'
+  | 'BUSINESS_HEALTH_ORGANIZATION';
+
+export interface BusinessDashboard {
+  readonly dashboardId: DashboardId;
+  readonly tenantId: string;
+  readonly uniqueDashboardCode: string;
+  readonly displayName: string;
+  readonly summaryDescription: string;
+  readonly category: DashboardCategoryCode;
+  readonly defaultActiveViewId: DashboardViewId;
+  readonly viewsList: DashboardView[];
+  readonly version: DashboardVersion;
+  readonly lifecycle: DashboardLifecycle;
+}`
+  },
+  {
+    name: 'dashboard-widget.ts',
+    path: 'packages/business-dashboards/src/widgets/dashboard-widget.ts',
+    language: 'typescript',
+    role: 'Dashboard Widget Model',
+    description: 'Declares widgets containing dynamic definitions categories, visual customization settings, and external data sources bindings.',
+    content: `import { WidgetId } from '../identity/widget-id.js';
+import { WidgetDefinition } from './widget-definition.js';
+import { WidgetBinding } from './widget-binding.js';
+import { WidgetConfiguration } from './widget-configuration.js';
+
+export interface DashboardWidget {
+  readonly widgetId: WidgetId;
+  readonly uniqueWidgetCode: string;
+  readonly displayName: string;
+  readonly definition: WidgetDefinition;
+  readonly binding: WidgetBinding;
+  readonly configuration: WidgetConfiguration;
+}`
+  },
+  {
+    name: 'README.md',
+    path: 'packages/business-dashboards/README.md',
+    language: 'markdown',
+    role: 'Architectural Specs',
+    description: 'Detailed specifications for BOSF-010 Enterprise Business Dashboards Framework.',
+    content: `# Enterprise Business Dashboards Framework (BOSF-010)
+
+The Enterprise Business Dashboards Framework module defines SBB's core domain-independent corporate dashboard configurations, dashboard view composition structures, multi-level layout options (e.g. standard grid, bento box gallery), reusable widgets with custom external data source bindings, user personalization profiles, drill-down action navigation hierarchies, access control governance rules, and release publication audits of the Business Operating System Framework (BOSF).`
   }
 ];
 

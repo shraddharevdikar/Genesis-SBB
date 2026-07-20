@@ -153,6 +153,9 @@
       ],
       "@sbb/business-knowledge": [
         "./packages/business-knowledge/src/index.ts"
+      ],
+      "@sbb/business-dashboards": [
+        "./packages/business-dashboards/src/index.ts"
       ]
     },
     "allowImportingTsExtensions": true,
