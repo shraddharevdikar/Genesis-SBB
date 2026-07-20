@@ -1,28 +1,28 @@
 import { TicketDetails, FileNode, FutureTicket } from './types';
 
 export const ticketDetails: TicketDetails = {
-  id: 'BOSF-014',
-  title: 'Enterprise Business Integrations Framework',
+  id: 'BOSF-015',
+  title: 'Enterprise Business Templates & Blueprints Framework',
   status: 'DONE',
   priority: 'CRITICAL',
   author: 'SBB Principal Architect',
   assignee: 'shraddha.revdikar@gmail.com',
-  objective: 'Build the foundational Business Integrations Framework responsible for defining reusable business integrations, connectors, contract schemas, authentication profiles, object mappings, and governance policy audits.',
-  modulePath: 'packages/business-integrations/src/core/integration-framework.ts',
+  objective: 'Build the foundational Business Templates & Blueprints Framework responsible for defining reusable operating model blueprints, organizational and department templates, and composition dependencies.',
+  modulePath: 'packages/business-blueprints/src/core/blueprint-framework.ts',
   requirements: [
-    'Establish the IntegrationFramework contract supporting RegisterIntegration, RegisterConnector, DefineContract, DefineMapping, ConnectIntegration, DisconnectIntegration, and RetireIntegration operations.',
-    'Model CRM, ERP, Finance, HR, Communication, AI Provider, and Productivity connector categories with standard capabilities.',
-    'Formulate Request, Response, and Event contracts with validation rules, HTTP status expectation definitions, and schema versioning.',
-    'Design field-level and object-level transformations, data mappings, and string/date formatting normalization rules.',
-    'Incorporate Rest, GraphQL, Soap, Webhooks, and Event Streaming protocol capabilities with authentication profiles (mTLS, OAuth2).',
-    'Enforce Governance auditing featuring ownership tracking, data-sovereignty restrictions, and cryptographic secure reference profiles.',
-    'Track validation structures and broadcast integration created, connected, disconnected, and retired domain events.'
+    'Establish the BlueprintFramework contract supporting CreateBlueprint, RegisterTemplate, ComposeBlueprint, ValidateBlueprint, PublishBlueprint, and RetireBlueprint operations.',
+    'Model organization, department, capability, operating model, and industry-specific blueprints with semantic version logs.',
+    'Formulate templates covering departments, processes, workflows, policies, KPIs, dashboards, reports, automations, and integrations.',
+    'Design composition layouts representing template reference instances and variables/overrides overrides.',
+    'Incorporate robust dependency graphs tracking nodes, edges, cyclic dependency rules, and conflict detection rules.',
+    'Enforce governance controls auditing owners, step validations, and confidentiality classification levels.',
+    'Track validation status schemas and broadcast blueprint created, published, versioned, and retired events.'
   ],
   responsibilities: [
-    { title: 'Governance Integration Blueprints', description: 'Deploys IntegrationFramework contract, multi-tenant session contexts, semantic versions, and lifecycle status checks.', status: 'Completed & Verified' },
-    { title: 'Connectors, Contracts, and Adapters', description: 'Models REST/GraphQL/SOAP protocol capabilities, schema constraints, validation rules, and secure auth credentials structures.', status: 'Completed & Verified' },
-    { title: 'Data Mapping & Transformation', description: 'Enforces robust field-level translation, custom regex mapping, and complex datatype normalization Rules.', status: 'Completed & Verified' },
-    { title: 'Sovereignty Protection & Event Streams', description: 'Tracks department owners, PII masking rules, MTLS security indicators, and broadcasts integration life cycles.', status: 'Completed & Verified' }
+    { title: 'Governance Blueprint Blueprints', description: 'Deploys BlueprintFramework contract, multi-tenant session contexts, semantic versions, and lifecycle status checks.', status: 'Completed & Verified' },
+    { title: 'Templates and Operating Blueprints', description: 'Models KPI, department, policy, process, and workflow templates, as well as holding and ecosystem blueprints.', status: 'Completed & Verified' },
+    { title: 'Composition & Dependency Graphs', description: 'Enforces template instance aliases, property overrides, cyclic dependencies nodes and edges analysis, and conflict checkers.', status: 'Completed & Verified' },
+    { title: 'Validation Reviews & Event Streams', description: 'Tracks executive reviewers step approvals, confidentiality levels, ownership certifications, and broadcasts blueprint life cycles.', status: 'Completed & Verified' }
   ]
 };
 
@@ -9660,6 +9660,99 @@ export interface ConnectorDefinition {
     content: `# Enterprise Business Integrations Framework (BOSF-014)
 
 The Enterprise Business Integrations Framework module defines SBB's core domain-independent corporate integrations, provider connectors, data schema contracts, authentication profiles, object mappings, and governance policy audits of the Business Operating System Framework (BOSF).`
+  },
+  {
+    name: 'blueprint-framework.ts',
+    path: 'packages/business-blueprints/src/core/blueprint-framework.ts',
+    language: 'typescript',
+    role: 'Blueprint Framework Contract',
+    description: 'Declares the main BlueprintFramework contract interface supporting blueprint registration, template cataloging, cyclic composition dependency audits, and operating model publishes.',
+    content: `import { BlueprintId } from '../identity/blueprint-id.js';
+import { TemplateId } from '../identity/template-id.js';
+import { BlueprintContext } from './blueprint-context.js';
+import { BusinessBlueprint, BlueprintCategoryTypeCode } from '../blueprints/business-blueprint.js';
+import { BusinessTemplate, TemplateCategoryCode } from '../templates/business-template.js';
+import { BlueprintComposition } from '../composition/blueprint-composition.js';
+import { BlueprintValidation } from '../governance/blueprint-validation.js';
+
+export interface BlueprintFramework {
+  createBlueprint(uniqueBlueprintCode: string, displayName: string, descriptionNotesText: string, category: BlueprintCategoryTypeCode, context: BlueprintContext): Promise<BusinessBlueprint>;
+  registerTemplate(uniqueTemplateCode: string, displayName: string, descriptionNotesText: string, category: TemplateCategoryCode, rawSchemaSpecificationJSON: string, context: BlueprintContext): Promise<BusinessTemplate>;
+  composeBlueprint(blueprintId: BlueprintId, composition: BlueprintComposition, context: BlueprintContext): Promise<BusinessBlueprint>;
+  validateBlueprint(blueprintId: BlueprintId, context: BlueprintContext): Promise<BlueprintValidation>;
+  publishBlueprint(blueprintId: BlueprintId, context: BlueprintContext): Promise<BusinessBlueprint>;
+  retireBlueprint(blueprintId: BlueprintId, context: BlueprintContext): Promise<void>;
+}`
+  },
+  {
+    name: 'business-template.ts',
+    path: 'packages/business-blueprints/src/templates/business-template.ts',
+    language: 'typescript',
+    role: 'Business Template Model',
+    description: 'Defines the root base specification for reusable building blocks including KPIs, departments, policies, processes, dashboards, and automated triggers.',
+    content: `import { TemplateId } from '../identity/template-id.js';
+
+export type TemplateCategoryCode =
+  | 'DEPARTMENT'
+  | 'PROCESS'
+  | 'WORKFLOW'
+  | 'POLICY'
+  | 'KPI'
+  | 'DASHBOARD'
+  | 'REPORT'
+  | 'AUTOMATION'
+  | 'INTEGRATION';
+
+export interface BusinessTemplate {
+  readonly templateId: TemplateId;
+  readonly uniqueTemplateCode: string;
+  readonly displayName: string;
+  readonly descriptionNotesText: string;
+  readonly categoryCode: TemplateCategoryCode;
+  readonly rawSchemaSpecificationJSON: string;
+  readonly authorOperatorRoleId: string;
+  readonly isSystemDefaultFlag: boolean;
+  readonly createdAt: Date;
+}`
+  },
+  {
+    name: 'business-blueprint.ts',
+    path: 'packages/business-blueprints/src/blueprints/business-blueprint.ts',
+    language: 'typescript',
+    role: 'Business Blueprint Model',
+    description: 'Defines the core parent composite for reusable organization, department, and vertical operating model configurations.',
+    content: `import { BlueprintId } from '../identity/blueprint-id.js';
+import { BlueprintVersion } from '../core/blueprint-version.js';
+import { BlueprintLifecycle } from '../core/blueprint-lifecycle.js';
+import { BlueprintComposition } from '../composition/blueprint-composition.js';
+
+export type BlueprintCategoryTypeCode =
+  | 'ORGANIZATION_LEVEL'
+  | 'DEPARTMENT_LEVEL'
+  | 'CAPABILITY_LEVEL'
+  | 'OPERATING_MODEL_LEVEL'
+  | 'INDUSTRY_SPECIFIC_LEVEL';
+
+export interface BusinessBlueprint {
+  readonly blueprintId: BlueprintId;
+  readonly uniqueBlueprintCode: string;
+  readonly displayName: string;
+  readonly descriptionNotesText: string;
+  readonly categoryTypeCode: BlueprintCategoryTypeCode;
+  readonly composition: BlueprintComposition;
+  readonly version: BlueprintVersion;
+  readonly lifecycle: BlueprintLifecycle;
+}`
+  },
+  {
+    name: 'README.md',
+    path: 'packages/business-blueprints/README.md',
+    language: 'markdown',
+    role: 'Architectural Specs',
+    description: 'Detailed specifications for BOSF-015 Enterprise Business Templates & Blueprints Framework.',
+    content: `# Enterprise Business Templates & Blueprints Framework (BOSF-015)
+
+The Enterprise Business Templates & Blueprints Framework module defines SBB's core domain-independent reusable template assets, structural operating model compositions, validation dependencies, and catalog governance procedures of the Business Operating System Framework (BOSF).`
   }
 ];
 

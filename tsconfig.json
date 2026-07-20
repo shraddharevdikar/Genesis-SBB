@@ -168,6 +168,9 @@
       ],
       "@sbb/business-integrations": [
         "./packages/business-integrations/src/index.ts"
+      ],
+      "@sbb/business-blueprints": [
+        "./packages/business-blueprints/src/index.ts"
       ]
     },
     "allowImportingTsExtensions": true,
