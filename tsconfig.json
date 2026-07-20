@@ -177,6 +177,9 @@
       ],
       "@sbb/sales-os": [
         "./packages/sales-os/src/index.ts"
+      ],
+      "@sbb/finance-os": [
+        "./packages/finance-os/src/index.ts"
       ]
     },
     "allowImportingTsExtensions": true,

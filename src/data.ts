@@ -1,28 +1,28 @@
 import { TicketDetails, FileNode, FutureTicket } from './types';
 
 export const ticketDetails: TicketDetails = {
-  id: 'BOSF-017',
-  title: 'SalesOS Foundation (M9.2)',
+  id: 'BOSF-018',
+  title: 'FinanceOS Foundation (M9.3)',
   status: 'DONE',
   priority: 'CRITICAL',
   author: 'SBB Principal Architect',
   assignee: 'shraddha.revdikar@gmail.com',
-  objective: 'Build the foundational SalesOS architecture responsible for lead ingestion, BANT qualification, opportunity lifecycle stages, multi-tier accounts, quotations with pricing/discounts, and automated AI revenue forecasting.',
-  modulePath: 'packages/sales-os/src/core/sales-framework.ts',
+  objective: 'Build the foundational FinanceOS architecture responsible for financial governance, budgeting, accounting, procurement, cash flow, reporting, forecasting, and executive financial intelligence.',
+  modulePath: 'packages/finance-os/src/core/finance-framework.ts',
   requirements: [
-    'Establish the SalesFramework contract supporting CaptureLead, QualifyLead, CreateOpportunity, AdvancePipeline, GenerateQuotation, ForecastRevenue, and CloseOpportunity operations.',
-    'Model enterprise sales lead management, original lead sources, ICP lead scores, and BANT qualification checklists.',
-    'Formulate account structures representing customer accounts, multi-tier account hierarchies, and geographic/industry segments.',
-    'Design contact management representing professional business contacts paired with buying committee roles.',
-    'Incorporate sales opportunity trackers with sequence-ordered stage pipelines, win probabilities, and value variables.',
-    'Enforce pricing model systems paired with policy-compliant discount ceilings and multi-level approver rules.',
-    'Track territory revenue forecasting (commit vs AI predicted) and broadcast sales lifecycles through domain event schemas.'
+    'Establish the FinanceFramework contract supporting CreateBudget, RecordTransaction, CreatePurchaseOrder, IssueInvoice, ApprovePayment, ForecastCashFlow, and CloseFinancialPeriod operations.',
+    'Model enterprise budgeting structures including categories, department allocations, and official budget reallocations.',
+    'Formulate double-entry bookkeeping ledger journal entries, Chart of Accounts assets/liabilities tree, and accounting period boundaries.',
+    'Design procurement pathways representing internal purchase requests, legally binding POs, and vendor compliance checks.',
+    'Incorporate receivables/payables accounts with invoice tracking, aging bucket analyses, and payment schedule approvals.',
+    'Enforce cash flow Statements across operating/investing/financing buckets and multi-bank consolidated liquidity forecasts.',
+    'Track AI financial risk anomalies (duplicate invoices, overruns) and broadcast finance lifecycles through domain event schemas.'
   ],
   responsibilities: [
-    { title: 'Governance Sales Framework', description: 'Deploys SalesFramework contract, multi-tenant session contexts, and sales lifecycle state transitions.', status: 'Completed & Verified' },
-    { title: 'Leads, Accounts & Contacts', description: 'Models BANT criteria, ICP scoring rules, parent accounts division depths, and buying committee sentiment metrics.', status: 'Completed & Verified' },
-    { title: 'Opportunities, Pricing & CS', description: 'Enforces sequential stage checks, ARR/TCV valuations, automated approval discounts, and customer adoption health thresholds.', status: 'Completed & Verified' },
-    { title: 'Forecast Analyses & Event Streams', description: 'Tracks manager commits vs AI MAPE projections, sales owners, and broadcasts lead/opportunity created, won, or lost events.', status: 'Completed & Verified' }
+    { title: 'Governance Finance Framework', description: 'Deploys FinanceFramework contract, multi-tenant session contexts, and financial lifecycle state transitions.', status: 'Completed & Verified' },
+    { title: 'Budgets, Ledgers & Procurement', description: 'Models budget categories, general ledger postings, and purchase request approval gates.', status: 'Completed & Verified' },
+    { title: 'Invoices, Cash Flow & Liquidity', description: 'Enforces accounts receivables aging, supplier schedules, cash flow statements, and rolling treasury projections.', status: 'Completed & Verified' },
+    { title: 'Risk Insights & Event Streams', description: 'Tracks AI cost optimization ideas, approval matrices, finance owners, and broadcasts budget, invoice, and closed period events.', status: 'Completed & Verified' }
   ]
 };
 
@@ -9858,6 +9858,71 @@ export interface SalesFramework {
   readonly generalDealHealthRatingCode: 'HEALTHY' | 'STAGNANT_RISK' | 'SLIPPING_TIMELINE' | 'COMPETITIVE_THREAT';
   readonly lastAssessmentAt: Date;
 }`
+  },
+  {
+    name: 'finance-framework.ts',
+    path: 'packages/finance-os/src/core/finance-framework.ts',
+    language: 'typescript',
+    role: 'Finance Framework Contract',
+    description: 'Declares the main FinanceFramework contract interface supporting budget creation, double-entry transaction ledger listings, purchase orders, client invoices, payout approvals, liquidity forecasts, and period closings.',
+    content: `import { FinanceContext } from './finance-context.js';
+import { Budget } from '../budgeting/budget.js';
+import { BudgetAllocation } from '../budgeting/budget-allocation.js';
+import { JournalEntry, JournalLine } from '../accounting/journal-entry.js';
+import { PurchaseOrder } from '../procurement/purchase-order.js';
+import { PurchaseRequestLineItem } from '../procurement/purchase-request.js';
+import { CustomerInvoice, CustomerInvoiceLine } from '../receivables/customer-invoice.js';
+import { PaymentApproval } from '../payables/payment-approval.js';
+import { TreasuryForecast } from '../cash-flow/treasury-forecast.js';
+import { AccountingPeriod } from '../accounting/accounting-period.js';
+import { ProcurementPolicy } from '../procurement/procurement-policy.js';
+
+export interface FinanceFramework {
+  createBudget(uniqueBudgetCode: string, displayName: string, fiscalYear: number, initialAllocations: BudgetAllocation[], currencyCode: string, context: FinanceContext): Promise<Budget>;
+  recordTransaction(uniqueEntryCode: string, lines: JournalLine[], context: FinanceContext): Promise<JournalEntry>;
+  createPurchaseOrder(uniquePoCode: string, vendorIdString: string, lineItems: PurchaseRequestLineItem[], currencyCode: string, deliveryAddressStreetText: string, deliveryAddressCityText: string, deliveryAddressCountryCode: string, procurementPolicy: ProcurementPolicy, context: FinanceContext): Promise<PurchaseOrder>;
+  issueInvoice(uniqueInvoiceCode: string, customerAccountIdString: string, associatedOpportunityCodeString: string | undefined, lineItems: CustomerInvoiceLine[], taxRatePercentageDecimal: number, currencyCode: string, dueDate: Date, context: FinanceContext): Promise<CustomerInvoice>;
+  approvePayment(uniqueApprovalCode: string, scheduledPaymentItemIdString: string, payeeSupplierName: string, transactionAmount: number, currencyCode: string, context: FinanceContext): Promise<PaymentApproval>;
+  forecastCashFlow(uniqueForecastCode: string, horizonWeeksCount: number, context: FinanceContext): Promise<TreasuryForecast>;
+  closeFinancialPeriod(uniquePeriodCode: string, context: FinanceContext): Promise<AccountingPeriod>;
+}`
+  },
+  {
+    name: 'financial-risk-insight.ts',
+    path: 'packages/finance-os/src/ai/financial-risk-insight.ts',
+    language: 'typescript',
+    role: 'Financial Risk Insight Model',
+    description: 'Models AI-identified risk points such as duplicate invoice probabilities, projected budget overruns, and cash runway alerts.',
+    content: `export type FinancialRiskClassificationCode =
+  | 'BUDGET_OVERRUN_PROJECTION'
+  | 'DUPLICATE_SUPPLIER_INVOICE_PROBABILITY'
+  | 'CASH_RUNWAY_ALERT'
+  | 'UNEXPECTED_VENDOR_PRICING_SURGE'
+  | 'SANCTION_COMPLIANCE_HIT';
+
+export interface FinancialRiskInsight {
+  readonly insightId: string;
+  readonly uniqueInsightCode: string;
+  readonly riskType: FinancialRiskClassificationCode;
+  readonly severityLevel: 'INFO' | 'WARNING' | 'HIGH_EXPOSURE' | 'CRITICAL_ACTION_REQUIRED';
+  readonly observationSummaryText: string;
+  readonly calculatedConfidenceScoreRatioDecimal: number;
+  readonly detectedSigmaOffsetValue: number;
+  readonly associatedEntityReferenceId?: string;
+  readonly recommendedMitigationActionText: string;
+  readonly isResolvedFlag: boolean;
+  readonly createdAt: Date;
+}`
+  },
+  {
+    name: 'README.md',
+    path: 'packages/finance-os/README.md',
+    language: 'markdown',
+    role: 'Architectural Specs',
+    description: 'Detailed specifications for FinanceOS Foundation (BOSF-018).',
+    content: `# SBB FinanceOS Foundation (BOSF-018)
+
+The FinanceOS Foundation module defines SBB's core domain-specific structures, financial governance processes, general ledgers, budgeting structures, accounts payable/receivable tracks, liquidity forecasts, procurement controls, and compliance policy constraints.`
   },
   {
     name: 'README.md',
