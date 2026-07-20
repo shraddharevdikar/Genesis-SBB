@@ -1,28 +1,28 @@
 import { TicketDetails, FileNode, FutureTicket } from './types';
 
 export const ticketDetails: TicketDetails = {
-  id: 'BOSF-010',
-  title: 'Enterprise Business Dashboards Framework',
+  id: 'BOSF-011',
+  title: 'Enterprise Business Reports Framework',
   status: 'DONE',
   priority: 'CRITICAL',
   author: 'SBB Principal Architect',
   assignee: 'shraddha.revdikar@gmail.com',
-  objective: 'Build the foundational Business Dashboards Framework responsible for defining reusable dashboard configurations, layout compositions, widgets data-bindings, personalized profiles, access policies, and navigation flows.',
-  modulePath: 'packages/business-dashboards/src/core/dashboard-framework.ts',
+  objective: 'Build the foundational Business Reports Framework responsible for defining reusable report configurations, templates structure, publication distributions, retention archives, and compliance classifications.',
+  modulePath: 'packages/business-reports/src/core/report-framework.ts',
   requirements: [
-    'Establish the DashboardFramework contract supporting CreateDashboard, DefineDashboardView, RegisterWidget, PublishDashboard, PersonalizeDashboard, and RetireDashboard operations.',
-    'Model Executive, Department, Operational, AI Workforce, and Business Health dashboards with semantic version logs.',
-    'Formulate Dashboard Views with customizable layout styles (fluid grid, bento box gallery, left bar expanded, canvas) and multiple visual sections.',
-    'Design reusable Widgets with definition categories, visual configurations, and external data source bindings (KPI, Knowledge graph, processes).',
-    'Incorporate Personalization with user preferences profiles, saved views, filters operators, and custom display themes (light, dark cosmic).',
-    'Enforce Navigation with multi-level menus, sidebars item structures, interaction drilldown actions, and SBB process shortcuts.',
-    'Track dashboard owners, access policies (allowed and restricted roles), publication audits, and broadcast domain dashboard events.'
+    'Establish the ReportFramework contract supporting CreateReport, DefineTemplate, PublishReport, ArchiveReport, DistributeReport, and RetireReport operations.',
+    'Model Executive, Department, Financial, Compliance, Operational, and AI Workforce reports with semantic version logs.',
+    'Formulate Document layouts and Templates supporting orientation, sizing margins, and dynamic or standard data sources bindings.',
+    'Design multi-level report chapters, ordered sections, and key findings summaries with cryptographic verification hashes.',
+    'Incorporate Publication tracks with subscription listings, secure delivery channels, and scheduled distributions.',
+    'Enforce compliant Archiving rules under specific retention periods and active legal holds on secure storage platforms.',
+    'Track report owners, approval workflows reviews, confidentiality classification levels, and broadcast domain report events.'
   ],
   responsibilities: [
-    { title: 'Governance Dashboard Blueprints', description: 'Deploys DashboardFramework contract, multi-tenant session contexts, semantic versions, and lifecycle status checks.', status: 'Completed & Verified' },
-    { title: 'Compositions & Widgets Binding', description: 'Models bento/grid layouts, widget definition types, external data-source bindings, and custom visual configurations.', status: 'Completed & Verified' },
-    { title: 'Personalization & Actions Menu', description: 'Enforces saved filter operators, cosmic dark theme preferences, drilldown action mappings, and sidebar navigation menus.', status: 'Completed & Verified' },
-    { title: 'Dashboard Security & Event Streams', description: 'Tracks owners, access level permissions, publication audits, and broadcasts dashboard created, published, updated, and retired events.', status: 'Completed & Verified' }
+    { title: 'Governance Report Blueprints', description: 'Deploys ReportFramework contract, multi-tenant session contexts, semantic versions, and lifecycle status checks.', status: 'Completed & Verified' },
+    { title: 'Templates Layout & Sections Bindings', description: 'Models page orientations/margins, report template style configurations, data source bindings, and ordered chapters section schemas.', status: 'Completed & Verified' },
+    { title: 'Publication Tracks & Secure Retention', description: 'Enforces distribution target mediums (SFTP, secure GPG email), subscription filters, retention policy timers, and legal holds.', status: 'Completed & Verified' },
+    { title: 'Document Security & Event Streams', description: 'Tracks reviewers approval steps, clearance/confidentiality levels, ownership records, and broadcasts report created, published, archived, and retired events.', status: 'Completed & Verified' }
   ]
 };
 
@@ -9359,6 +9359,103 @@ export interface DashboardWidget {
     content: `# Enterprise Business Dashboards Framework (BOSF-010)
 
 The Enterprise Business Dashboards Framework module defines SBB's core domain-independent corporate dashboard configurations, dashboard view composition structures, multi-level layout options (e.g. standard grid, bento box gallery), reusable widgets with custom external data source bindings, user personalization profiles, drill-down action navigation hierarchies, access control governance rules, and release publication audits of the Business Operating System Framework (BOSF).`
+  },
+  {
+    name: 'report-framework.ts',
+    path: 'packages/business-reports/src/core/report-framework.ts',
+    language: 'typescript',
+    role: 'Report Framework Contract',
+    description: 'Declares the main ReportFramework contract interface supporting creation, template definitions, publishing, archiving, distribution, and sunsetting.',
+    content: `import { ReportId } from '../identity/report-id.js';
+import { ReportTemplateId } from '../identity/report-template-id.js';
+import { ReportContext } from './report-context.js';
+import { BusinessReport, BusinessReportCategoryCode } from '../reports/business-report.js';
+import { ReportTemplate } from '../templates/report-template.js';
+import { ReportPublication } from '../publication/report-publication.js';
+import { ReportArchive } from '../archive/report-archive.js';
+import { ReportDistribution } from '../publication/report-distribution.js';
+
+export interface ReportFramework {
+  createReport(uniqueReportCode: string, category: BusinessReportCategoryCode, displayName: string, summaryDescription: string, templateId: ReportTemplateId, context: ReportContext): Promise<BusinessReport>;
+  defineTemplate(template: ReportTemplate, context: ReportContext): Promise<ReportTemplateId>;
+  publishReport(reportId: ReportId, context: ReportContext): Promise<ReportPublication>;
+  archiveReport(reportId: ReportId, commentsReasonNotesText: string, context: ReportContext): Promise<ReportArchive>;
+  distributeReport(reportId: ReportId, distribution: ReportDistribution, context: ReportContext): Promise<void>;
+  retireReport(reportId: ReportId, context: ReportContext): Promise<void>;
+}`
+  },
+  {
+    name: 'business-report.ts',
+    path: 'packages/business-reports/src/reports/business-report.ts',
+    language: 'typescript',
+    role: 'Business Report Model',
+    description: 'Models multi-tenant versioned business reports composed of compliant chapters, templates layout, executive summaries, and active lifecycles.',
+    content: `import { ReportId } from '../identity/report-id.js';
+import { ReportTemplate } from '../templates/report-template.js';
+import { ReportChapter } from '../sections/report-chapter.js';
+import { ReportSummary } from '../sections/report-summary.js';
+import { ReportLifecycle } from '../core/report-lifecycle.js';
+import { ReportVersion } from '../core/report-version.js';
+
+export type BusinessReportCategoryCode =
+  | 'EXECUTIVE_STRATEGY'
+  | 'DEPARTMENTAL_OPERATIONS'
+  | 'FINANCIAL_FISCAL'
+  | 'GOVERNMENTAL_COMPLIANCE'
+  | 'AI_AGENT_WORKFORCE_TELEMETRY';
+
+export interface BusinessReport {
+  readonly reportId: ReportId;
+  readonly tenantId: string;
+  readonly uniqueReportCode: string;
+  readonly displayName: string;
+  readonly summaryDescription: string;
+  readonly category: BusinessReportCategoryCode;
+  readonly template: ReportTemplate;
+  readonly chaptersList: ReportChapter[];
+  readonly executiveSummary: ReportSummary;
+  readonly version: ReportVersion;
+  readonly lifecycle: ReportLifecycle;
+}`
+  },
+  {
+    name: 'report-template.ts',
+    path: 'packages/business-reports/src/templates/report-template.ts',
+    language: 'typescript',
+    role: 'Report Template Model',
+    description: 'Declares templates detailing page orientation/sizing bounds and custom external query data sources bindings.',
+    content: `import { ReportTemplateId } from '../identity/report-template-id.js';
+import { TemplateLayout } from './template-layout.js';
+import { TemplateBinding } from './template-binding.js';
+
+export type ReportTemplateCategoryCode =
+  | 'STANDARD_A4_DOCUMENT'
+  | 'SLIDE_DECK_EXECUTIVE'
+  | 'COMPLIANCE_DISCLOSURE'
+  | 'SPREADSHEET_FINANCIAL_GRID'
+  | 'REALTIME_AUDIT_LOG_EXPORT';
+
+export interface ReportTemplate {
+  readonly templateId: ReportTemplateId;
+  readonly uniqueTemplateCode: string;
+  readonly displayName: string;
+  readonly descriptionNotesText?: string;
+  readonly category: ReportTemplateCategoryCode;
+  readonly layout: TemplateLayout;
+  readonly dataBindingsList: TemplateBinding[];
+  readonly localizationLocaleCode: string;
+  readonly isLockedForEditing: boolean;
+}`
+  },
+  {
+    name: 'README.md',
+    path: 'packages/business-reports/README.md',
+    language: 'markdown',
+    role: 'Architectural Specs',
+    description: 'Detailed specifications for BOSF-011 Enterprise Business Reports Framework.',
+    content: `# Enterprise Business Reports Framework (BOSF-011)
+
+The Enterprise Business Reports Framework module defines SBB's core domain-independent corporate report documents structure, layout template properties, distribution listings, retention archives, legal hold rules, classification safety, and approval workflows under the Business Operating System Framework (BOSF).`
   }
 ];
 

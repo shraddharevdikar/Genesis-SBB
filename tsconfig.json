@@ -156,6 +156,9 @@
       ],
       "@sbb/business-dashboards": [
         "./packages/business-dashboards/src/index.ts"
+      ],
+      "@sbb/business-reports": [
+        "./packages/business-reports/src/index.ts"
       ]
     },
     "allowImportingTsExtensions": true,
