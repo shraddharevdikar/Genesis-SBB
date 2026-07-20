@@ -1,28 +1,28 @@
 import { TicketDetails, FileNode, FutureTicket } from './types';
 
 export const ticketDetails: TicketDetails = {
-  id: 'BOSF-018',
-  title: 'FinanceOS Foundation (M9.3)',
+  id: 'BOSF-019',
+  title: 'HROS Foundation (M9.4)',
   status: 'DONE',
   priority: 'CRITICAL',
   author: 'SBB Principal Architect',
   assignee: 'shraddha.revdikar@gmail.com',
-  objective: 'Build the foundational FinanceOS architecture responsible for financial governance, budgeting, accounting, procurement, cash flow, reporting, forecasting, and executive financial intelligence.',
-  modulePath: 'packages/finance-os/src/core/finance-framework.ts',
+  objective: 'Build the foundational HROS architecture responsible for workforce planning, recruitment, employee lifecycle management, performance, learning, compensation, engagement, and organizational development.',
+  modulePath: 'packages/hr-os/src/core/hr-framework.ts',
   requirements: [
-    'Establish the FinanceFramework contract supporting CreateBudget, RecordTransaction, CreatePurchaseOrder, IssueInvoice, ApprovePayment, ForecastCashFlow, and CloseFinancialPeriod operations.',
-    'Model enterprise budgeting structures including categories, department allocations, and official budget reallocations.',
-    'Formulate double-entry bookkeeping ledger journal entries, Chart of Accounts assets/liabilities tree, and accounting period boundaries.',
-    'Design procurement pathways representing internal purchase requests, legally binding POs, and vendor compliance checks.',
-    'Incorporate receivables/payables accounts with invoice tracking, aging bucket analyses, and payment schedule approvals.',
-    'Enforce cash flow Statements across operating/investing/financing buckets and multi-bank consolidated liquidity forecasts.',
-    'Track AI financial risk anomalies (duplicate invoices, overruns) and broadcast finance lifecycles through domain event schemas.'
+    'Establish the HRFramework contract supporting PlanWorkforce, CreateJobRequisition, HireEmployee, OnboardEmployee, ManagePerformance, ManageLearning, ManageCompensation, and OffboardEmployee operations.',
+    'Model strategic workforce planning, target budgets, specific positions, and corporate organizational chart depths.',
+    'Formulate job requisitions, candidate profiles, interview structures, and dual-party hiring decisions.',
+    'Design employee records, employment contracts, role ladders, and transient leave status entries.',
+    'Incorporate onboarding programs with IT checklists, assigned buddies, and 30/60/90-day milestones.',
+    'Enforce performance goal OKRs, calibration review sheets, competency requirements, and progression paths.',
+    'Track AI workforce models (talent recommendations, retention flight risk indices, expansion forecasts) and broadcast lifecycles through domain event schemas.'
   ],
   responsibilities: [
-    { title: 'Governance Finance Framework', description: 'Deploys FinanceFramework contract, multi-tenant session contexts, and financial lifecycle state transitions.', status: 'Completed & Verified' },
-    { title: 'Budgets, Ledgers & Procurement', description: 'Models budget categories, general ledger postings, and purchase request approval gates.', status: 'Completed & Verified' },
-    { title: 'Invoices, Cash Flow & Liquidity', description: 'Enforces accounts receivables aging, supplier schedules, cash flow statements, and rolling treasury projections.', status: 'Completed & Verified' },
-    { title: 'Risk Insights & Event Streams', description: 'Tracks AI cost optimization ideas, approval matrices, finance owners, and broadcasts budget, invoice, and closed period events.', status: 'Completed & Verified' }
+    { title: 'Governance HR Framework', description: 'Deploys HRFramework contract, multi-tenant session contexts, and employee lifecycle state transitions.', status: 'Completed & Verified' },
+    { title: 'Workforce, Recruitment & Hiring', description: 'Models strategic workforce plans, job requisitions, candidate pipelines, interview panels, and offer matrices.', status: 'Completed & Verified' },
+    { title: 'Employees, Onboarding & Performance', description: 'Enforces employment contracts, role ladders, IT checklists, 30/60/90 milestones, individual OKRs, and performance reviews.', status: 'Completed & Verified' },
+    { title: 'AI Talents, Engagement & Events', description: 'Tracks resume matching, attrition risk forecasts, anonymous surveys, recognition awards, and broadcasts HR lifecycles over standard event schemas.', status: 'Completed & Verified' }
   ]
 };
 
@@ -9933,6 +9933,92 @@ The FinanceOS Foundation module defines SBB's core domain-specific structures, f
     content: `# SBB SalesOS Foundation (BOSF-017)
 
 The SalesOS Foundation module defines SBB's core domain-specific structures, pipeline governance processes, deal recommendations, multi-tier account hierarchies, revenue forecasts, and sales-specific compliance policies.`
+  },
+  {
+    name: 'hr-framework.ts',
+    path: 'packages/hr-os/src/core/hr-framework.ts',
+    language: 'typescript',
+    role: 'HR Framework Contract',
+    description: 'Declares the main HRFramework contract interface supporting strategic workforce planning, job requisitions, candidate onboarding, performance reviews, training plans, compensation reviews, and employee offboarding.',
+    content: `import { HRContext } from './hr-context.js';
+import { WorkforcePlan } from '../workforce/workforce-plan.js';
+import { JobRequisition } from '../recruitment/job-requisition.js';
+import { Candidate } from '../recruitment/candidate.js';
+import { Employee, EmployeeId } from '../employees/employee.js';
+import { OnboardingPlan } from '../onboarding/onboarding-plan.js';
+import { PerformanceReview } from '../performance/performance-review.js';
+import { LearningPlan } from '../learning/learning-plan.js';
+import { CompensationPlan } from '../compensation/compensation-plan.js';
+import { HRPolicy } from '../governance/hr-policy.js';
+
+export interface HRFramework {
+  planWorkforce(uniquePlanCode: string, displayName: string, fiscalYear: number, budgetAmount: number, currencyCode: string, context: HRContext): Promise<WorkforcePlan>;
+  createJobRequisition(uniqueRequisitionCode: string, targetPositionId: string, baseSalaryMin: number, baseSalaryMax: number, currencyCode: string, context: HRContext): Promise<JobRequisition>;
+  hireEmployee(uniqueEmployeeCode: string, candidate: Candidate, associatedRequisition: JobRequisition, selectedSalary: number, selectedBonusPct: number, contractDocumentURI: string, context: HRContext): Promise<Employee>;
+  onboardEmployee(uniqueOnboardingPlanCode: string, employeeId: EmployeeId, expectedDurationDays: number, context: HRContext): Promise<OnboardingPlan>;
+  managePerformance(uniqueReviewCode: string, employeeId: EmployeeId, fiscalPeriodCode: string, context: HRContext): Promise<PerformanceReview>;
+  manageLearning(uniquePlanCode: string, employeeId: EmployeeId, context: HRContext): Promise<LearningPlan>;
+  manageCompensation(uniquePlanCode: string, employeeId: EmployeeId, adjustedBaseSalary: number, context: HRContext): Promise<CompensationPlan>;
+  offboardEmployee(employeeId: EmployeeId, exitReason: 'VOLUNTARY' | 'INVOLUNTARY_PERFORMANCE' | 'INVOLUNTARY_REDUNDANCY' | 'RETIREMENT', severanceWeeks: number, context: HRContext): Promise<boolean>;
+}`
+  },
+  {
+    name: 'employee-lifecycle.ts',
+    path: 'packages/hr-os/src/core/employee-lifecycle.ts',
+    language: 'typescript',
+    role: 'Employee Lifecycle Model',
+    description: 'Models candidate, onboarding, employment, and performance lifecycle state machines and transitions.',
+    content: `export type CandidateLifecycleState =
+  | 'APPLIED'
+  | 'SCREENED'
+  | 'INTERVIEWING'
+  | 'OFFER_EXTENDED'
+  | 'OFFER_ACCEPTED'
+  | 'OFFER_DECLINED'
+  | 'REJECTED'
+  | 'WITHDRAWN';
+
+export type OnboardingLifecycleState =
+  | 'PRE_BOARDING'
+  | 'DAY_ONE'
+  | 'IN_PROGRESS'
+  | 'MILESTONES_MET'
+  | 'COMPLETED'
+  | 'STALLED_ALERT';
+
+export type EmploymentLifecycleState =
+  | 'PROBATIONARY'
+  | 'ACTIVE'
+  | 'ON_LEAVE_MATERNITY_PATERNITY'
+  | 'ON_LEAVE_SABBATICAL'
+  | 'SUSPENDED'
+  | 'OFFBOARDING_IN_PROGRESS'
+  | 'TERMINATED_EXITED';
+
+export type PerformanceCycleState =
+  | 'CYCLE_PLANNING'
+  | 'SELF_ASSESSMENT_STAGE'
+  | 'MANAGER_REVIEW_STAGE'
+  | 'PEER_CALIBRATION_STAGE'
+  | 'COMPLETED_RECORDED';
+
+export interface EmployeeLifecycle {
+  readonly currentEmploymentState: EmploymentLifecycleState;
+  readonly probationEndCalculatedDate?: Date;
+  readonly lastStatusChangeAt: Date;
+  readonly terminationDate?: Date;
+  readonly terminationReasonCode?: 'VOLUNTARY' | 'INVOLUNTARY_PERFORMANCE' | 'INVOLUNTARY_REDUNDANCY' | 'RETIREMENT';
+}`
+  },
+  {
+    name: 'README.md',
+    path: 'packages/hr-os/README.md',
+    language: 'markdown',
+    role: 'Architectural Specs',
+    description: 'Detailed specifications for HROS Foundation (BOSF-019).',
+    content: `# SBB HROS Foundation (BOSF-019)
+
+The Human Resources Operating System (HROS) Foundation module defines SBB's core domain-specific structures, employee lifecycles, workforce planners, recruitment panels, compensation frameworks, development channels, employee feedback loops, and geographic labor compliance guidelines.`
   }
 ];
 

@@ -1,0 +1,55 @@
+{
+  "name": "@sbb/hr-os",
+  "version": "1.0.0",
+  "description": "HROS Foundation Module responsible for workforce planning, recruitment, employee lifecycle management, performance, learning, compensation, engagement, and organizational development of the Business Operating System Framework (BOSF)",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@sbb/shared": "^1.0.0",
+    "@sbb/runtime-platform": "^1.0.0",
+    "@sbb/runtime-api": "^1.0.0",
+    "@sbb/agent-framework": "^1.0.0",
+    "@sbb/agent-registry": "^1.0.0",
+    "@sbb/agent-runtime": "^1.0.0",
+    "@sbb/agent-skills": "^1.0.0",
+    "@sbb/agent-memory": "^1.0.0",
+    "@sbb/agent-communication": "^1.0.0",
+    "@sbb/agent-collaboration": "^1.0.0",
+    "@sbb/agent-planning": "^1.0.0",
+    "@sbb/agent-execution": "^1.0.0",
+    "@sbb/agent-governance": "^1.0.0",
+    "@sbb/agent-learning": "^1.0.0",
+    "@sbb/agent-marketplace": "^1.0.0",
+    "@sbb/agent-monitoring": "^1.0.0",
+    "@sbb/agent-sdk": "^1.0.0",
+    "@sbb/agent-api": "^1.0.0",
+    "@sbb/business-foundation": "^1.0.0",
+    "@sbb/business-department": "^1.0.0",
+    "@sbb/business-organization": "^1.0.0",
+    "@sbb/business-roles": "^1.0.0",
+    "@sbb/business-processes": "^1.0.0",
+    "@sbb/business-workflows": "^1.0.0",
+    "@sbb/business-performance": "^1.0.0",
+    "@sbb/business-policies": "^1.0.0",
+    "@sbb/business-knowledge": "^1.0.0",
+    "@sbb/business-dashboards": "^1.0.0",
+    "@sbb/business-reports": "^1.0.0",
+    "@sbb/business-automation": "^1.0.0",
+    "@sbb/business-intelligence": "^1.0.0",
+    "@sbb/business-integrations": "^1.0.0",
+    "@sbb/business-blueprints": "^1.0.0",
+    "@sbb/marketing-os": "^1.0.0",
+    "@sbb/sales-os": "^1.0.0",
+    "@sbb/finance-os": "^1.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.5",
+    "@types/node": "^20.12.12"
+  },
+  "publishConfig": {
+    "access": "restricted"
+  }
+}
