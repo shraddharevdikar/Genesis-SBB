@@ -1,28 +1,28 @@
 import { TicketDetails, FileNode, FutureTicket } from './types';
 
 export const ticketDetails: TicketDetails = {
-  id: 'BOSF-016',
-  title: 'MarketingOS Foundation (M9.1)',
+  id: 'BOSF-017',
+  title: 'SalesOS Foundation (M9.2)',
   status: 'DONE',
   priority: 'CRITICAL',
   author: 'SBB Principal Architect',
   assignee: 'shraddha.revdikar@gmail.com',
-  objective: 'Build the foundational MarketingOS architecture responsible for campaign planning, multi-channel strategy execution (SEO, GEO, AEO, Paid, Social, Email, Affiliate), lead funnel conversions, and marketing-specific compliance policies.',
-  modulePath: 'packages/marketing-os/src/core/marketing-framework.ts',
+  objective: 'Build the foundational SalesOS architecture responsible for lead ingestion, BANT qualification, opportunity lifecycle stages, multi-tier accounts, quotations with pricing/discounts, and automated AI revenue forecasting.',
+  modulePath: 'packages/sales-os/src/core/sales-framework.ts',
   requirements: [
-    'Establish the MarketingFramework contract supporting PlanStrategy, DefineAudience, CreateCampaign, LaunchCampaign, MonitorPerformance, OptimizeCampaign, and CloseCampaign operations.',
-    'Model comprehensive marketing strategy tiers, ICP audience personas, and campaign budgeting/timeline constraints.',
-    'Formulate channels representing traditional SEO/PPC/Social alongside next-gen Conversational SEO (GEO/AEO).',
-    'Design asset-level and plan-level content marketing models with integrated calendar timelines.',
-    'Incorporate lead funnel conversions, originals source tracking, and multi-touch data-driven attribution models.',
-    'Enforce governance policy audits (GDPR, CAN-SPAM) paired with automated warning or pause action triggers.',
-    'Track performance KPIs (CAC, ROAS, MQLs) and broadcast campaign life cycles through enterprise domain events.'
+    'Establish the SalesFramework contract supporting CaptureLead, QualifyLead, CreateOpportunity, AdvancePipeline, GenerateQuotation, ForecastRevenue, and CloseOpportunity operations.',
+    'Model enterprise sales lead management, original lead sources, ICP lead scores, and BANT qualification checklists.',
+    'Formulate account structures representing customer accounts, multi-tier account hierarchies, and geographic/industry segments.',
+    'Design contact management representing professional business contacts paired with buying committee roles.',
+    'Incorporate sales opportunity trackers with sequence-ordered stage pipelines, win probabilities, and value variables.',
+    'Enforce pricing model systems paired with policy-compliant discount ceilings and multi-level approver rules.',
+    'Track territory revenue forecasting (commit vs AI predicted) and broadcast sales lifecycles through domain event schemas.'
   ],
   responsibilities: [
-    { title: 'Governance Campaign Framework', description: 'Deploys MarketingFramework contract, time-zone aware context sessions, and campaign lifecycle state transitions.', status: 'Completed & Verified' },
-    { title: 'Conversational & Traditional Channels', description: 'Models GEO citation ranks, AEO answer snippets, PPC bid tracking, social calendars, email campaigns, and affiliate shares.', status: 'Completed & Verified' },
-    { title: 'Leads, Attribution, and AI Assistant', description: 'Enforces original source tracking, multi-touch attribution calculations, and autonomous AI budget shift recommenders.', status: 'Completed & Verified' },
-    { title: 'Compliance Policies & Event Streams', description: 'Tracks department owners, CAN-SPAM policy rules, and broadcasts campaign created, launched, optimized, and completed event schemas.', status: 'Completed & Verified' }
+    { title: 'Governance Sales Framework', description: 'Deploys SalesFramework contract, multi-tenant session contexts, and sales lifecycle state transitions.', status: 'Completed & Verified' },
+    { title: 'Leads, Accounts & Contacts', description: 'Models BANT criteria, ICP scoring rules, parent accounts division depths, and buying committee sentiment metrics.', status: 'Completed & Verified' },
+    { title: 'Opportunities, Pricing & CS', description: 'Enforces sequential stage checks, ARR/TCV valuations, automated approval discounts, and customer adoption health thresholds.', status: 'Completed & Verified' },
+    { title: 'Forecast Analyses & Event Streams', description: 'Tracks manager commits vs AI MAPE projections, sales owners, and broadcasts lead/opportunity created, won, or lost events.', status: 'Completed & Verified' }
   ]
 };
 
@@ -9813,6 +9813,61 @@ export interface GeoChannel {
     content: `# SBB MarketingOS Foundation (BOSF-016)
 
 The MarketingOS Foundation module defines SBB's core domain-specific structures, campaign strategies, optimization pipelines, lead funnels, and marketing-specific governance policies.`
+  },
+  {
+    name: 'sales-framework.ts',
+    path: 'packages/sales-os/src/core/sales-framework.ts',
+    language: 'typescript',
+    role: 'Sales Framework Contract',
+    description: 'Declares the main SalesFramework contract interface supporting lead capturing, BANT qualification, opportunity creation, pipeline advancement, pricing/quotation generation, and revenue forecasting.',
+    content: `import { SalesContext } from './sales-context.js';
+import { LeadId, SalesLead } from '../leads/sales-lead.js';
+import { LeadSource } from '../leads/lead-source.js';
+import { LeadQualification } from '../leads/lead-qualification.js';
+import { OpportunityId, SalesOpportunity } from '../opportunities/sales-opportunity.js';
+import { OpportunityStage } from '../opportunities/opportunity-stage.js';
+import { OpportunityValue } from '../opportunities/opportunity-value.js';
+import { QuotationId, SalesQuotation, QuotationLineItem } from '../quotations/sales-quotation.js';
+import { PricingModel } from '../quotations/pricing-model.js';
+import { DiscountPolicy } from '../quotations/discount-policy.js';
+import { RevenueForecast } from '../pipeline/revenue-forecast.js';
+
+export interface SalesFramework {
+  captureLead(uniqueLeadCode: string, companyName: string, primaryContactName: string, primaryContactEmailString: string, originalSource: LeadSource, context: SalesContext): Promise<SalesLead>;
+  qualifyLead(leadId: LeadId, qualificationCriteria: LeadQualification, context: SalesContext): Promise<SalesLead>;
+  createOpportunity(uniqueOpportunityCode: string, displayName: string, parentAccountIdString: string, initialValue: OpportunityValue, expectedCloseDate: Date, context: SalesContext): Promise<SalesOpportunity>;
+  advancePipeline(opportunityId: OpportunityId, targetStage: OpportunityStage, context: SalesContext): Promise<SalesOpportunity>;
+  generateQuotation(uniqueQuotationCode: string, opportunityId: OpportunityId, lineItems: QuotationLineItem[], pricingModel: PricingModel, discountPolicy: DiscountPolicy, context: SalesContext): Promise<SalesQuotation>;
+  forecastRevenue(targetFiscalQuarterString: string, salesTerritoryCode: string, quotaTargetAmount: number, context: SalesContext): Promise<RevenueForecast>;
+  closeOpportunity(opportunityId: OpportunityId, isWonFlag: boolean, closedReasonNotesText: string, actualClosedDate: Date, context: SalesContext): Promise<SalesOpportunity>;
+}`
+  },
+  {
+    name: 'win-probability.ts',
+    path: 'packages/sales-os/src/opportunities/win-probability.ts',
+    language: 'typescript',
+    role: 'Win Probability Model',
+    description: 'Models standard win probabilities by blending sales representative assessments and AI-driven predictions alongside confidence intervals.',
+    content: `export interface WinProbability {
+  readonly probabilityId: string;
+  readonly salesRepSubjectiveProbabilityDecimal: number;
+  readonly aiModelPredictiveProbabilityDecimal: number;
+  readonly appliedBlendedProbabilityDecimal: number;
+  readonly aiConfidenceIntervalLowerBoundDecimal: number;
+  readonly aiConfidenceIntervalUpperBoundDecimal: number;
+  readonly generalDealHealthRatingCode: 'HEALTHY' | 'STAGNANT_RISK' | 'SLIPPING_TIMELINE' | 'COMPETITIVE_THREAT';
+  readonly lastAssessmentAt: Date;
+}`
+  },
+  {
+    name: 'README.md',
+    path: 'packages/sales-os/README.md',
+    language: 'markdown',
+    role: 'Architectural Specs',
+    description: 'Detailed specifications for SalesOS Foundation (BOSF-017).',
+    content: `# SBB SalesOS Foundation (BOSF-017)
+
+The SalesOS Foundation module defines SBB's core domain-specific structures, pipeline governance processes, deal recommendations, multi-tier account hierarchies, revenue forecasts, and sales-specific compliance policies.`
   }
 ];
 
