@@ -159,6 +159,9 @@
       ],
       "@sbb/business-reports": [
         "./packages/business-reports/src/index.ts"
+      ],
+      "@sbb/business-automation": [
+        "./packages/business-automation/src/index.ts"
       ]
     },
     "allowImportingTsExtensions": true,

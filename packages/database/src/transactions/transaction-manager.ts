@@ -23,7 +23,7 @@ export class TransactionManager {
     options?: {
       maxWait?: number;
       timeout?: number;
-      isolationLevel?: Prisma.TransactionIsolationLevel;
+      isolationLevel?: any;
     }
   ): Promise<T> {
     return this.prisma.$transaction(work, options);

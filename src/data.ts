@@ -1,28 +1,28 @@
 import { TicketDetails, FileNode, FutureTicket } from './types';
 
 export const ticketDetails: TicketDetails = {
-  id: 'BOSF-011',
-  title: 'Enterprise Business Reports Framework',
+  id: 'BOSF-012',
+  title: 'Enterprise Business Automation Framework',
   status: 'DONE',
   priority: 'CRITICAL',
   author: 'SBB Principal Architect',
   assignee: 'shraddha.revdikar@gmail.com',
-  objective: 'Build the foundational Business Reports Framework responsible for defining reusable report configurations, templates structure, publication distributions, retention archives, and compliance classifications.',
-  modulePath: 'packages/business-reports/src/core/report-framework.ts',
+  objective: 'Build the foundational Business Automation Framework responsible for defining reusable business automation plans, event/scheduled triggers, conditional criteria, action compositions, calendar scheduling, governance approvals, execution monitoring, and lifecycle streams.',
+  modulePath: 'packages/business-automation/src/core/automation-framework.ts',
   requirements: [
-    'Establish the ReportFramework contract supporting CreateReport, DefineTemplate, PublishReport, ArchiveReport, DistributeReport, and RetireReport operations.',
-    'Model Executive, Department, Financial, Compliance, Operational, and AI Workforce reports with semantic version logs.',
-    'Formulate Document layouts and Templates supporting orientation, sizing margins, and dynamic or standard data sources bindings.',
-    'Design multi-level report chapters, ordered sections, and key findings summaries with cryptographic verification hashes.',
-    'Incorporate Publication tracks with subscription listings, secure delivery channels, and scheduled distributions.',
-    'Enforce compliant Archiving rules under specific retention periods and active legal holds on secure storage platforms.',
-    'Track report owners, approval workflows reviews, confidentiality classification levels, and broadcast domain report events.'
+    'Establish the AutomationFramework contract supporting CreateAutomation, DefineTrigger, DefineCondition, DefineAction, EnableAutomation, DisableAutomation, and RetireAutomation operations.',
+    'Model Event-Based, Scheduled, Policy-Based, KPI-Based, and AI-Assisted business automations with semantic version logs.',
+    'Formulate Triggers supporting system events, crontab schedules, KPI thresholds, and compliance policy triggers.',
+    'Design Conditions modeling rules, limits, operator evaluations, and compound logical grouping trees.',
+    'Incorporate Actions defining workflows execution, system alerts, custom tasks, approvals requests, and external webhook integrations.',
+    'Enforce Scheduling pattern limits, timezone-aware execution windows, and corporate holiday calendar constraints.',
+    'Track automation owners, review workflows, safety policy links, failure-rate health metrics, and broadcast domain automation events.'
   ],
   responsibilities: [
-    { title: 'Governance Report Blueprints', description: 'Deploys ReportFramework contract, multi-tenant session contexts, semantic versions, and lifecycle status checks.', status: 'Completed & Verified' },
-    { title: 'Templates Layout & Sections Bindings', description: 'Models page orientations/margins, report template style configurations, data source bindings, and ordered chapters section schemas.', status: 'Completed & Verified' },
-    { title: 'Publication Tracks & Secure Retention', description: 'Enforces distribution target mediums (SFTP, secure GPG email), subscription filters, retention policy timers, and legal holds.', status: 'Completed & Verified' },
-    { title: 'Document Security & Event Streams', description: 'Tracks reviewers approval steps, clearance/confidentiality levels, ownership records, and broadcasts report created, published, archived, and retired events.', status: 'Completed & Verified' }
+    { title: 'Governance Automation Blueprints', description: 'Deploys AutomationFramework contract, multi-tenant session contexts, semantic versions, and lifecycle status checks.', status: 'Completed & Verified' },
+    { title: 'Triggers, Criteria, and Action Intent', description: 'Models event/cron triggers, business rules comparison operator trees, action sequence orderings, and external URI refs.', status: 'Completed & Verified' },
+    { title: 'Timezone Schedulers & Monitoring', description: 'Enforces daily execution windows, recurrence interval multiplier limits, success/failure rate calculations, and SLA benchmarks.', status: 'Completed & Verified' },
+    { title: 'Approval Security & Event Streams', description: 'Tracks reviewers approval steps, policy risk level assessments, ownership records, and broadcasts automation created, enabled, disabled, and retired events.', status: 'Completed & Verified' }
   ]
 };
 
@@ -9456,6 +9456,77 @@ export interface ReportTemplate {
     content: `# Enterprise Business Reports Framework (BOSF-011)
 
 The Enterprise Business Reports Framework module defines SBB's core domain-independent corporate report documents structure, layout template properties, distribution listings, retention archives, legal hold rules, classification safety, and approval workflows under the Business Operating System Framework (BOSF).`
+  },
+  {
+    name: 'automation-framework.ts',
+    path: 'packages/business-automation/src/core/automation-framework.ts',
+    language: 'typescript',
+    role: 'Automation Framework Contract',
+    description: 'Declares the main AutomationFramework contract interface supporting creation, trigger mapping, condition checks, action intents, and active lifecycle controls.',
+    content: `import { AutomationId } from '../identity/automation-id.js';
+import { TriggerId } from '../identity/trigger-id.js';
+import { ActionId } from '../identity/action-id.js';
+import { AutomationContext } from './automation-context.js';
+import { BusinessAutomation, AutomationCategoryCode } from '../automation/business-automation.js';
+import { AutomationTrigger } from '../triggers/automation-trigger.js';
+import { AutomationCondition } from '../conditions/automation-condition.js';
+import { AutomationAction } from '../actions/automation-action.js';
+
+export interface AutomationFramework {
+  createAutomation(uniqueAutomationCode: string, category: AutomationCategoryCode, displayName: string, descriptionNotesText: string, context: AutomationContext): Promise<BusinessAutomation>;
+  defineTrigger(automationId: AutomationId, trigger: AutomationTrigger, context: AutomationContext): Promise<TriggerId>;
+  defineCondition(automationId: AutomationId, condition: AutomationCondition, context: AutomationContext): Promise<string>;
+  defineAction(automationId: AutomationId, action: AutomationAction, context: AutomationContext): Promise<ActionId>;
+  enableAutomation(automationId: AutomationId, context: AutomationContext): Promise<void>;
+  disableAutomation(automationId: AutomationId, reasonNotesText: string, context: AutomationContext): Promise<void>;
+  retireAutomation(automationId: AutomationId, context: AutomationContext): Promise<void>;
+}`
+  },
+  {
+    name: 'business-automation.ts',
+    path: 'packages/business-automation/src/automation/business-automation.ts',
+    language: 'typescript',
+    role: 'Business Automation Model',
+    description: 'Models multi-tenant versioned business automations linking triggers, condition evaluations, ordered action sequences, and calendar schedules.',
+    content: `import { AutomationId } from '../identity/automation-id.js';
+import { AutomationTrigger } from '../triggers/automation-trigger.js';
+import { AutomationCondition } from '../conditions/automation-condition.js';
+import { ActionSequence } from '../actions/action-sequence.js';
+import { AutomationSchedule } from '../scheduling/automation-schedule.js';
+import { AutomationVersion } from '../core/automation-version.js';
+import { AutomationLifecycle } from '../core/automation-lifecycle.js';
+
+export type AutomationCategoryCode =
+  | 'EVENT_BASED_WORKFLOW_ROUTE'
+  | 'SCHEDULED_INTELLIGENCE_CRON'
+  | 'POLICY_BASED_ENFORCEMENT'
+  | 'KPI_BASED_ESCORT_HEAL'
+  | 'AI_ASSISTED_AUTONOMOUS_LOOP';
+
+export interface BusinessAutomation {
+  readonly automationId: AutomationId;
+  readonly tenantId: string;
+  readonly uniqueAutomationCode: string;
+  readonly displayName: string;
+  readonly descriptionNotesText: string;
+  readonly category: AutomationCategoryCode;
+  readonly trigger: AutomationTrigger;
+  readonly conditionCheck?: AutomationCondition;
+  readonly actionSequence: ActionSequence;
+  readonly schedule?: AutomationSchedule;
+  readonly version: AutomationVersion;
+  readonly lifecycle: AutomationLifecycle;
+}`
+  },
+  {
+    name: 'README.md',
+    path: 'packages/business-automation/README.md',
+    language: 'markdown',
+    role: 'Architectural Specs',
+    description: 'Detailed specifications for BOSF-012 Enterprise Business Automation Framework.',
+    content: `# Enterprise Business Automation Framework (BOSF-012)
+
+The Enterprise Business Automation Framework module defines SBB's core domain-independent corporate automation configurations, event/scheduled triggers, conditional evaluation criteria, action sequences, business calendars, execution windows, safety approval gates, monitoring metrics, and active lifecycle logs of the Business Operating System Framework (BOSF).`
   }
 ];
 

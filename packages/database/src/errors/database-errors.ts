@@ -29,7 +29,7 @@ export class DatabaseValidationError extends ValidationError {
  * Translates low-level Prisma execution exceptions into highly structured, descriptive platform errors.
  */
 export function handleDatabaseError(error: any): Error {
-  if (error instanceof Prisma.PrismaClientKnownRequestError) {
+  if (error && typeof error === 'object' && (error.name === 'PrismaClientKnownRequestError' || error.constructor?.name === 'PrismaClientKnownRequestError')) {
     switch (error.code) {
       case 'P2002': {
         const target = Array.isArray(error.meta?.target)
@@ -59,11 +59,11 @@ export function handleDatabaseError(error: any): Error {
     }
   }
 
-  if (error instanceof Prisma.PrismaClientValidationError) {
+  if (error && typeof error === 'object' && (error.name === 'PrismaClientValidationError' || error.constructor?.name === 'PrismaClientValidationError')) {
     return new DatabaseValidationError(`Database query validation error: ${error.message}`);
   }
 
-  if (error instanceof Prisma.PrismaClientInitializationError) {
+  if (error && typeof error === 'object' && (error.name === 'PrismaClientInitializationError' || error.constructor?.name === 'PrismaClientInitializationError')) {
     return new DatabaseError(`Database connection initialization error: ${error.message}`, 500);
   }
 
