@@ -1,28 +1,28 @@
 import { TicketDetails, FileNode, FutureTicket } from './types';
 
 export const ticketDetails: TicketDetails = {
-  id: 'BOSF-012',
-  title: 'Enterprise Business Automation Framework',
+  id: 'BOSF-013',
+  title: 'Enterprise Business Intelligence Framework',
   status: 'DONE',
   priority: 'CRITICAL',
   author: 'SBB Principal Architect',
   assignee: 'shraddha.revdikar@gmail.com',
-  objective: 'Build the foundational Business Automation Framework responsible for defining reusable business automation plans, event/scheduled triggers, conditional criteria, action compositions, calendar scheduling, governance approvals, execution monitoring, and lifecycle streams.',
-  modulePath: 'packages/business-automation/src/core/automation-framework.ts',
+  objective: 'Build the foundational Business Intelligence Framework responsible for defining reusable business intelligence scopes, analytical insight trend and anomaly patterns, horizon forecasting, priority advisory recommendations, and structured decision context tradeoffs.',
+  modulePath: 'packages/business-intelligence/src/core/intelligence-framework.ts',
   requirements: [
-    'Establish the AutomationFramework contract supporting CreateAutomation, DefineTrigger, DefineCondition, DefineAction, EnableAutomation, DisableAutomation, and RetireAutomation operations.',
-    'Model Event-Based, Scheduled, Policy-Based, KPI-Based, and AI-Assisted business automations with semantic version logs.',
-    'Formulate Triggers supporting system events, crontab schedules, KPI thresholds, and compliance policy triggers.',
-    'Design Conditions modeling rules, limits, operator evaluations, and compound logical grouping trees.',
-    'Incorporate Actions defining workflows execution, system alerts, custom tasks, approvals requests, and external webhook integrations.',
-    'Enforce Scheduling pattern limits, timezone-aware execution windows, and corporate holiday calendar constraints.',
-    'Track automation owners, review workflows, safety policy links, failure-rate health metrics, and broadcast domain automation events.'
+    'Establish the IntelligenceFramework contract supporting GenerateInsight, AnalyzeTrend, DetectAnomaly, ProduceForecast, CreateRecommendation, and RetireIntelligence operations.',
+    'Model Business, Department, Customer, Product, Financial, and AI Workforce intelligence domains with semantic version logs.',
+    'Formulate Insights covering trend directions, anomaly drifts, correlation structures, and root cause environmental contribution factors.',
+    'Design Forecasts representing revenue, demand, capacity, resource, and pipeline horizons paired with confidence distribution ranges.',
+    'Incorporate Recommendations detailing advisory strategic, operational, and financial impact cost-savings OPEX benchmarks.',
+    'Enforce Decision Support sessions capturing proposed options, qualitative tradeoffs pros/cons, and compliance policy risk levels.',
+    'Track intelligence owners, data completeness scores, validator audit trails, and broadcast domain intelligence events.'
   ],
   responsibilities: [
-    { title: 'Governance Automation Blueprints', description: 'Deploys AutomationFramework contract, multi-tenant session contexts, semantic versions, and lifecycle status checks.', status: 'Completed & Verified' },
-    { title: 'Triggers, Criteria, and Action Intent', description: 'Models event/cron triggers, business rules comparison operator trees, action sequence orderings, and external URI refs.', status: 'Completed & Verified' },
-    { title: 'Timezone Schedulers & Monitoring', description: 'Enforces daily execution windows, recurrence interval multiplier limits, success/failure rate calculations, and SLA benchmarks.', status: 'Completed & Verified' },
-    { title: 'Approval Security & Event Streams', description: 'Tracks reviewers approval steps, policy risk level assessments, ownership records, and broadcasts automation created, enabled, disabled, and retired events.', status: 'Completed & Verified' }
+    { title: 'Governance Intelligence Blueprints', description: 'Deploys IntelligenceFramework contract, multi-tenant session contexts, semantic versions, and lifecycle status checks.', status: 'Completed & Verified' },
+    { title: 'Insights, Forecasting, and Horizon Metrics', description: 'Models trend directions, sigma offset anomalies, root cause contribution factors, and forecast confidence intervals.', status: 'Completed & Verified' },
+    { title: 'Recommendations & Decision Support', description: 'Enforces tactical priority levels, financial OPEX impacts, alternative options feasibility indexes, and qualitative net benefit tradeoffs.', status: 'Completed & Verified' },
+    { title: 'Quality Validation & Event Streams', description: 'Tracks peer reviewer step approvals, data completeness ratios, ownership certification, and broadcasts insight, forecast, recommendation, and retire events.', status: 'Completed & Verified' }
   ]
 };
 
@@ -9527,6 +9527,74 @@ export interface BusinessAutomation {
     content: `# Enterprise Business Automation Framework (BOSF-012)
 
 The Enterprise Business Automation Framework module defines SBB's core domain-independent corporate automation configurations, event/scheduled triggers, conditional evaluation criteria, action sequences, business calendars, execution windows, safety approval gates, monitoring metrics, and active lifecycle logs of the Business Operating System Framework (BOSF).`
+  },
+  {
+    name: 'intelligence-framework.ts',
+    path: 'packages/business-intelligence/src/core/intelligence-framework.ts',
+    language: 'typescript',
+    role: 'Intelligence Framework Contract',
+    description: 'Declares the main IntelligenceFramework contract interface supporting descriptive insights, trend patterns, anomalies, projections forecasting, and advisory recommendations.',
+    content: `import { InsightId } from '../identity/insight-id.js';
+import { RecommendationId } from '../identity/recommendation-id.js';
+import { ForecastId } from '../identity/forecast-id.js';
+import { IntelligenceContext } from './intelligence-context.js';
+import { BusinessInsight, InsightCategoryCode } from '../insights/business-insight.js';
+import { TrendAnalysis } from '../insights/trend-analysis.js';
+import { AnomalyDetection } from '../insights/anomaly-detection.js';
+import { BusinessForecast, ForecastCategoryCode } from '../forecasting/business-forecast.js';
+import { ForecastHorizon } from '../forecasting/forecast-horizon.js';
+import { BusinessRecommendation, RecommendationCategoryCode } from '../recommendations/business-recommendation.js';
+import { RecommendationPriorityCode } from '../recommendations/recommendation-priority.js';
+import { RecommendationImpact } from '../recommendations/recommendation-impact.js';
+
+export interface IntelligenceFramework {
+  generateInsight(uniqueInsightCode: string, category: InsightCategoryCode, displayName: string, summaryDescriptionText: string, affectedResourceURI: string, confidenceScoreRatio: number, context: IntelligenceContext): Promise<BusinessInsight>;
+  analyzeTrend(uniqueInsightCode: string, displayName: string, summaryDescriptionText: string, affectedResourceURI: string, measuredPeriodDaysCount: number, historicalDataPointsCount: number, context: IntelligenceContext): Promise<TrendAnalysis>;
+  detectAnomaly(uniqueInsightCode: string, displayName: string, summaryDescriptionText: string, affectedResourceURI: string, expectedMedianValue: number, observedActualValue: number, context: IntelligenceContext): Promise<AnomalyDetection>;
+  produceForecast(uniqueForecastCode: string, category: ForecastCategoryCode, displayName: string, horizon: ForecastHorizon, targetModelCode: string, context: IntelligenceContext): Promise<BusinessForecast>;
+  createRecommendation(uniqueRecommendationCode: string, category: RecommendationCategoryCode, displayName: string, detailedDescriptionText: string, priority: RecommendationPriorityCode, expectedImpact: RecommendationImpact, sourceInsightIdStringList: string[], context: IntelligenceContext): Promise<BusinessRecommendation>;
+  retireIntelligence(intelligenceScopeId: string, context: IntelligenceContext): Promise<void>;
+}`
+  },
+  {
+    name: 'business-intelligence.ts',
+    path: 'packages/business-intelligence/src/intelligence/business-intelligence.ts',
+    language: 'typescript',
+    role: 'Business Intelligence Model',
+    description: 'Models multi-tenant versioned business intelligence aggregates linking registered insights, active horizon forecasts, and advisory recommendations.',
+    content: `import { InsightId } from '../identity/insight-id.js';
+import { IntelligenceDomainCode } from './intelligence-domain.js';
+import { IntelligenceModel } from './intelligence-model.js';
+import { BusinessInsight } from '../insights/business-insight.js';
+import { BusinessForecast } from '../forecasting/business-forecast.js';
+import { BusinessRecommendation } from '../recommendations/business-recommendation.js';
+import { IntelligenceVersion } from '../core/intelligence-version.js';
+import { IntelligenceLifecycle } from '../core/intelligence-lifecycle.js';
+
+export interface BusinessIntelligence {
+  readonly intelligenceScopeId: string;
+  readonly tenantId: string;
+  readonly uniqueScopeCode: string;
+  readonly displayName: string;
+  readonly descriptionNotesText: string;
+  readonly targetDomainCode: IntelligenceDomainCode;
+  readonly activeModelsList: IntelligenceModel[];
+  readonly registeredInsightsList: BusinessInsight[];
+  readonly activeForecastsList: BusinessForecast[];
+  readonly criticalRecommendationsList: BusinessRecommendation[];
+  readonly version: IntelligenceVersion;
+  readonly lifecycle: IntelligenceLifecycle;
+}`
+  },
+  {
+    name: 'README.md',
+    path: 'packages/business-intelligence/README.md',
+    language: 'markdown',
+    role: 'Architectural Specs',
+    description: 'Detailed specifications for BOSF-013 Enterprise Business Intelligence Framework.',
+    content: `# Enterprise Business Intelligence Framework (BOSF-013)
+
+The Enterprise Business Intelligence Framework module defines SBB's core domain-independent corporate intelligence scopes, analytical model descriptions, trend insights, anomalies detection, forecasting projections, action-prioritized recommendations, and structured decision context tradeoffs of the Business Operating System Framework (BOSF).`
   }
 ];
 

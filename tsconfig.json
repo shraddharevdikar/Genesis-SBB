@@ -162,6 +162,9 @@
       ],
       "@sbb/business-automation": [
         "./packages/business-automation/src/index.ts"
+      ],
+      "@sbb/business-intelligence": [
+        "./packages/business-intelligence/src/index.ts"
       ]
     },
     "allowImportingTsExtensions": true,
