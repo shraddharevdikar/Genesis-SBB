@@ -10341,6 +10341,43 @@ export interface HealthcareFramework {
     content: `# SBB HealthcareOS Foundation (BOSF-024)
 
 The Healthcare Operating System (HealthcareOS) is SBB's core industry-specific operating system designed to orchestrate patient care, track provider structures, manage appointments, control medical billing, coordinate diagnostic laboratories and electronic prescriptions, and direct clinical and operational AI-driven workflows by composing existing SBB Operating Systems.`
+  },
+  {
+    name: 'manufacturing-framework.ts',
+    path: 'packages/manufacturing-os/src/core/manufacturing-framework.ts',
+    language: 'typescript',
+    role: 'Manufacturing Framework Contract',
+    description: 'Declares the main ManufacturingFramework contract interface supporting production planning, procurement, production scheduling, shop floor execution, quality inspections, maintenance, and logistics shipments dispatch.',
+    content: `import { ManufacturingContext } from './manufacturing-context.js';
+import { ProductionPlan } from '../planning/production-plan.js';
+import { PurchaseOrder } from '../procurement/purchase-order.js';
+import { ProductionSchedule } from '../planning/production-schedule.js';
+import { ProductionOrder } from '../production/production-order.js';
+import { QualityCheck } from '../quality/quality-check.js';
+import { MaintenanceWorkOrder } from '../maintenance/maintenance-work-order.js';
+import { Shipment } from '../logistics/shipment.js';
+import { ProductId } from '../products/product.js';
+import { SupplierId } from '../procurement/supplier.js';
+
+export interface ManufacturingFramework {
+  planProduction(uniquePlanCode: string, strategicTimeHorizonMonthsCount: number, targetProductIdsList: ProductId[], plannedRequirementsQuantitiesList: number[], approvedBudgetCapAmount: number, currencyCode: string, context?: ManufacturingContext): Promise<ProductionPlan>;
+  procureMaterials(uniquePoCode: string, associatedSupplierId: SupplierId, itemProductIdsList: ProductId[], orderedQuantitiesList: number[], unitCostsList: number[], expectedDeliveryDatesList: Date[], currencyCode: string, context?: ManufacturingContext): Promise<PurchaseOrder>;
+  scheduleProduction(uniqueScheduleCode: string, associatedProductionOrderIdsList: string[], targetProductIdsList: ProductId[], assignedWorkCenterIdsList: string[], scheduledStartTimesList: Date[], scheduledEndTimesList: Date[], targetUnitsToProduceQuantitiesList: number[], context?: ManufacturingContext): Promise<ProductionSchedule>;
+  executeProduction(uniqueOrderCode: string, targetProductId: ProductId, associatedBomIdString: string, associatedRoutingIdString: string, plannedQuantityToManufacture: number, targetStartDate: Date, targetEndDate: Date, currencyCode: string, context?: ManufacturingContext): Promise<ProductionOrder>;
+  performQualityInspection(uniqueCheckCode: string, inspectionPlanIdString: string, associatedBatchCodeText: string, associatedWorkOrderIdString: string, totalUnitsTestedCount: number, failedUnitsCount: number, measurementsPayloadJSONString: string, context?: ManufacturingContext): Promise<QualityCheck>;
+  maintainEquipment(uniqueWorkOrderCode: string, targetMachineIdString: string, classification: 'PREVENTIVE_ROUTINE' | 'UNPLANNED_BREAKDOWN' | 'CALIBRATION' | 'SAFETY_AUDIT', severityLevel: 'LOW_ROUTINE' | 'MEDIUM_URGENT' | 'HIGH_CRITICAL_BREAKDOWN', problemStatementSummary: string, context?: ManufacturingContext): Promise<MaintenanceWorkOrder>;
+  dispatchProducts(uniqueShipmentCode: string, associatedSalesOrderIdString: string, senderWarehouseIdString: string, itemProductIdsList: ProductId[], quantitiesShippedList: number[], batchLotCodesUsedList: string[], destinationAddressString: string, shippingCarrierName: string, estimatedWeightKilogramsDecimal: number, estimatedDeliveryDate: Date, context?: ManufacturingContext): Promise<Shipment>;
+}`
+  },
+  {
+    name: 'README.md',
+    path: 'packages/manufacturing-os/README.md',
+    language: 'markdown',
+    role: 'Architectural Specs',
+    description: 'Detailed specifications for ManufacturingOS Foundation (BOSF-025).',
+    content: `# SBB ManufacturingOS Foundation (BOSF-025)
+
+The Manufacturing Operating System (ManufacturingOS) is SBB's industry-specific operating system designed to orchestrate manufacturing lifecycles, track product specifications, build bills of materials (BOM), model production schedules, automate inventory routing across warehouses, direct shop floor work orders, enforce industrial quality checks, manage preventive machinery maintenance, and streamline shipment dispatches by composing existing SBB Operating Systems.`
   }
 ];
 

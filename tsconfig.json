@@ -198,6 +198,9 @@
       ],
       "@sbb/healthcare-os": [
         "./packages/healthcare-os/src/index.ts"
+      ],
+      "@sbb/manufacturing-os": [
+        "./packages/manufacturing-os/src/index.ts"
       ]
     },
     "allowImportingTsExtensions": true,
