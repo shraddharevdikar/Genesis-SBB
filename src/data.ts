@@ -1,28 +1,29 @@
 import { TicketDetails, FileNode, FutureTicket } from './types';
 
 export const ticketDetails: TicketDetails = {
-  id: 'BOSF-019',
-  title: 'HROS Foundation (M9.4)',
+  id: 'BOSF-020',
+  title: 'OperationsOS Foundation (M9.5)',
   status: 'DONE',
   priority: 'CRITICAL',
   author: 'SBB Principal Architect',
   assignee: 'shraddha.revdikar@gmail.com',
-  objective: 'Build the foundational HROS architecture responsible for workforce planning, recruitment, employee lifecycle management, performance, learning, compensation, engagement, and organizational development.',
-  modulePath: 'packages/hr-os/src/core/hr-framework.ts',
+  objective: 'Establish the foundational architecture for OperationsOS responsible for operational planning, project delivery, resource management, quality control, service level agreements, risk governance, and AI-assisted continuous improvement loops.',
+  modulePath: 'packages/operations-os/src/core/operations-framework.ts',
   requirements: [
-    'Establish the HRFramework contract supporting PlanWorkforce, CreateJobRequisition, HireEmployee, OnboardEmployee, ManagePerformance, ManageLearning, ManageCompensation, and OffboardEmployee operations.',
-    'Model strategic workforce planning, target budgets, specific positions, and corporate organizational chart depths.',
-    'Formulate job requisitions, candidate profiles, interview structures, and dual-party hiring decisions.',
-    'Design employee records, employment contracts, role ladders, and transient leave status entries.',
-    'Incorporate onboarding programs with IT checklists, assigned buddies, and 30/60/90-day milestones.',
-    'Enforce performance goal OKRs, calibration review sheets, competency requirements, and progression paths.',
-    'Track AI workforce models (talent recommendations, retention flight risk indices, expansion forecasts) and broadcast lifecycles through domain event schemas.'
+    'Create the core OperationsFramework interface declaring PlanOperations, CreateProject, CreateWorkOrder, AssignResources, ExecuteOperations, MonitorOperations, and ImproveOperations operations.',
+    'Model strategic planning structures with throughput objectives, progress weights, and roadmap milestones.',
+    'Formulate delivery projects with dynamic stage phases, milestones, finish-to-start dependencies, and lag duration limits.',
+    'Design work orders, task elements, group-directed triage queues, and operational resource assignments.',
+    'Incorporate resource registries, dynamic capacity plans with gap forecast solvers, and utilization logs.',
+    'Track physical asset registers, asset lifecycle transition records, and recurring preventive/corrective maintenance schedules.',
+    'Establish client/internal service requests, SLA response targets, and quality standard inspection metrics.',
+    'Broaden risk controls with probability and severity matrices, policy rule definitions, and enterprise event streaming telemetry.'
   ],
   responsibilities: [
-    { title: 'Governance HR Framework', description: 'Deploys HRFramework contract, multi-tenant session contexts, and employee lifecycle state transitions.', status: 'Completed & Verified' },
-    { title: 'Workforce, Recruitment & Hiring', description: 'Models strategic workforce plans, job requisitions, candidate pipelines, interview panels, and offer matrices.', status: 'Completed & Verified' },
-    { title: 'Employees, Onboarding & Performance', description: 'Enforces employment contracts, role ladders, IT checklists, 30/60/90 milestones, individual OKRs, and performance reviews.', status: 'Completed & Verified' },
-    { title: 'AI Talents, Engagement & Events', description: 'Tracks resume matching, attrition risk forecasts, anonymous surveys, recognition awards, and broadcasts HR lifecycles over standard event schemas.', status: 'Completed & Verified' }
+    { title: 'Operations Framework Hub', description: 'Implements OperationsFramework contract, multi-tenant execution contexts, and standard state machines.', status: 'Completed & Verified' },
+    { title: 'Project & Work Governance', description: 'Deploys structures for multi-phase delivery pipelines, lag dependencies, task assignments, and triage queues.', status: 'Completed & Verified' },
+    { title: 'Resource & Asset Management', description: 'Enforces human/machine capability registries, gap-checking capacity plans, asset life histories, and maintenance calendars.', status: 'Completed & Verified' },
+    { title: 'SLA, Quality & Compliance', description: 'Ensures service request fulfillment, ISO-standard quality audits, corrective mitigation logs, and streaming event payloads.', status: 'Completed & Verified' }
   ]
 };
 
@@ -10019,6 +10020,134 @@ export interface EmployeeLifecycle {
     content: `# SBB HROS Foundation (BOSF-019)
 
 The Human Resources Operating System (HROS) Foundation module defines SBB's core domain-specific structures, employee lifecycles, workforce planners, recruitment panels, compensation frameworks, development channels, employee feedback loops, and geographic labor compliance guidelines.`
+  },
+  {
+    name: 'operations-framework.ts',
+    path: 'packages/operations-os/src/core/operations-framework.ts',
+    language: 'typescript',
+    role: 'Operations Framework Contract',
+    description: 'Declares the main OperationsFramework contract interface supporting strategic operational planning, project initiation, work orders, resources assignment, execution, monitoring, and AI-led continuous improvement.',
+    content: `import { OperationsContext } from './operations-context.js';
+import { OperationalPlan } from '../planning/operational-plan.js';
+import { Project } from '../projects/project.js';
+import { WorkOrder } from '../work-management/work-order.js';
+import { OperationsResource } from '../resources/resource.js';
+import { CapacityPlan } from '../resources/capacity-plan.js';
+import { QualityInspection } from '../quality/quality-inspection.js';
+import { OperationalInsight } from '../ai/operational-insight.js';
+
+export interface OperationsFramework {
+  planOperations(
+    uniquePlanCode: string,
+    displayName: string,
+    planningFiscalYear: number,
+    targetThroughputMetricString: string,
+    budgetAllocatedAmount: number,
+    currencyCode: string,
+    context: OperationsContext
+  ): Promise<OperationalPlan>;
+
+  createProject(
+    uniqueProjectCode: string,
+    displayName: string,
+    businessSponsorRoleIdString: string,
+    projectManagerRoleIdString: string,
+    plannedStartDate: Date,
+    plannedEndDate: Date,
+    estBudgetCostAmount: number,
+    currencyCode: string,
+    context: OperationsContext
+  ): Promise<Project>;
+
+  createWorkOrder(
+    uniqueOrderCode: string,
+    requesterRoleIdString: string,
+    targetAssetIdString: string,
+    priority: 'ROUTINE' | 'ELEVATED' | 'CRITICAL_URGENT',
+    scheduledStartDate: Date,
+    scheduledEndDate: Date,
+    context: OperationsContext
+  ): Promise<WorkOrder>;
+
+  assignResources(
+    targetEntityIdString: string,
+    assignedResourceIdString: string,
+    allocationRatioDecimal: number,
+    context: OperationsContext
+  ): Promise<boolean>;
+
+  executeOperations(
+    workOrderIdString: string,
+    context: OperationsContext
+  ): Promise<WorkOrder>;
+
+  monitorOperations(
+    targetEntityIdString: string,
+    associatedStandardIdString: string,
+    context: OperationsContext
+  ): Promise<QualityInspection>;
+
+  improveOperations(
+    associatedPlanIdString: string,
+    context: OperationsContext
+  ): Promise<OperationalInsight[]>;
+}`
+  },
+  {
+    name: 'operations-lifecycle.ts',
+    path: 'packages/operations-os/src/core/operations-lifecycle.ts',
+    language: 'typescript',
+    role: 'Operations Lifecycle Model',
+    description: 'Models project execution tracks, work order fulfillments, and physical asset operational states.',
+    content: `export type ProjectLifecycleState =
+  | 'INITIATION'
+  | 'PLANNING'
+  | 'EXECUTION_IN_PROGRESS'
+  | 'SUSPENDED_PAUSED'
+  | 'CLOSING_STAGE'
+  | 'COMPLETED'
+  | 'ABANDONED';
+
+export type WorkOrderLifecycleState =
+  | 'DRAFT'
+  | 'QUEUED_UNASSIGNED'
+  | 'ASSIGNED'
+  | 'IN_PROGRESS'
+  | 'BLOCKED_HOLD'
+  | 'COMPLETED_VERIFIED'
+  | 'CANCELLED';
+
+export type ServiceRequestLifecycleState =
+  | 'SUBMITTED'
+  | 'TRIAGED_ROUTED'
+  | 'FULFILLMENT_IN_PROGRESS'
+  | 'PENDING_CUSTOMER_FEEDBACK'
+  | 'RESOLVED_CLOSED'
+  | 'BREACHED_UNRESOLVED';
+
+export type AssetLifecycleState =
+  | 'PROCURED'
+  | 'DEPLOYED_ACTIVE'
+  | 'UNDER_MAINTENANCE'
+  | 'DEGRADED_PERFORMANCE'
+  | 'DECOMMISSIONED_RETIRED';
+
+export interface OperationsLifecycle {
+  readonly currentProjectState: ProjectLifecycleState;
+  readonly lastStateTransitionAt: Date;
+  readonly estimatedCompletionDate?: Date;
+  readonly isCriticalPathDelayedFlag: boolean;
+}`
+  },
+  {
+    name: 'README.md',
+    path: 'packages/operations-os/README.md',
+    language: 'markdown',
+    role: 'Architectural Specs',
+    description: 'Detailed specifications for OperationsOS Foundation (BOSF-020).',
+    content: `# SBB OperationsOS Foundation (BOSF-020)
+
+The Human Resources Operating System (HROS) and Operations Operating System (OperationsOS) are core operational hubs of SBB's Enterprise architecture.`
   }
 ];
 

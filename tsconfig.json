@@ -180,6 +180,12 @@
       ],
       "@sbb/finance-os": [
         "./packages/finance-os/src/index.ts"
+      ],
+      "@sbb/hr-os": [
+        "./packages/hr-os/src/index.ts"
+      ],
+      "@sbb/operations-os": [
+        "./packages/operations-os/src/index.ts"
       ]
     },
     "allowImportingTsExtensions": true,
