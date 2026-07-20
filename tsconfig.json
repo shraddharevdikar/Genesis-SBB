@@ -192,6 +192,9 @@
       ],
       "@sbb/executive-os": [
         "./packages/executive-os/src/index.ts"
+      ],
+      "@sbb/real-estate-os": [
+        "./packages/real-estate-os/src/index.ts"
       ]
     },
     "allowImportingTsExtensions": true,

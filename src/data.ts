@@ -1,28 +1,29 @@
 import { TicketDetails, FileNode, FutureTicket } from './types';
 
 export const ticketDetails: TicketDetails = {
-  id: 'BOSF-022',
-  title: 'ExecutiveOS Foundation (M9.7)',
+  id: 'BOSF-023',
+  title: 'Real EstateOS Foundation (M10.1)',
   status: 'DONE',
   priority: 'CRITICAL',
   author: 'SBB Principal Architect',
   assignee: 'shraddha.revdikar@gmail.com',
-  objective: 'Establish the foundational architecture for ExecutiveOS responsible for enterprise strategy alignment, enterprise objectives, cross-operating system scorecards, investment portfolios, strategic risks, executive governance, and predictive scenario analyses.',
-  modulePath: 'packages/executive-os/src/core/executive-framework.ts',
+  objective: 'Establish the foundational architecture for Real EstateOS responsible for property lifecycle orchestration, land acquisition, project planning, inventory matrices, channel sales, construction monitoring, possession tracking, and resident asset management.',
+  modulePath: 'packages/real-estate-os/src/core/real-estate-framework.ts',
   requirements: [
-    'Create the core ExecutiveFramework interface declaring DefineStrategy, ApproveEnterpriseObjectives, ReviewEnterprisePerformance, EvaluateEnterpriseRisk, PrioritizePortfolio, ReviewEnterpriseHealth, and DriveStrategicTransformation operations.',
-    'Model strategic multi-year plans, structured enterprise objectives (OKRs), strategic initiatives, and cross-functional transformation programs.',
-    'Design balanced scorecards, scorecard metrics with perspective classifications, and board-level executive review frameworks.',
-    'Formulate investment portfolio optimization matrices, CapEx/OpEx investment models, and prioritized initiatives.',
-    'Track board meetings, agendas, board-member attendees, formal executive decisions, and delegated spending authorities.',
-    'Establish comprehensive enterprise risk registers, strategic risks, and detailed risk mitigation action plans.',
-    'Broaden executive intelligence with briefing binders, automated anomalies, predictive trend forecasts, and strategic advisor analysis recommendations.'
+    'Create the core RealEstateFramework interface declaring AcquireLand, LaunchProject, AllocateInventory, BookProperty, TrackConstruction, CompletePossession, and ManageProperty operations.',
+    'Model physical land parcels, legal zoning boards, due diligence parameters, and acquisition transactions.',
+    'Design multi-tower projects, project phase trackers, physical tower specs, and apartment inventory matrices.',
+    'Formulate buyer registries, broker commissions, and channel partner parameters.',
+    'Establish property bookings, unit allocations, and construction-linked milestone payment plans.',
+    'Track construction stages, quality QC inspections, contractors, and critical milestones.',
+    'Integrate property handovers, keys possession, snag lists, warranties, cooperative housing societies, and maintenance requests.',
+    'Provide demand forecasting, optimal dynamic pricing recommendations, absorption analysis, and project dashboard indicators.'
   ],
   responsibilities: [
-    { title: 'Executive Framework Hub', description: 'Deploys ExecutiveFramework contract, multi-tenant execution contexts, and Command Center indicators.', status: 'Completed & Verified' },
-    { title: 'Strategy & Performance Portfolio', description: 'Models strategic plans, OKR lists, transformation programs, balanced scorecards, and CapEx/OpEx business investments.', status: 'Completed & Verified' },
-    { title: 'Governance & Risk Registry', description: 'Enforces board meetings, formal decision votes, delegated spending authority, and enterprise risk registers.', status: 'Completed & Verified' },
-    { title: 'Executive AI & Alerts', description: 'Synthesizes advisor recommendations, predictive forecast simulations, critical emergency alerts, and compiled briefing files.', status: 'Completed & Verified' }
+    { title: 'Real Estate Framework Hub', description: 'Deploys RealEstateFramework contract, property lifecycle enums, and industry execution contexts.', status: 'Completed & Verified' },
+    { title: 'Project, Land & Inventory Matrix', description: 'Models physical land parcels, zoning files, real estate projects, physical towers, and unit inventory logs.', status: 'Completed & Verified' },
+    { title: 'CRM, Sales & Construction Tracking', description: 'Enforces buyer profiles, broker networks, booking receipts, payment schedules, and construction QC checklists.', status: 'Completed & Verified' },
+    { title: 'Handover & Smart Property Analytics', description: 'Synthesizes keys possession, punch list trackers, cooperative housing boards, pricing advisors, and forecasting dashboards.', status: 'Completed & Verified' }
   ]
 };
 
@@ -10266,6 +10267,42 @@ export interface ExecutiveFramework {
     content: `# SBB ExecutiveOS Foundation (BOSF-022)
 
 The Executive Operating System (ExecutiveOS) is the highest-level operating system in the Sovereign Business Brain (SBB) platform. It orchestrates and synthesizes intelligence, risk governance, performance metrics, and portfolio optimization across all other operating systems.`
+  },
+  {
+    name: 'real-estate-framework.ts',
+    path: 'packages/real-estate-os/src/core/real-estate-framework.ts',
+    language: 'typescript',
+    role: 'Real Estate Framework Contract',
+    description: 'Declares the main RealEstateFramework contract interface supporting land acquisition, project launch, inventory allocation, booking, construction tracking, possession, and property management.',
+    content: `import { IndustryContext } from './industry-context.js';
+import { LandParcel } from '../land/land-parcel.js';
+import { RealEstateProject } from '../projects/real-estate-project.js';
+import { InventoryUnit } from '../projects/inventory.js';
+import { PropertyBooking } from '../sales/booking.js';
+import { UnitAllocation } from '../sales/unit-allocation.js';
+import { ConstructionStage } from '../construction/construction-stage.js';
+import { PropertyPossession } from '../handover/possession.js';
+import { CooperativeHousingSociety } from '../property-management/society.js';
+
+export interface RealEstateFramework {
+  acquireLand(uniqueParcelCode: string, displayName: string, physicalLocationAddress: string, geographicalCoordinatesGPS: string, totalAreaSquareMetersDecimal: number, costBasisAmount: number, currencyCode: string, context?: IndustryContext): Promise<LandParcel>;
+  launchProject(uniqueProjectCode: string, displayName: string, associatedLandParcelIdString: string, developmentType: 'RESIDENTIAL_HIGHRISE' | 'COMMERCIAL_OFFICE' | 'INTEGRATED_TOWNSHIP' | 'INDUSTRIAL_WAREHOUSE', approvedBudgetAmount: number, currencyCode: string, targetLaunchDate: Date, plannedCompletionDate: Date, context?: IndustryContext): Promise<RealEstateProject>;
+  allocateInventory(uniqueAllocationCode: string, associatedBookingIdString: string, associatedUnitIdString: string, allocatedBuyerIdString: string, parkingSpaceAssignedText?: string, context?: IndustryContext): Promise<UnitAllocation>;
+  bookProperty(uniqueBookingCode: string, associatedUnitIdString: string, associatedBuyerIdString: string, totalAgreedSaleAmount: number, bookingAdvanceAmountPaid: number, currencyCode: string, context?: IndustryContext): Promise<PropertyBooking>;
+  trackConstruction(uniqueStageCode: string, associatedProjectIdString: string, associatedTowerIdString?: string, stageState?: 'EXCAVATION' | 'FOUNDATION' | 'STRUCTURE_RCC' | 'BRICKWORK_PLASTER' | 'INTERIORS_MEP' | 'FINISHING_QC', context?: IndustryContext): Promise<ConstructionStage>;
+  completePossession(uniquePossessionCode: string, associatedBookingIdString: string, associatedUnitIdString: string, targetBuyerIdString: string, targetPossessionDate: Date, context?: IndustryContext): Promise<PropertyPossession>;
+  manageProperty(uniqueSocietyCode: string, associatedProjectIdString: string, registeredSocietyName: string, officialRegistrationNumberText: string, monthlyMaintenanceSinkingFeeAmount: number, currencyCode: string, context?: IndustryContext): Promise<CooperativeHousingSociety>;
+}`
+  },
+  {
+    name: 'README.md',
+    path: 'packages/real-estate-os/README.md',
+    language: 'markdown',
+    role: 'Architectural Specs',
+    description: 'Detailed specifications for RealEstateOS Foundation (BOSF-023).',
+    content: `# SBB RealEstateOS Foundation (BOSF-023)
+
+The Real Estate Operating System (RealEstateOS) is SBB's core industry-specific operating system designed to orchestrate property lifecycles, track land acquisitions, manage complex tower/phase construction structures, control unified buyer/channel partner sales, and direct community property management operations by composing existing SBB Operating Systems.`
   }
 ];
 
