@@ -165,6 +165,9 @@
       ],
       "@sbb/business-intelligence": [
         "./packages/business-intelligence/src/index.ts"
+      ],
+      "@sbb/business-integrations": [
+        "./packages/business-integrations/src/index.ts"
       ]
     },
     "allowImportingTsExtensions": true,

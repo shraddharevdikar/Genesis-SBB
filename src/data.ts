@@ -1,28 +1,28 @@
 import { TicketDetails, FileNode, FutureTicket } from './types';
 
 export const ticketDetails: TicketDetails = {
-  id: 'BOSF-013',
-  title: 'Enterprise Business Intelligence Framework',
+  id: 'BOSF-014',
+  title: 'Enterprise Business Integrations Framework',
   status: 'DONE',
   priority: 'CRITICAL',
   author: 'SBB Principal Architect',
   assignee: 'shraddha.revdikar@gmail.com',
-  objective: 'Build the foundational Business Intelligence Framework responsible for defining reusable business intelligence scopes, analytical insight trend and anomaly patterns, horizon forecasting, priority advisory recommendations, and structured decision context tradeoffs.',
-  modulePath: 'packages/business-intelligence/src/core/intelligence-framework.ts',
+  objective: 'Build the foundational Business Integrations Framework responsible for defining reusable business integrations, connectors, contract schemas, authentication profiles, object mappings, and governance policy audits.',
+  modulePath: 'packages/business-integrations/src/core/integration-framework.ts',
   requirements: [
-    'Establish the IntelligenceFramework contract supporting GenerateInsight, AnalyzeTrend, DetectAnomaly, ProduceForecast, CreateRecommendation, and RetireIntelligence operations.',
-    'Model Business, Department, Customer, Product, Financial, and AI Workforce intelligence domains with semantic version logs.',
-    'Formulate Insights covering trend directions, anomaly drifts, correlation structures, and root cause environmental contribution factors.',
-    'Design Forecasts representing revenue, demand, capacity, resource, and pipeline horizons paired with confidence distribution ranges.',
-    'Incorporate Recommendations detailing advisory strategic, operational, and financial impact cost-savings OPEX benchmarks.',
-    'Enforce Decision Support sessions capturing proposed options, qualitative tradeoffs pros/cons, and compliance policy risk levels.',
-    'Track intelligence owners, data completeness scores, validator audit trails, and broadcast domain intelligence events.'
+    'Establish the IntegrationFramework contract supporting RegisterIntegration, RegisterConnector, DefineContract, DefineMapping, ConnectIntegration, DisconnectIntegration, and RetireIntegration operations.',
+    'Model CRM, ERP, Finance, HR, Communication, AI Provider, and Productivity connector categories with standard capabilities.',
+    'Formulate Request, Response, and Event contracts with validation rules, HTTP status expectation definitions, and schema versioning.',
+    'Design field-level and object-level transformations, data mappings, and string/date formatting normalization rules.',
+    'Incorporate Rest, GraphQL, Soap, Webhooks, and Event Streaming protocol capabilities with authentication profiles (mTLS, OAuth2).',
+    'Enforce Governance auditing featuring ownership tracking, data-sovereignty restrictions, and cryptographic secure reference profiles.',
+    'Track validation structures and broadcast integration created, connected, disconnected, and retired domain events.'
   ],
   responsibilities: [
-    { title: 'Governance Intelligence Blueprints', description: 'Deploys IntelligenceFramework contract, multi-tenant session contexts, semantic versions, and lifecycle status checks.', status: 'Completed & Verified' },
-    { title: 'Insights, Forecasting, and Horizon Metrics', description: 'Models trend directions, sigma offset anomalies, root cause contribution factors, and forecast confidence intervals.', status: 'Completed & Verified' },
-    { title: 'Recommendations & Decision Support', description: 'Enforces tactical priority levels, financial OPEX impacts, alternative options feasibility indexes, and qualitative net benefit tradeoffs.', status: 'Completed & Verified' },
-    { title: 'Quality Validation & Event Streams', description: 'Tracks peer reviewer step approvals, data completeness ratios, ownership certification, and broadcasts insight, forecast, recommendation, and retire events.', status: 'Completed & Verified' }
+    { title: 'Governance Integration Blueprints', description: 'Deploys IntegrationFramework contract, multi-tenant session contexts, semantic versions, and lifecycle status checks.', status: 'Completed & Verified' },
+    { title: 'Connectors, Contracts, and Adapters', description: 'Models REST/GraphQL/SOAP protocol capabilities, schema constraints, validation rules, and secure auth credentials structures.', status: 'Completed & Verified' },
+    { title: 'Data Mapping & Transformation', description: 'Enforces robust field-level translation, custom regex mapping, and complex datatype normalization Rules.', status: 'Completed & Verified' },
+    { title: 'Sovereignty Protection & Event Streams', description: 'Tracks department owners, PII masking rules, MTLS security indicators, and broadcasts integration life cycles.', status: 'Completed & Verified' }
   ]
 };
 
@@ -9595,6 +9595,71 @@ export interface BusinessIntelligence {
     content: `# Enterprise Business Intelligence Framework (BOSF-013)
 
 The Enterprise Business Intelligence Framework module defines SBB's core domain-independent corporate intelligence scopes, analytical model descriptions, trend insights, anomalies detection, forecasting projections, action-prioritized recommendations, and structured decision context tradeoffs of the Business Operating System Framework (BOSF).`
+  },
+  {
+    name: 'integration-framework.ts',
+    path: 'packages/business-integrations/src/core/integration-framework.ts',
+    language: 'typescript',
+    role: 'Integration Framework Contract',
+    description: 'Declares the main IntegrationFramework contract interface supporting integrations, connectors, contracts schemas, adapter profiles, data mapping, and governance policies.',
+    content: `import { IntegrationId } from '../identity/integration-id.js';
+import { ConnectorId } from '../identity/connector-id.js';
+import { IntegrationContext } from './integration-context.js';
+import { BusinessIntegration } from '../integrations/business-integration.js';
+import { ConnectorDefinition } from '../connectors/connector-definition.js';
+import { RequestContract } from '../contracts/request-contract.js';
+import { ObjectMapping } from '../mapping/object-mapping.js';
+
+export interface IntegrationFramework {
+  registerIntegration(uniqueScopeCode: string, displayName: string, descriptionText: string, targetConnectorId: ConnectorId, context: IntegrationContext): Promise<BusinessIntegration>;
+  registerConnector(uniqueConnectorCode: string, displayName: string, categoryCode: string, context: IntegrationContext): Promise<ConnectorDefinition>;
+  defineContract(uniqueContractCode: string, schemaName: string, rawSchemaJSON: string, schemaVersion: string, context: IntegrationContext): Promise<RequestContract>;
+  defineMapping(uniqueMappingCode: string, sourceSchemaURI: string, targetSchemaURI: string, mappings: ObjectMapping, context: IntegrationContext): Promise<ObjectMapping>;
+  connectIntegration(integrationId: IntegrationId, context: IntegrationContext): Promise<void>;
+  disconnectIntegration(integrationId: IntegrationId, context: IntegrationContext): Promise<void>;
+  retireIntegration(integrationId: IntegrationId, context: IntegrationContext): Promise<void>;
+}`
+  },
+  {
+    name: 'connector-definition.ts',
+    path: 'packages/business-integrations/src/connectors/connector-definition.ts',
+    language: 'typescript',
+    role: 'Connector Definition Spec',
+    description: 'Defines integration connectors across multiple categories like CRM, ERP, Finance, HR, Communication, AI Provider, and Productivity.',
+    content: `import { ConnectorId } from '../identity/connector-id.js';
+import { ConnectorCapability } from './connector-capability.js';
+import { ConnectorConfiguration } from './connector-configuration.js';
+
+export type ConnectorCategoryCode =
+  | 'CRM_SYSTEM'
+  | 'ERP_SYSTEM'
+  | 'FINANCE_SYSTEM'
+  | 'HR_SYSTEM'
+  | 'COMMUNICATION_SYSTEM'
+  | 'AI_PROVIDER_SYSTEM'
+  | 'PRODUCTIVITY_SYSTEM';
+
+export interface ConnectorDefinition {
+  readonly connectorId: ConnectorId;
+  readonly uniqueConnectorCode: string;
+  readonly displayName: string;
+  readonly categoryCode: ConnectorCategoryCode;
+  readonly capabilitiesList: ConnectorCapability[];
+  readonly defaultConfiguration: ConnectorConfiguration;
+  readonly providerVendorName: string;
+  readonly isMultiTenantSupported: boolean;
+  readonly isDeprecated: boolean;
+}`
+  },
+  {
+    name: 'README.md',
+    path: 'packages/business-integrations/README.md',
+    language: 'markdown',
+    role: 'Architectural Specs',
+    description: 'Detailed specifications for BOSF-014 Enterprise Business Integrations Framework.',
+    content: `# Enterprise Business Integrations Framework (BOSF-014)
+
+The Enterprise Business Integrations Framework module defines SBB's core domain-independent corporate integrations, provider connectors, data schema contracts, authentication profiles, object mappings, and governance policy audits of the Business Operating System Framework (BOSF).`
   }
 ];
 
