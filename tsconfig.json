@@ -171,6 +171,9 @@
       ],
       "@sbb/business-blueprints": [
         "./packages/business-blueprints/src/index.ts"
+      ],
+      "@sbb/marketing-os": [
+        "./packages/marketing-os/src/index.ts"
       ]
     },
     "allowImportingTsExtensions": true,

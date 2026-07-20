@@ -1,28 +1,28 @@
 import { TicketDetails, FileNode, FutureTicket } from './types';
 
 export const ticketDetails: TicketDetails = {
-  id: 'BOSF-015',
-  title: 'Enterprise Business Templates & Blueprints Framework',
+  id: 'BOSF-016',
+  title: 'MarketingOS Foundation (M9.1)',
   status: 'DONE',
   priority: 'CRITICAL',
   author: 'SBB Principal Architect',
   assignee: 'shraddha.revdikar@gmail.com',
-  objective: 'Build the foundational Business Templates & Blueprints Framework responsible for defining reusable operating model blueprints, organizational and department templates, and composition dependencies.',
-  modulePath: 'packages/business-blueprints/src/core/blueprint-framework.ts',
+  objective: 'Build the foundational MarketingOS architecture responsible for campaign planning, multi-channel strategy execution (SEO, GEO, AEO, Paid, Social, Email, Affiliate), lead funnel conversions, and marketing-specific compliance policies.',
+  modulePath: 'packages/marketing-os/src/core/marketing-framework.ts',
   requirements: [
-    'Establish the BlueprintFramework contract supporting CreateBlueprint, RegisterTemplate, ComposeBlueprint, ValidateBlueprint, PublishBlueprint, and RetireBlueprint operations.',
-    'Model organization, department, capability, operating model, and industry-specific blueprints with semantic version logs.',
-    'Formulate templates covering departments, processes, workflows, policies, KPIs, dashboards, reports, automations, and integrations.',
-    'Design composition layouts representing template reference instances and variables/overrides overrides.',
-    'Incorporate robust dependency graphs tracking nodes, edges, cyclic dependency rules, and conflict detection rules.',
-    'Enforce governance controls auditing owners, step validations, and confidentiality classification levels.',
-    'Track validation status schemas and broadcast blueprint created, published, versioned, and retired events.'
+    'Establish the MarketingFramework contract supporting PlanStrategy, DefineAudience, CreateCampaign, LaunchCampaign, MonitorPerformance, OptimizeCampaign, and CloseCampaign operations.',
+    'Model comprehensive marketing strategy tiers, ICP audience personas, and campaign budgeting/timeline constraints.',
+    'Formulate channels representing traditional SEO/PPC/Social alongside next-gen Conversational SEO (GEO/AEO).',
+    'Design asset-level and plan-level content marketing models with integrated calendar timelines.',
+    'Incorporate lead funnel conversions, originals source tracking, and multi-touch data-driven attribution models.',
+    'Enforce governance policy audits (GDPR, CAN-SPAM) paired with automated warning or pause action triggers.',
+    'Track performance KPIs (CAC, ROAS, MQLs) and broadcast campaign life cycles through enterprise domain events.'
   ],
   responsibilities: [
-    { title: 'Governance Blueprint Blueprints', description: 'Deploys BlueprintFramework contract, multi-tenant session contexts, semantic versions, and lifecycle status checks.', status: 'Completed & Verified' },
-    { title: 'Templates and Operating Blueprints', description: 'Models KPI, department, policy, process, and workflow templates, as well as holding and ecosystem blueprints.', status: 'Completed & Verified' },
-    { title: 'Composition & Dependency Graphs', description: 'Enforces template instance aliases, property overrides, cyclic dependencies nodes and edges analysis, and conflict checkers.', status: 'Completed & Verified' },
-    { title: 'Validation Reviews & Event Streams', description: 'Tracks executive reviewers step approvals, confidentiality levels, ownership certifications, and broadcasts blueprint life cycles.', status: 'Completed & Verified' }
+    { title: 'Governance Campaign Framework', description: 'Deploys MarketingFramework contract, time-zone aware context sessions, and campaign lifecycle state transitions.', status: 'Completed & Verified' },
+    { title: 'Conversational & Traditional Channels', description: 'Models GEO citation ranks, AEO answer snippets, PPC bid tracking, social calendars, email campaigns, and affiliate shares.', status: 'Completed & Verified' },
+    { title: 'Leads, Attribution, and AI Assistant', description: 'Enforces original source tracking, multi-touch attribution calculations, and autonomous AI budget shift recommenders.', status: 'Completed & Verified' },
+    { title: 'Compliance Policies & Event Streams', description: 'Tracks department owners, CAN-SPAM policy rules, and broadcasts campaign created, launched, optimized, and completed event schemas.', status: 'Completed & Verified' }
   ]
 };
 
@@ -9753,6 +9753,66 @@ export interface BusinessBlueprint {
     content: `# Enterprise Business Templates & Blueprints Framework (BOSF-015)
 
 The Enterprise Business Templates & Blueprints Framework module defines SBB's core domain-independent reusable template assets, structural operating model compositions, validation dependencies, and catalog governance procedures of the Business Operating System Framework (BOSF).`
+  },
+  {
+    name: 'marketing-framework.ts',
+    path: 'packages/marketing-os/src/core/marketing-framework.ts',
+    language: 'typescript',
+    role: 'Marketing Framework Contract',
+    description: 'Declares the main MarketingFramework contract interface supporting campaign planning, audience segmentation, budget optimization, performance tracking, and sunsetting.',
+    content: `import { MarketingContext } from './marketing-context.js';
+import { CampaignId, MarketingCampaign } from '../campaigns/marketing-campaign.js';
+import { MarketingStrategy, MarketingStrategyTier } from '../strategy/marketing-strategy.js';
+import { AudienceStrategy, AudienceClassificationCode } from '../strategy/audience-strategy.js';
+import { CampaignObjective } from '../campaigns/campaign-objective.js';
+import { CampaignBudget } from '../campaigns/campaign-budget.js';
+import { CampaignTimeline } from '../campaigns/campaign-timeline.js';
+import { MarketingKpis } from '../analytics/marketing-kpis.js';
+import { OptimizationRecommendation } from '../ai/optimization-recommendation.js';
+
+export interface MarketingFramework {
+  planStrategy(uniqueStrategyCode: string, displayName: string, descriptionText: string, strategyTier: MarketingStrategyTier, fiscalYear: number, allocatedOverallBudgetAmount: number, currencyCode: string, targetCpaAmountLimit: number, targetRoasRatioLimit: number, context: MarketingContext): Promise<MarketingStrategy>;
+  defineAudience(audienceClassification: AudienceClassificationCode, geolocationsList: string[], primaryLanguageCodesList: string[], context: MarketingContext): Promise<AudienceStrategy>;
+  createCampaign(uniqueCampaignCode: string, displayName: string, descriptionText: string, strategyCode: string, objective: CampaignObjective, budget: CampaignBudget, timeline: CampaignTimeline, context: MarketingContext): Promise<MarketingCampaign>;
+  launchCampaign(campaignId: CampaignId, activeChannelCodesList: string[], context: MarketingContext): Promise<MarketingCampaign>;
+  monitorPerformance(campaignId: CampaignId, context: MarketingContext): Promise<MarketingKpis>;
+  optimizeCampaign(campaignId: CampaignId, recommendation: OptimizationRecommendation, context: MarketingContext): Promise<MarketingCampaign>;
+  closeCampaign(campaignId: CampaignId, context: MarketingContext): Promise<void>;
+}`
+  },
+  {
+    name: 'geo-channel.ts',
+    path: 'packages/marketing-os/src/channels/geo-channel.ts',
+    language: 'typescript',
+    role: 'GEO Channel Model',
+    description: 'Defines the Generative Engine Optimization models tracking brand mentions, citations, conversational share of voice, and sentiment scores across LLMs.',
+    content: `export interface GenerativeEngineCitation {
+  readonly engineName: 'GEMINI' | 'CHATGPT' | 'PERPLEXITY' | 'CLAUDE';
+  readonly queryIntentCategory: string;
+  readonly citationRankPosition: number;
+  readonly citationTextSnippet: string;
+  readonly sentimentScoreNumeric: number;
+}
+
+export interface GeoChannel {
+  readonly channelId: string;
+  readonly uniqueChannelCode: string;
+  readonly brandMentionInclusionsCount: number;
+  readonly trackedCitationReferences: GenerativeEngineCitation[];
+  readonly conversationalShareOfVoiceRatio: number;
+  readonly criticalTopicCoveragePercentage: number;
+  readonly optimizationRuleSetJSON: string;
+}`
+  },
+  {
+    name: 'README.md',
+    path: 'packages/marketing-os/README.md',
+    language: 'markdown',
+    role: 'Architectural Specs',
+    description: 'Detailed specifications for MarketingOS Foundation (BOSF-016).',
+    content: `# SBB MarketingOS Foundation (BOSF-016)
+
+The MarketingOS Foundation module defines SBB's core domain-specific structures, campaign strategies, optimization pipelines, lead funnels, and marketing-specific governance policies.`
   }
 ];
 
