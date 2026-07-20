@@ -1,29 +1,28 @@
 import { TicketDetails, FileNode, FutureTicket } from './types';
 
 export const ticketDetails: TicketDetails = {
-  id: 'BOSF-020',
-  title: 'OperationsOS Foundation (M9.5)',
+  id: 'BOSF-021',
+  title: 'LegalOS Foundation (M9.6)',
   status: 'DONE',
   priority: 'CRITICAL',
   author: 'SBB Principal Architect',
   assignee: 'shraddha.revdikar@gmail.com',
-  objective: 'Establish the foundational architecture for OperationsOS responsible for operational planning, project delivery, resource management, quality control, service level agreements, risk governance, and AI-assisted continuous improvement loops.',
-  modulePath: 'packages/operations-os/src/core/operations-framework.ts',
+  objective: 'Establish the foundational architecture for LegalOS governing contracts, compliance requirements, corporate governance policies, intellectual property patents/trademarks, legal risk disputes, multi-tier approvals, and continuous compliance AI scanner loops.',
+  modulePath: 'packages/legal-os/src/core/legal-framework.ts',
   requirements: [
-    'Create the core OperationsFramework interface declaring PlanOperations, CreateProject, CreateWorkOrder, AssignResources, ExecuteOperations, MonitorOperations, and ImproveOperations operations.',
-    'Model strategic planning structures with throughput objectives, progress weights, and roadmap milestones.',
-    'Formulate delivery projects with dynamic stage phases, milestones, finish-to-start dependencies, and lag duration limits.',
-    'Design work orders, task elements, group-directed triage queues, and operational resource assignments.',
-    'Incorporate resource registries, dynamic capacity plans with gap forecast solvers, and utilization logs.',
-    'Track physical asset registers, asset lifecycle transition records, and recurring preventive/corrective maintenance schedules.',
-    'Establish client/internal service requests, SLA response targets, and quality standard inspection metrics.',
-    'Broaden risk controls with probability and severity matrices, policy rule definitions, and enterprise event streaming telemetry.'
+    'Create the core LegalFramework interface declaring CreateContract, ReviewContract, AssessCompliance, EvaluateLegalRisk, ManageGovernance, ExecuteLegalApproval, and RecordAudit operations.',
+    'Model comprehensive contract pipelines, flexible signatories, compliance requirements, and automated renewal triggers.',
+    'Design board resolutions, delegated authority limits, spending sign-off conditions, and governance review checkers.',
+    'Track litigation dossiers, lawsuit states, potential loss ratios, and pre-litigation commercial disputes.',
+    'Incorporate registered intellectual property maps, trademarks, patents, copyrights, and trade secret secure boundaries.',
+    'Formulate multi-stage approval stage workflows, decision matrices, and digitized audit finding registers.',
+    'Stream legal operations lifecycle stages via dedicated domain events and AI-led compliance scanning recommendations.'
   ],
   responsibilities: [
-    { title: 'Operations Framework Hub', description: 'Implements OperationsFramework contract, multi-tenant execution contexts, and standard state machines.', status: 'Completed & Verified' },
-    { title: 'Project & Work Governance', description: 'Deploys structures for multi-phase delivery pipelines, lag dependencies, task assignments, and triage queues.', status: 'Completed & Verified' },
-    { title: 'Resource & Asset Management', description: 'Enforces human/machine capability registries, gap-checking capacity plans, asset life histories, and maintenance calendars.', status: 'Completed & Verified' },
-    { title: 'SLA, Quality & Compliance', description: 'Ensures service request fulfillment, ISO-standard quality audits, corrective mitigation logs, and streaming event payloads.', status: 'Completed & Verified' }
+    { title: 'Legal Framework Hub', description: 'Implements LegalFramework contract, multi-tenant execution contexts, and standard agreement state machines.', status: 'Completed & Verified' },
+    { title: 'Contract & Compliance Registry', description: 'Deploys structures for templates, signatories, obligation logs, regulatory frameworks, and control tests.', status: 'Completed & Verified' },
+    { title: 'Governance & IP Control', description: 'Enforces board resolutions, delegated spend limits, patents, trademarks, copyrights, and trade secrets.', status: 'Completed & Verified' },
+    { title: 'Risk, Audits & Events', description: 'Ensures litigation lawsuit files, audit finding registers, multi-stage approval workflows, and streaming event payloads.', status: 'Completed & Verified' }
   ]
 };
 
@@ -10148,6 +10147,90 @@ export interface OperationsLifecycle {
     content: `# SBB OperationsOS Foundation (BOSF-020)
 
 The Human Resources Operating System (HROS) and Operations Operating System (OperationsOS) are core operational hubs of SBB's Enterprise architecture.`
+  },
+  {
+    name: 'legal-framework.ts',
+    path: 'packages/legal-os/src/core/legal-framework.ts',
+    language: 'typescript',
+    role: 'Legal Framework Contract',
+    description: 'Declares the main LegalFramework contract interface supporting contract management, compliance checks, regulatory risks, board governance, and formal approvals.',
+    content: `import { LegalContext } from './legal-context.js';
+import { Contract } from '../contracts/contract.js';
+import { ContractTemplate } from '../contracts/contract-template.js';
+import { ComplianceAssessment } from '../compliance/compliance-assessment.js';
+import { LegalRisk } from '../risk/legal-risk.ts';
+import { GovernanceReview } from '../governance/governance-review.js';
+import { LegalApproval } from '../approvals/legal-approval.js';
+import { AuditRecord } from '../audit/audit-record.js';
+import { ContractRiskAnalysis } from '../ai/contract-risk-analysis.js';
+
+export interface LegalFramework {
+  createContract(uniqueContractCode: string, displayName: string, category: 'NDA' | 'MASTER_SERVICE_AGREEMENT' | 'PARTNERSHIP' | 'VENDOR_PURCHASE' | 'EMPLOYMENT_EXECUTIVE' | 'CUSTOM', documentStorageURI: string, templateIdString?: string, context?: LegalContext): Promise<Contract>;
+  reviewContract(contractIdString: string, context?: LegalContext): Promise<ContractRiskAnalysis>;
+  assessCompliance(uniqueAssessmentCode: string, targetFrameworkIdString: string, checkedControlIdsList: string[], context?: LegalContext): Promise<ComplianceAssessment>;
+  evaluateLegalRisk(uniqueRiskCode: string, riskTitleString: string, estimatedProbabilityRatio: number, estimatedFinancialImpactAmount: number, currencyCode: string, context?: LegalContext): Promise<LegalRisk>;
+  manageGovernance(uniqueReviewCode: string, scopeQuarterString: string, context?: LegalContext): Promise<GovernanceReview>;
+  executeLegalApproval(uniqueApprovalCode: string, targetEntityIdString: string, context?: LegalContext): Promise<LegalApproval>;
+  recordAudit(uniqueAuditCode: string, displayName: string, category: 'INTERNAL_GOVERNANCE' | 'REGULATORY_COMPLIANCE' | 'THIRD_PARTY_CONTRACTUAL' | 'FINANCIAL_OVERSIGHT', targetDepartmentIdString: string, plannedStartDate: Date, plannedEndDate: Date, context?: LegalContext): Promise<AuditRecord>;
+}`
+  },
+  {
+    name: 'legal-lifecycle.ts',
+    path: 'packages/legal-os/src/core/legal-lifecycle.ts',
+    language: 'typescript',
+    role: 'Legal Lifecycle Model',
+    description: 'Models contract signature pipelines, compliance assessment milestones, and active litigation phases.',
+    content: `export type ContractLifecycleState =
+  | 'DRAFT'
+  | 'INTERNAL_REVIEW'
+  | 'EXTERNAL_NEGOTIATION'
+  | 'PENDING_APPROVAL'
+  | 'APPROVED'
+  | 'EXECUTED_ACTIVE'
+  | 'EXPIRED'
+  | 'TERMINATED';
+
+export type ComplianceRequirementState =
+  | 'IDENTIFIED_NEW'
+  | 'UNDER_ASSESSMENT'
+  | 'COMPLIANT_ACTIVE'
+  | 'NON_COMPLIANT_BREACH'
+  | 'SUPERSEDED_HISTORIC';
+
+export type LitigationCaseState =
+  | 'PRE_LITIGATION_THREAT'
+  | 'ACTIVE_FILING'
+  | 'DISCOVERY_PHASE'
+  | 'TRIAL_HEARING'
+  | 'SETTLED_CLOSED'
+  | 'JUDGMENT_RENDERED'
+  | 'APPEALED';
+
+export type LegalApprovalState =
+  | 'NOT_STARTED'
+  | 'IN_PROGRESS'
+  | 'APPROVED_PASSED'
+  | 'REJECTED_WITH_REVISIONS'
+  | 'BYPASSED';
+
+export interface LegalLifecycle {
+  readonly currentContractState: ContractLifecycleState;
+  readonly lastStateTransitionAt: Date;
+  readonly signatureDate?: Date;
+  readonly effectiveDate?: Date;
+  readonly plannedExpiryDate?: Date;
+  readonly isBreachedFlag: boolean;
+}`
+  },
+  {
+    name: 'README.md',
+    path: 'packages/legal-os/README.md',
+    language: 'markdown',
+    role: 'Architectural Specs',
+    description: 'Detailed specifications for LegalOS Foundation (BOSF-021).',
+    content: `# SBB LegalOS Foundation (BOSF-021)
+
+The Legal Operating System (LegalOS) Foundation module defines SBB's core domain-specific structures, contract lifecycle matrices, compliance frameworks, corporate governance board controls, legal litigation logs, intellectual property registries, enterprise audit recordings, multi-tier legal approvals, and continuous compliance AI-led feedback loops.`
   }
 ];
 

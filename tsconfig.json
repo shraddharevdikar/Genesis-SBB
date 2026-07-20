@@ -186,6 +186,9 @@
       ],
       "@sbb/operations-os": [
         "./packages/operations-os/src/index.ts"
+      ],
+      "@sbb/legal-os": [
+        "./packages/legal-os/src/index.ts"
       ]
     },
     "allowImportingTsExtensions": true,
