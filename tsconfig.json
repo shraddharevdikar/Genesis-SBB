@@ -189,6 +189,9 @@
       ],
       "@sbb/legal-os": [
         "./packages/legal-os/src/index.ts"
+      ],
+      "@sbb/executive-os": [
+        "./packages/executive-os/src/index.ts"
       ]
     },
     "allowImportingTsExtensions": true,

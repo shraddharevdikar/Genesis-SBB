@@ -1,28 +1,28 @@
 import { TicketDetails, FileNode, FutureTicket } from './types';
 
 export const ticketDetails: TicketDetails = {
-  id: 'BOSF-021',
-  title: 'LegalOS Foundation (M9.6)',
+  id: 'BOSF-022',
+  title: 'ExecutiveOS Foundation (M9.7)',
   status: 'DONE',
   priority: 'CRITICAL',
   author: 'SBB Principal Architect',
   assignee: 'shraddha.revdikar@gmail.com',
-  objective: 'Establish the foundational architecture for LegalOS governing contracts, compliance requirements, corporate governance policies, intellectual property patents/trademarks, legal risk disputes, multi-tier approvals, and continuous compliance AI scanner loops.',
-  modulePath: 'packages/legal-os/src/core/legal-framework.ts',
+  objective: 'Establish the foundational architecture for ExecutiveOS responsible for enterprise strategy alignment, enterprise objectives, cross-operating system scorecards, investment portfolios, strategic risks, executive governance, and predictive scenario analyses.',
+  modulePath: 'packages/executive-os/src/core/executive-framework.ts',
   requirements: [
-    'Create the core LegalFramework interface declaring CreateContract, ReviewContract, AssessCompliance, EvaluateLegalRisk, ManageGovernance, ExecuteLegalApproval, and RecordAudit operations.',
-    'Model comprehensive contract pipelines, flexible signatories, compliance requirements, and automated renewal triggers.',
-    'Design board resolutions, delegated authority limits, spending sign-off conditions, and governance review checkers.',
-    'Track litigation dossiers, lawsuit states, potential loss ratios, and pre-litigation commercial disputes.',
-    'Incorporate registered intellectual property maps, trademarks, patents, copyrights, and trade secret secure boundaries.',
-    'Formulate multi-stage approval stage workflows, decision matrices, and digitized audit finding registers.',
-    'Stream legal operations lifecycle stages via dedicated domain events and AI-led compliance scanning recommendations.'
+    'Create the core ExecutiveFramework interface declaring DefineStrategy, ApproveEnterpriseObjectives, ReviewEnterprisePerformance, EvaluateEnterpriseRisk, PrioritizePortfolio, ReviewEnterpriseHealth, and DriveStrategicTransformation operations.',
+    'Model strategic multi-year plans, structured enterprise objectives (OKRs), strategic initiatives, and cross-functional transformation programs.',
+    'Design balanced scorecards, scorecard metrics with perspective classifications, and board-level executive review frameworks.',
+    'Formulate investment portfolio optimization matrices, CapEx/OpEx investment models, and prioritized initiatives.',
+    'Track board meetings, agendas, board-member attendees, formal executive decisions, and delegated spending authorities.',
+    'Establish comprehensive enterprise risk registers, strategic risks, and detailed risk mitigation action plans.',
+    'Broaden executive intelligence with briefing binders, automated anomalies, predictive trend forecasts, and strategic advisor analysis recommendations.'
   ],
   responsibilities: [
-    { title: 'Legal Framework Hub', description: 'Implements LegalFramework contract, multi-tenant execution contexts, and standard agreement state machines.', status: 'Completed & Verified' },
-    { title: 'Contract & Compliance Registry', description: 'Deploys structures for templates, signatories, obligation logs, regulatory frameworks, and control tests.', status: 'Completed & Verified' },
-    { title: 'Governance & IP Control', description: 'Enforces board resolutions, delegated spend limits, patents, trademarks, copyrights, and trade secrets.', status: 'Completed & Verified' },
-    { title: 'Risk, Audits & Events', description: 'Ensures litigation lawsuit files, audit finding registers, multi-stage approval workflows, and streaming event payloads.', status: 'Completed & Verified' }
+    { title: 'Executive Framework Hub', description: 'Deploys ExecutiveFramework contract, multi-tenant execution contexts, and Command Center indicators.', status: 'Completed & Verified' },
+    { title: 'Strategy & Performance Portfolio', description: 'Models strategic plans, OKR lists, transformation programs, balanced scorecards, and CapEx/OpEx business investments.', status: 'Completed & Verified' },
+    { title: 'Governance & Risk Registry', description: 'Enforces board meetings, formal decision votes, delegated spending authority, and enterprise risk registers.', status: 'Completed & Verified' },
+    { title: 'Executive AI & Alerts', description: 'Synthesizes advisor recommendations, predictive forecast simulations, critical emergency alerts, and compiled briefing files.', status: 'Completed & Verified' }
   ]
 };
 
@@ -10231,6 +10231,41 @@ export interface LegalLifecycle {
     content: `# SBB LegalOS Foundation (BOSF-021)
 
 The Legal Operating System (LegalOS) Foundation module defines SBB's core domain-specific structures, contract lifecycle matrices, compliance frameworks, corporate governance board controls, legal litigation logs, intellectual property registries, enterprise audit recordings, multi-tier legal approvals, and continuous compliance AI-led feedback loops.`
+  },
+  {
+    name: 'executive-framework.ts',
+    path: 'packages/executive-os/src/core/executive-framework.ts',
+    language: 'typescript',
+    role: 'Executive Framework Contract',
+    description: 'Declares the main ExecutiveFramework contract interface supporting enterprise strategy, enterprise objectives, balanced scorecards, portfolio priority, and transformation programs.',
+    content: `import { ExecutiveContext } from './executive-context.js';
+import { StrategicPlan } from '../strategy/strategic-plan.js';
+import { EnterpriseObjective } from '../strategy/enterprise-objective.js';
+import { BalancedScorecard } from '../performance/balanced-scorecard.js';
+import { EnterpriseRisk } from '../risk/enterprise-risk.js';
+import { EnterprisePortfolio } from '../portfolio/enterprise-portfolio.js';
+import { EnterpriseHealthAnalysis } from '../ai/enterprise-health-analysis.js';
+import { TransformationProgram } from '../strategy/transformation-program.js';
+
+export interface ExecutiveFramework {
+  defineStrategy(uniquePlanCode: string, displayName: string, fiscalStartYear: number, fiscalEndYear: number, overallObjectiveDescriptionText: string, context?: ExecutiveContext): Promise<StrategicPlan>;
+  approveEnterpriseObjectives(planIdString: string, objectivesList: { uniqueObjectiveCode: string; objectiveTitleString: string; descriptionText: string; weightFactorDecimal: number; targetProgressValueDecimal: number; metricUnitString: string; }[], context?: ExecutiveContext): Promise<EnterpriseObjective[]>;
+  reviewEnterprisePerformance(uniqueScorecardCode: string, calendarYear: number, context?: ExecutiveContext): Promise<BalancedScorecard>;
+  evaluateEnterpriseRisk(uniqueRiskCode: string, displayName: string, category: 'STRATEGIC' | 'FINANCIAL' | 'OPERATIONAL' | 'REPUTATIONAL' | 'COMPLIANCE_LEGAL', probabilityRatingNumeric: number, financialImpactRatingAmount: number, currencyCode: string, context?: ExecutiveContext): Promise<EnterpriseRisk>;
+  prioritizePortfolio(uniquePortfolioCode: string, displayName: string, category: 'TECHNOLOGY_MODERNIZATION' | 'BUSINESS_EXPANSION' | 'OPERATIONAL_EXCELLENCE' | 'REGULATORY_COMPLIANCE_CAPITAL', totalBudgetAmount: number, currencyCode: string, context?: ExecutiveContext): Promise<EnterprisePortfolio>;
+  reviewEnterpriseHealth(uniqueAnalysisCode: string, context?: ExecutiveContext): Promise<EnterpriseHealthAnalysis>;
+  driveStrategicTransformation(uniqueProgramCode: string, displayName: string, comprehensiveStrategyDescription: string, aggregateBudgetCostAmount: number, currencyCode: string, context?: ExecutiveContext): Promise<TransformationProgram>;
+}`
+  },
+  {
+    name: 'README.md',
+    path: 'packages/executive-os/README.md',
+    language: 'markdown',
+    role: 'Architectural Specs',
+    description: 'Detailed specifications for ExecutiveOS Foundation (BOSF-022).',
+    content: `# SBB ExecutiveOS Foundation (BOSF-022)
+
+The Executive Operating System (ExecutiveOS) is the highest-level operating system in the Sovereign Business Brain (SBB) platform. It orchestrates and synthesizes intelligence, risk governance, performance metrics, and portfolio optimization across all other operating systems.`
   }
 ];
 
