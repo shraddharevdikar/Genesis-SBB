@@ -1,29 +1,31 @@
 import { TicketDetails, FileNode, FutureTicket } from './types';
 
 export const ticketDetails: TicketDetails = {
-  id: 'BOSF-023',
-  title: 'Real EstateOS Foundation (M10.1)',
+  id: 'BOSF-024',
+  title: 'HealthcareOS Foundation (M10.2)',
   status: 'DONE',
   priority: 'CRITICAL',
   author: 'SBB Principal Architect',
   assignee: 'shraddha.revdikar@gmail.com',
-  objective: 'Establish the foundational architecture for Real EstateOS responsible for property lifecycle orchestration, land acquisition, project planning, inventory matrices, channel sales, construction monitoring, possession tracking, and resident asset management.',
-  modulePath: 'packages/real-estate-os/src/core/real-estate-framework.ts',
+  objective: 'Establish the foundational architecture for HealthcareOS responsible for patient care lifecycle, provider registries, appointments, clinical encounters, electronic prescriptions, laboratory reporting, facility ward tracking, medical billing, and clinical AI support.',
+  modulePath: 'packages/healthcare-os/src/core/healthcare-framework.ts',
   requirements: [
-    'Create the core RealEstateFramework interface declaring AcquireLand, LaunchProject, AllocateInventory, BookProperty, TrackConstruction, CompletePossession, and ManageProperty operations.',
-    'Model physical land parcels, legal zoning boards, due diligence parameters, and acquisition transactions.',
-    'Design multi-tower projects, project phase trackers, physical tower specs, and apartment inventory matrices.',
-    'Formulate buyer registries, broker commissions, and channel partner parameters.',
-    'Establish property bookings, unit allocations, and construction-linked milestone payment plans.',
-    'Track construction stages, quality QC inspections, contractors, and critical milestones.',
-    'Integrate property handovers, keys possession, snag lists, warranties, cooperative housing societies, and maintenance requests.',
-    'Provide demand forecasting, optimal dynamic pricing recommendations, absorption analysis, and project dashboard indicators.'
+    'Create the core HealthcareFramework interface declaring RegisterPatient, ScheduleAppointment, RecordEncounter, CreateTreatmentPlan, IssuePrescription, ProcessLaboratoryOrder, AdmitPatient, and DischargePatient operations.',
+    'Model patient profiles, verified identifiers, and emergency contacts.',
+    'Design physician, nurse, and medical specialist registries with active credentials.',
+    'Formulate appointment schedule intervals, waiting lists, and queue tracking.',
+    'Establish clinical encounters, diagnoses, medical treatment plans, and clinical notes.',
+    'Track medical pharmacy specifications, drug prescriptions, and active administration logs.',
+    'Integrate laboratory diagnostic tests, clinical test orders, and pathologist results.',
+    'Organize ward configurations, hospital beds allocations, and department capacity parameters.',
+    'Model medical billing, insurance claims submittals, and bank payment pre-authorizations.',
+    'Provide clinical decision support, health risk indices, and resource optimization forecasting.'
   ],
   responsibilities: [
-    { title: 'Real Estate Framework Hub', description: 'Deploys RealEstateFramework contract, property lifecycle enums, and industry execution contexts.', status: 'Completed & Verified' },
-    { title: 'Project, Land & Inventory Matrix', description: 'Models physical land parcels, zoning files, real estate projects, physical towers, and unit inventory logs.', status: 'Completed & Verified' },
-    { title: 'CRM, Sales & Construction Tracking', description: 'Enforces buyer profiles, broker networks, booking receipts, payment schedules, and construction QC checklists.', status: 'Completed & Verified' },
-    { title: 'Handover & Smart Property Analytics', description: 'Synthesizes keys possession, punch list trackers, cooperative housing boards, pricing advisors, and forecasting dashboards.', status: 'Completed & Verified' }
+    { title: 'Healthcare Framework Hub', description: 'Deploys HealthcareFramework contract, care lifecycle status enums, and clinical execution contexts.', status: 'Completed & Verified' },
+    { title: 'Patient, Provider & Appointment Matrix', description: 'Models patient profiles, verified national IDs, physician rosters, ward nursing sheets, and scheduler waitlists.', status: 'Completed & Verified' },
+    { title: 'Clinical, Pharmacy & Laboratory Registry', description: 'Enforces SOAP exam notes, diagnosis matrices, electronic prescriptions, medication catalogs, and laboratory results.', status: 'Completed & Verified' },
+    { title: 'Billing, Facilities & Smart Healthcare Analytics', description: 'Synthesizes ward beds, insurance claims, decision support models, hospital dashboards, and resource optimizers.', status: 'Completed & Verified' }
   ]
 };
 
@@ -10303,6 +10305,42 @@ export interface RealEstateFramework {
     content: `# SBB RealEstateOS Foundation (BOSF-023)
 
 The Real Estate Operating System (RealEstateOS) is SBB's core industry-specific operating system designed to orchestrate property lifecycles, track land acquisitions, manage complex tower/phase construction structures, control unified buyer/channel partner sales, and direct community property management operations by composing existing SBB Operating Systems.`
+  },
+  {
+    name: 'healthcare-framework.ts',
+    path: 'packages/healthcare-os/src/core/healthcare-framework.ts',
+    language: 'typescript',
+    role: 'Healthcare Framework Contract',
+    description: 'Declares the main HealthcareFramework contract interface supporting patient registration, appointments, clinical encounters, treatment plans, prescriptions, lab orders, inpatient admission, and discharge.',
+    content: `import { HealthcareContext } from './healthcare-context.js';
+import { Patient, PatientId } from '../patients/patient.js';
+import { PatientProfile } from '../patients/patient-profile.js';
+import { Appointment, AppointmentId } from '../appointments/appointment.js';
+import { MedicalEncounter, EncounterId } from '../clinical/encounter.js';
+import { PatientTreatmentPlan } from '../clinical/treatment-plan.js';
+import { ElectronicPrescription } from '../pharmacy/prescription.js';
+import { LaboratoryOrder } from '../laboratory/laboratory-order.js';
+
+export interface HealthcareFramework {
+  registerPatient(uniquePatientCode: string, primaryRecordNumberMRN: string, profileData: Omit<PatientProfile, 'profileId' | 'associatedPatientId' | 'lastModifiedAt'>, context?: HealthcareContext): Promise<Patient>;
+  scheduleAppointment(uniqueAppointmentCode: string, associatedPatientId: PatientId, associatedProviderIdString: string, scheduledStartAt: Date, scheduledEndAt: Date, purposeOfVisitSummary: string, encounterType: 'TELEMEDICINE_VIDEO' | 'IN_PERSON_CLINIC_VISIT' | 'HOME_CARE_VISIT' | 'EMERGENCY_WALK_IN', targetPhysicianIdString?: string, context?: HealthcareContext): Promise<Appointment>;
+  recordEncounter(uniqueEncounterCode: string, associatedPatientId: PatientId, associatedProviderIdString: string, attendingPhysicianIdString: string, facilityDepartmentIdString?: string, associatedAppointmentIdString?: string, context?: HealthcareContext): Promise<MedicalEncounter>;
+  createTreatmentPlan(uniquePlanCode: string, associatedPatientId: PatientId, orderingPhysicianIdString: string, primaryIndicationText: string, plannedStartDate: Date, plannedEndDate: Date, totalPlannedCostAmount: number, currencyCode: string, context?: HealthcareContext): Promise<PatientTreatmentPlan>;
+  issuePrescription(uniquePrescriptionCode: string, associatedPatientId: PatientId, prescribingPhysicianIdString: string, classification: 'STANDARD_OUTPATIENT' | 'INPATIENT_STAT' | 'NARCOTIC_SECURED', linesJSON: string, digitalSignatureDocURI: string, associatedEncounterIdString?: string, context?: HealthcareContext): Promise<ElectronicPrescription>;
+  processLaboratoryOrder(uniqueOrderCode: string, associatedPatientId: PatientId, orderingPhysicianIdString: string, requestedDiagnosticTestIdsList: string[], clinicalIndicationReasonText: string, priorityLevel: 'ROUTINE' | 'URGENT' | 'STAT_EMERGENCY', associatedEncounterIdString?: string, context?: HealthcareContext): Promise<LaboratoryOrder>;
+  admitPatient(associatedPatientId: PatientId, targetEncounterId: EncounterId, assignedBedIdString: string, clinicalReasonSummaryText: string, context?: HealthcareContext): Promise<MedicalEncounter>;
+  dischargePatient(targetEncounterId: EncounterId, dischargeDispositionText: string, dischargeSummaryNotesText: string, context?: HealthcareContext): Promise<MedicalEncounter>;
+}`
+  },
+  {
+    name: 'README.md',
+    path: 'packages/healthcare-os/README.md',
+    language: 'markdown',
+    role: 'Architectural Specs',
+    description: 'Detailed specifications for HealthcareOS Foundation (BOSF-024).',
+    content: `# SBB HealthcareOS Foundation (BOSF-024)
+
+The Healthcare Operating System (HealthcareOS) is SBB's core industry-specific operating system designed to orchestrate patient care, track provider structures, manage appointments, control medical billing, coordinate diagnostic laboratories and electronic prescriptions, and direct clinical and operational AI-driven workflows by composing existing SBB Operating Systems.`
   }
 ];
 

@@ -195,6 +195,9 @@
       ],
       "@sbb/real-estate-os": [
         "./packages/real-estate-os/src/index.ts"
+      ],
+      "@sbb/healthcare-os": [
+        "./packages/healthcare-os/src/index.ts"
       ]
     },
     "allowImportingTsExtensions": true,
