@@ -1,4 +1,7 @@
 export * from './client/prisma-client.js';
+export * from './client.js';
+export * from './database.service.js';
+export * from './database.module.js';
 export * from './repositories/repository.interface.js';
 export * from './repositories/base-repository.js';
 export * from './transactions/transaction-manager.js';
