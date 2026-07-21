@@ -10485,6 +10485,41 @@ export interface HospitalityFramework {
     content: `# SBB HospitalityOS Foundation (BOSF-028)
 
 The Hospitality Operating System (HospitalityOS) is SBB's core industry-specific operating system designed to orchestrate guest lifecycles, manage guest profiles and loyalty levels, track room inventory and clean/dirty statuses, coordinate housekeeping schedules and maintenance requests, process dining, spa, and fitness center bookings, manage conference and banquet events, issue guest folios and invoices, and deliver analytics such as occupancy forecasts and dynamic pricing under human-supervised AI guidance.`
+  },
+  {
+    name: 'logistics-framework.ts',
+    path: 'packages/logistics-os/src/core/logistics-framework.ts',
+    language: 'typescript',
+    role: 'Logistics Framework Contract',
+    description: 'Declares the main LogisticsFramework contract interface supporting supplier procurement, inventory receipt, warehouse bin layout, stock allocation, shipment dispatching, delivery tracking, and returns process.',
+    content: `import { LogisticsContext } from './logistics-context.js';
+import { PurchaseOrder } from '../procurement/purchase-order.js';
+import { Warehouse } from '../warehousing/warehouse.js';
+import { StockMovement } from '../warehousing/stock-movement.js';
+import { InventoryBalance } from '../inventory/inventory-balance.js';
+import { Shipment } from '../transportation/shipment.js';
+import { Delivery } from '../delivery/delivery.js';
+import { ReturnOrder } from '../returns/return-order.js';
+
+export interface LogisticsFramework {
+  manageProcurement(supplierIdString: string, targetWarehouseIdString: string, skuQuantitiesMapJSON: string, context?: LogisticsContext): Promise<PurchaseOrder>;
+  receiveInventory(associatedPurchaseOrderIdString: string, receivedQuantitiesJSON: string, carrierWaybillReferenceString: string, context?: LogisticsContext): Promise<StockMovement[]>;
+  manageWarehouse(uniqueWarehouseCodeString: string, totalStorageCapacityCubicMeters: number, hazardousMaterialsAuthorized: boolean, context?: LogisticsContext): Promise<Warehouse>;
+  allocateInventory(associatedOrderIdString: string, requestedSkuCodeString: string, allocationQuantityCount: number, context?: LogisticsContext): Promise<InventoryBalance>;
+  dispatchShipment(transportOrdersListJSON: string, targetCarrierTypeCode: string, scheduledRouteIdString: string, context?: LogisticsContext): Promise<Shipment>;
+  trackDelivery(associatedDeliveryIdString: string, currentLatitudeDecimal: number, currentLongitudeDecimal: number, context?: LogisticsContext): Promise<Delivery>;
+  processReturns(originalSalesOrderIdString: string, returnReasonCodeString: string, returnQuantitiesJSON: string, context?: LogisticsContext): Promise<ReturnOrder>;
+}`
+  },
+  {
+    name: 'README.md',
+    path: 'packages/logistics-os/README.md',
+    language: 'markdown',
+    role: 'Architectural Specs',
+    description: 'Detailed specifications for LogisticsOS Foundation (BOSF-029).',
+    content: `# SBB Logistics & Supply ChainOS Foundation (BOSF-029)
+
+The Logistics & Supply Chain Operating System (LogisticsOS) is SBB's core industry-specific operating system designed to orchestrate the complete supply chain lifecycle, manage warehouse maps and inventory layouts, track procurement plans and supplier records, record stock counts and automatic adjustments, optimize routes and transport orders, govern last-mile deliveries, coordinate reverse logistics returns and inspections, and generate supply chain intelligence under human-supervised AI guidance.`
   }
 ];
 

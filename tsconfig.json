@@ -210,6 +210,9 @@
       ],
       "@sbb/hospitality-os": [
         "./packages/hospitality-os/src/index.ts"
+      ],
+      "@sbb/logistics-os": [
+        "./packages/logistics-os/src/index.ts"
       ]
     },
     "allowImportingTsExtensions": true,
