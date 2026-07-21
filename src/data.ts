@@ -10450,6 +10450,41 @@ export interface EducationFramework {
     content: `# SBB EducationOS Foundation (BOSF-027)
 
 The Education Operating System (EducationOS) is SBB's core industry-specific operating system designed to orchestrate educational lifecycles, manage student registries and profiles, implement flexible curriculum frameworks and academic terms, schedule instructor timetables and classroom resources, track assignment grades and assessment rubrics, handle admissions cycles and applications, issue secure credentials and academic transcripts, manage library and lab resources, and deliver educational analytics under human-supervised AI guidance.`
+  },
+  {
+    name: 'hospitality-framework.ts',
+    path: 'packages/hospitality-os/src/core/hospitality-framework.ts',
+    language: 'typescript',
+    role: 'Hospitality Framework Contract',
+    description: 'Declares the main HospitalityFramework contract interface supporting room reservations, guest check-ins, physical allocations, housekeeping, spa and wellness bookings, guest folio charges, and final check-outs.',
+    content: `import { HospitalityContext } from './hospitality-context.js';
+import { Reservation } from '../reservations/reservation.js';
+import { GuestId } from '../guests/guest.js';
+import { RoomAllocation } from '../reservations/room-allocation.js';
+import { HousekeepingTask } from '../housekeeping/housekeeping-task.js';
+import { FacilityBooking } from '../facilities/facility-booking.js';
+import { GuestFolio } from '../billing/guest-folio.js';
+import { HospitalityInvoice } from '../billing/hospitality-invoice.js';
+
+export interface HospitalityFramework {
+  manageReservation(associatedGuestId: GuestId, scheduledCheckInDate: Date, scheduledCheckOutDate: Date, requestedRoomCategoryCode: string, guestAdultsCount: number, guestChildrenCount: number, remarksNotesJSON: string, context?: HospitalityContext): Promise<Reservation>;
+  checkInGuest(associatedReservationIdString: string, identityDocumentType: string, identityDocumentReferenceNumber: string, preAuthHoldAmountDecimal: number, context?: HospitalityContext): Promise<Reservation>;
+  allocateRoom(associatedReservationIdString: string, targetRoomIdString: string, overrideDirtyStatusFlag: boolean, context?: HospitalityContext): Promise<RoomAllocation>;
+  coordinateHousekeeping(targetRoomIdString: string, taskTypeCode: string, assignedHousekeeperStaffRoleIdString?: string, taskPriorityCode?: string, context?: HospitalityContext): Promise<HousekeepingTask>;
+  manageFacilities(associatedGuestId: GuestId, facilityTypeCode: string, scheduledStartTimestamp: Date, scheduledEndTimestamp: Date, associatedStaffRoleIdString?: string, customRequestsText?: string, context?: HospitalityContext): Promise<FacilityBooking>;
+  processGuestBilling(associatedFolioIdString: string, chargeCategoryCode: string, amountChargedDecimal: number, quantityCount: number, postedByStaffRoleIdString: string, referenceSourceCode?: string, context?: HospitalityContext): Promise<GuestFolio>;
+  checkOutGuest(associatedReservationIdString: string, paymentMethodCode: string, complianceTaxIdString?: string, context?: HospitalityContext): Promise<HospitalityInvoice>;
+}`
+  },
+  {
+    name: 'README.md',
+    path: 'packages/hospitality-os/README.md',
+    language: 'markdown',
+    role: 'Architectural Specs',
+    description: 'Detailed specifications for HospitalityOS Foundation (BOSF-028).',
+    content: `# SBB HospitalityOS Foundation (BOSF-028)
+
+The Hospitality Operating System (HospitalityOS) is SBB's core industry-specific operating system designed to orchestrate guest lifecycles, manage guest profiles and loyalty levels, track room inventory and clean/dirty statuses, coordinate housekeeping schedules and maintenance requests, process dining, spa, and fitness center bookings, manage conference and banquet events, issue guest folios and invoices, and deliver analytics such as occupancy forecasts and dynamic pricing under human-supervised AI guidance.`
   }
 ];
 

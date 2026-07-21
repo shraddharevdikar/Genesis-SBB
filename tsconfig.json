@@ -207,6 +207,9 @@
       ],
       "@sbb/education-os": [
         "./packages/education-os/src/index.ts"
+      ],
+      "@sbb/hospitality-os": [
+        "./packages/hospitality-os/src/index.ts"
       ]
     },
     "allowImportingTsExtensions": true,
