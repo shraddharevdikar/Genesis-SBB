@@ -37,6 +37,9 @@
       "@sbb/auth": [
         "./packages/auth/src/index.ts"
       ],
+      "@sbb/rbac": [
+        "./packages/rbac/src/index.ts"
+      ],
       "@sbb/types": [
         "./packages/types/src/index.ts"
       ],
