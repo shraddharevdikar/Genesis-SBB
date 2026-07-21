@@ -1,0 +1,33 @@
+{
+  "name": "@sbb/retail-ecommerce-os",
+  "version": "1.0.0",
+  "description": "Retail & Ecommerce Operating System (RetailEcommerceOS) responsible for omnichannel catalog curation, promotion engines, loyalty schemes, stock allocations across fulfillment networks, return orders, point of sale transactions, and commerce intelligence analytics",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@sbb/shared": "^1.0.0",
+    "@sbb/runtime-platform": "^1.0.0",
+    "@sbb/runtime-api": "^1.0.0",
+    "@sbb/agent-framework": "^1.0.0",
+    "@sbb/marketing-os": "^1.0.0",
+    "@sbb/sales-os": "^1.0.0",
+    "@sbb/finance-os": "^1.0.0",
+    "@sbb/hr-os": "^1.0.0",
+    "@sbb/operations-os": "^1.0.0",
+    "@sbb/legal-os": "^1.0.0",
+    "@sbb/executive-os": "^1.0.0",
+    "@sbb/real-estate-os": "^1.0.0",
+    "@sbb/healthcare-os": "^1.0.0",
+    "@sbb/manufacturing-os": "^1.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.5",
+    "@types/node": "^20.12.12"
+  },
+  "publishConfig": {
+    "access": "restricted"
+  }
+}

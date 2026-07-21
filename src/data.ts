@@ -10378,6 +10378,42 @@ export interface ManufacturingFramework {
     content: `# SBB ManufacturingOS Foundation (BOSF-025)
 
 The Manufacturing Operating System (ManufacturingOS) is SBB's industry-specific operating system designed to orchestrate manufacturing lifecycles, track product specifications, build bills of materials (BOM), model production schedules, automate inventory routing across warehouses, direct shop floor work orders, enforce industrial quality checks, manage preventive machinery maintenance, and streamline shipment dispatches by composing existing SBB Operating Systems.`
+  },
+  {
+    name: 'retail-framework.ts',
+    path: 'packages/retail-ecommerce-os/src/core/retail-framework.ts',
+    language: 'typescript',
+    role: 'Retail Framework Contract',
+    description: 'Declares the main RetailFramework contract interface supporting catalog management, price configurations, omnichannel order processing, inventory allocations, package fulfillments, returned items processing, and loyalty accounts management.',
+    content: `import { RetailContext } from './retail-context.js';
+import { ProductCatalog } from '../catalog/product-catalog.js';
+import { PriceList } from '../pricing/price-list.js';
+import { SalesOrder } from '../orders/sales-order.js';
+import { StockAllocation } from '../inventory/stock-allocation.js';
+import { OrderFulfillment } from '../orders/order-fulfillment.js';
+import { ReturnOrder } from '../orders/return-order.js';
+import { LoyaltyAccount } from '../customers/loyalty-account.js';
+import { CustomerId } from '../customers/retail-customer.js';
+
+export interface RetailFramework {
+  manageCatalog(uniqueCatalogCode: string, catalogTitle: string, marketRegionCodeText: string, associatedProductsPayloadJSON: string, context?: RetailContext): Promise<ProductCatalog>;
+  configurePricing(uniquePriceListCode: string, priceListTitle: string, currencyCode: string, targetChannelSourcesList: string[], skuPricesPayloadJSON: string, context?: RetailContext): Promise<PriceList>;
+  processOrder(uniqueOrderCode: string, associatedCustomerId: CustomerId, currencyCode: string, orderItemsPayloadJSON: string, deliveryMethod: 'HOME_DELIVERY' | 'IN_STORE_PICKUP' | 'CURBSIDE_PICKUP' | 'DIGITAL_DOWNLOAD', targetLocationIdString?: string, context?: RetailContext): Promise<SalesOrder>;
+  allocateInventory(uniqueAllocationCode: string, associatedOrderIdString: string, itemsToAllocatePayloadJSON: string, context?: RetailContext): Promise<StockAllocation[]>;
+  fulfillOrder(uniqueFulfillmentCode: string, associatedOrderIdString: string, sourceInventoryLocationIdString: string, allocatedItemsPayloadJSON: string, shippingCarrierName?: string, context?: RetailContext): Promise<OrderFulfillment>;
+  processReturn(uniqueReturnCode: string, associatedSalesOrderIdString: string, returnedItemsPayloadJSON: string, refundProcessingMethod: 'ORIGINAL_PAYMENT_METHOD' | 'GIFT_CARD_CREDIT' | 'EXCHANGE_ITEM_OFFSET', context?: RetailContext): Promise<ReturnOrder>;
+  manageLoyalty(associatedCustomerId: CustomerId, pointsToEarnOrRedeemCount: number, transactionNotesText: string, associatedSalesOrderIdString?: string, context?: RetailContext): Promise<LoyaltyAccount>;
+}`
+  },
+  {
+    name: 'README.md',
+    path: 'packages/retail-ecommerce-os/README.md',
+    language: 'markdown',
+    role: 'Architectural Specs',
+    description: 'Detailed specifications for RetailEcommerceOS Foundation (BOSF-026).',
+    content: `# SBB Retail & EcommerceOS Foundation (BOSF-026)
+
+The Retail & Ecommerce Operating System (RetailEcommerceOS) is SBB's core industry-specific operating system designed to orchestrate omnichannel commercial lifecycles, manage product variants and categories, implement flexible pricing schedules and promotions, allocate stock levels across multi-node warehouse networks, coordinate home deliveries and in-store pickups, track physical Point of Sale (POS) terminals, and run unified commerce analytics under human-supervised AI guidance.`
   }
 ];
 

@@ -201,6 +201,9 @@
       ],
       "@sbb/manufacturing-os": [
         "./packages/manufacturing-os/src/index.ts"
+      ],
+      "@sbb/retail-ecommerce-os": [
+        "./packages/retail-ecommerce-os/src/index.ts"
       ]
     },
     "allowImportingTsExtensions": true,
