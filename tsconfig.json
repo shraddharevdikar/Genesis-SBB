@@ -204,6 +204,9 @@
       ],
       "@sbb/retail-ecommerce-os": [
         "./packages/retail-ecommerce-os/src/index.ts"
+      ],
+      "@sbb/education-os": [
+        "./packages/education-os/src/index.ts"
       ]
     },
     "allowImportingTsExtensions": true,

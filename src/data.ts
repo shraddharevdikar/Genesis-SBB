@@ -10414,6 +10414,42 @@ export interface RetailFramework {
     content: `# SBB Retail & EcommerceOS Foundation (BOSF-026)
 
 The Retail & Ecommerce Operating System (RetailEcommerceOS) is SBB's core industry-specific operating system designed to orchestrate omnichannel commercial lifecycles, manage product variants and categories, implement flexible pricing schedules and promotions, allocate stock levels across multi-node warehouse networks, coordinate home deliveries and in-store pickups, track physical Point of Sale (POS) terminals, and run unified commerce analytics under human-supervised AI guidance.`
+  },
+  {
+    name: 'education-framework.ts',
+    path: 'packages/education-os/src/core/education-framework.ts',
+    language: 'typescript',
+    role: 'Education Framework Contract',
+    description: 'Declares the main EducationFramework contract interface supporting admissions, student course enrollment, academic programs, curriculum and term schedules, instructor timetables, assessment gradebooks, certifications, and campus resources.',
+    content: `import { EducationContext } from './education-context.js';
+import { Student, StudentId } from '../students/student.js';
+import { Enrollment } from '../students/enrollment.js';
+import { Course } from '../academics/course.js';
+import { LearningModule } from '../learning/learning-module.js';
+import { Gradebook } from '../learning/gradebook.js';
+import { Certificate } from '../certification/certificate.js';
+import { Campus } from '../campus/campus.js';
+import { AdmissionApplication } from '../admissions/admission-application.js';
+
+export interface EducationFramework {
+  admitStudent(uniqueApplicationCode: string, applicantPayloadJSON: string, targetProgramIdString: string, targetAdmissionCycleIdString: string, context?: EducationContext): Promise<AdmissionApplication>;
+  enrollStudent(associatedStudentId: StudentId, targetCourseSectionIdString: string, academicTermIdString: string, isAuditOnlyFlag: boolean, context?: EducationContext): Promise<Enrollment>;
+  manageCourses(uniqueCourseCode: string, courseTitle: string, creditUnitsDecimal: number, departmentIdString: string, syllabusPayloadJSON: string, context?: EducationContext): Promise<Course>;
+  deliverLearning(uniqueModuleCode: string, associatedCourseIdString: string, displayTitle: string, curatedResourcesJSON: string, context?: EducationContext): Promise<LearningModule>;
+  conductAssessment(associatedStudentId: StudentId, associatedCourseIdString: string, academicTermIdString: string, submittedGradesJSON: string, context?: EducationContext): Promise<Gradebook>;
+  issueCertification(associatedStudentId: StudentId, conferredCredentialTitle: string, associatedProgramIdString?: string, honorsConferredText?: string, context?: EducationContext): Promise<Certificate>;
+  manageCampus(uniqueCampusCode: string, displayName: string, physicalAddressString: string, safetyCapacityLimit: number, context?: EducationContext): Promise<Campus>;
+}`
+  },
+  {
+    name: 'README.md',
+    path: 'packages/education-os/README.md',
+    language: 'markdown',
+    role: 'Architectural Specs',
+    description: 'Detailed specifications for EducationOS Foundation (BOSF-027).',
+    content: `# SBB EducationOS Foundation (BOSF-027)
+
+The Education Operating System (EducationOS) is SBB's core industry-specific operating system designed to orchestrate educational lifecycles, manage student registries and profiles, implement flexible curriculum frameworks and academic terms, schedule instructor timetables and classroom resources, track assignment grades and assessment rubrics, handle admissions cycles and applications, issue secure credentials and academic transcripts, manage library and lab resources, and deliver educational analytics under human-supervised AI guidance.`
   }
 ];
 
