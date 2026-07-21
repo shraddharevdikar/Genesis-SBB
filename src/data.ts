@@ -10520,6 +10520,44 @@ export interface LogisticsFramework {
     content: `# SBB Logistics & Supply ChainOS Foundation (BOSF-029)
 
 The Logistics & Supply Chain Operating System (LogisticsOS) is SBB's core industry-specific operating system designed to orchestrate the complete supply chain lifecycle, manage warehouse maps and inventory layouts, track procurement plans and supplier records, record stock counts and automatic adjustments, optimize routes and transport orders, govern last-mile deliveries, coordinate reverse logistics returns and inspections, and generate supply chain intelligence under human-supervised AI guidance.`
+  },
+  {
+    name: 'professional-services-framework.ts',
+    path: 'packages/professional-services-os/src/core/professional-services-framework.ts',
+    language: 'typescript',
+    role: 'Professional Services Framework Contract',
+    description: 'Declares the main ProfessionalServicesFramework contract interface supporting client engagements, proposals/SOWs, project delivery, resource allocation, service delivery, timesheets, billing requests, and customer success management.',
+    content: `import { ServicesContext } from './services-context.js';
+import { Client } from '../clients/client.js';
+import { Engagement } from '../clients/engagement.js';
+import { Proposal } from '../proposals/proposal.js';
+import { Project } from '../projects/project.js';
+import { ResourceAllocation } from '../resources/resource-allocation.js';
+import { ServiceRequest } from '../delivery/service-request.js';
+import { Worklog } from '../delivery/worklog.js';
+import { InvoiceRequest } from '../billing/invoice-request.js';
+import { CustomerHealth } from '../customer-success/customer-health.js';
+
+export interface ProfessionalServicesFramework {
+  manageClientEngagement(clientIdString: string, engagementTitle: string, deliveryModelCode: string, totalValueAmount: number, context?: ServicesContext): Promise<Engagement>;
+  createProposal(associatedClientIdString: string, proposalTitle: string, targetPracticeArea: string, estimatedFeeAmount: number, context?: ServicesContext): Promise<Proposal>;
+  launchProject(associatedEngagementIdString: string, projectTitleString: string, projectManagerStaffRoleId: string, allocatedBudgetAmount: number, context?: ServicesContext): Promise<Project>;
+  allocateResources(consultantIdString: string, targetProjectIdString: string, plannedStartDate: Date, plannedEndDate: Date, ftePercentageDecimal: number, context?: ServicesContext): Promise<ResourceAllocation>;
+  deliverServices(clientIdString: string, requestSubject: string, detailedDescription: string, priorityCode: string, context?: ServicesContext): Promise<ServiceRequest>;
+  recordTime(consultantIdString: string, projectIdString: string, hoursWorkedDecimal: number, workDate: Date, activitySummaryText: string, context?: ServicesContext): Promise<Worklog>;
+  requestBilling(associatedEngagementIdString: string, billingTypeCode: string, billingLineItemsJSON: string, context?: ServicesContext): Promise<InvoiceRequest>;
+  measureCustomerSuccess(clientIdString: string, surveyRatingsListJSON: string, netPromoterScore: number, context?: ServicesContext): Promise<CustomerHealth>;
+}`
+  },
+  {
+    name: 'README.md',
+    path: 'packages/professional-services-os/README.md',
+    language: 'markdown',
+    role: 'Architectural Specs',
+    description: 'Detailed specifications for ProfessionalServicesOS Foundation (BOSF-030).',
+    content: `# SBB Professional ServicesOS Foundation (BOSF-030)
+
+The Professional Services Operating System (ProfessionalServicesOS) is SBB's core industry-specific operating system designed to orchestrate the complete client engagement lifecycle, manage client accounts and service agreements, track proposals and statements of work, monitor project deliverables and milestones, assign and allocate consultants based on skills and availability, record timesheets and expense entries, manage billing requests and revenue recognition, track customer success health scores, and deliver professional services intelligence under human-supervised AI guidance.`
   }
 ];
 

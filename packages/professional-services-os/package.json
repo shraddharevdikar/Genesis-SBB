@@ -1,0 +1,37 @@
+{
+  "name": "@sbb/professional-services-os",
+  "version": "1.0.0",
+  "description": "Professional Services Operating System (ProfessionalServicesOS) responsible for client engagement lifecycles, statements of work, resource allocations, time and expense tracking, billing requests, and delivery intelligence analytics",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@sbb/shared": "^1.0.0",
+    "@sbb/runtime-platform": "^1.0.0",
+    "@sbb/runtime-api": "^1.0.0",
+    "@sbb/agent-framework": "^1.0.0",
+    "@sbb/marketing-os": "^1.0.0",
+    "@sbb/sales-os": "^1.0.0",
+    "@sbb/finance-os": "^1.0.0",
+    "@sbb/hr-os": "^1.0.0",
+    "@sbb/operations-os": "^1.0.0",
+    "@sbb/legal-os": "^1.0.0",
+    "@sbb/executive-os": "^1.0.0",
+    "@sbb/real-estate-os": "^1.0.0",
+    "@sbb/healthcare-os": "^1.0.0",
+    "@sbb/manufacturing-os": "^1.0.0",
+    "@sbb/retail-ecommerce-os": "^1.0.0",
+    "@sbb/education-os": "^1.0.0",
+    "@sbb/hospitality-os": "^1.0.0",
+    "@sbb/logistics-os": "^1.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.5",
+    "@types/node": "^20.12.12"
+  },
+  "publishConfig": {
+    "access": "restricted"
+  }
+}

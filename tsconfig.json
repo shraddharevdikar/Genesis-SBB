@@ -213,6 +213,9 @@
       ],
       "@sbb/logistics-os": [
         "./packages/logistics-os/src/index.ts"
+      ],
+      "@sbb/professional-services-os": [
+        "./packages/professional-services-os/src/index.ts"
       ]
     },
     "allowImportingTsExtensions": true,
