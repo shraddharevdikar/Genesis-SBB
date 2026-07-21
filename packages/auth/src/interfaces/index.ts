@@ -19,3 +19,7 @@ export interface ITokenGenerator {
 export interface IPasswordPolicy {
   validate(password: string, options?: PasswordPolicyOptions): PasswordPolicyResult;
 }
+
+export * from './jwt-payload.interface.js';
+export * from './authenticated-user.interface.js';
+

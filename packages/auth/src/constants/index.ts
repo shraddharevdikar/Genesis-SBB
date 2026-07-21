@@ -5,3 +5,6 @@ export const AUTH_CONSTANTS = {
   PASSWORD_MAX_LENGTH: 128,
   TOKEN_BYTES: 32,
 } as const;
+
+export * from './auth.constants.js';
+

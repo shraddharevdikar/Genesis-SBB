@@ -10,7 +10,8 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "paths": {
-      "@sbb/shared": ["../shared/src/index.ts"]
+      "@sbb/shared": ["../shared/src/index.ts"],
+      "@sbb/database": ["../database/src/index.ts"]
     }
   },
   "include": ["src/**/*"],

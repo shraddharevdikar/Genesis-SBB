@@ -47,7 +47,7 @@ export class DatabaseService extends PrismaClient implements OnModuleInit, OnMod
   /**
    * Wrap operations inside a transaction.
    */
-  async transaction<T>(fn: (prisma: PrismaClient) => Promise<T>): Promise<T> {
-    return this.$transaction(fn as any);
+  async transaction<T>(fn: (prisma: any) => Promise<T>): Promise<T> {
+    return this.$transaction(fn) as unknown as Promise<T>;
   }
 }
