@@ -107,14 +107,36 @@ model UserRole {
 }
 
 model AuditLog {
-  id        String   @id @default(uuid())
-  actorId   String   @map("actor_id")
-  entity    String
-  entityId  String   @map("entity_id")
-  action    String
-  payload   Json
-  timestamp DateTime @default(now())
+  id             String    @id @default(uuid())
+  actorId        String    @map("actor_id")
+  entity         String
+  entityId       String    @map("entity_id")
+  action         String
+  payload        Json
+  timestamp      DateTime  @default(now())
 
+  // New Enterprise Audit fields
+  tenantId       String?   @map("tenant_id")
+  organizationId String?   @map("organization_id")
+  userId         String?   @map("user_id")
+  sessionId      String?   @map("session_id")
+  ipAddress      String?   @map("ip_address")
+  userAgent      String?   @map("user_agent")
+  resourceType   String?   @map("resource_type")
+  resourceId     String?   @map("resource_id")
+  status         String?   @default("SUCCESS")
+  severity       String?   @default("INFO")
+  beforeState    Json?     @map("before_state")
+  afterState     Json?     @map("after_state")
+  metadata       Json?     @map("metadata")
+  correlationId  String?   @map("correlation_id")
+
+  @@index([tenantId])
+  @@index([organizationId])
+  @@index([userId])
+  @@index([resourceId])
+  @@index([action])
+  @@index([timestamp])
   @@map("audit_logs")
 }
 

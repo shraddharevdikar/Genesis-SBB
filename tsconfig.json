@@ -40,6 +40,9 @@
       "@sbb/rbac": [
         "./packages/rbac/src/index.ts"
       ],
+      "@sbb/audit": [
+        "./packages/audit/src/index.ts"
+      ],
       "@sbb/types": [
         "./packages/types/src/index.ts"
       ],
