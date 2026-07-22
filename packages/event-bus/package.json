@@ -1,0 +1,31 @@
+{
+  "name": "@sbb/event-bus",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "node --import tsx --test src/**/*.spec.ts"
+  },
+  "dependencies": {
+    "@sbb/shared": "^1.0.0",
+    "@sbb/database": "^1.0.0",
+    "@sbb/auth": "^1.0.0",
+    "@sbb/rbac": "^1.0.0",
+    "@sbb/audit": "^1.0.0",
+    "@nestjs/common": "^11.1.27",
+    "@nestjs/core": "^11.1.27",
+    "class-validator": "^0.14.1",
+    "class-transformer": "^0.5.1",
+    "eventemitter2": "^6.4.9",
+    "reflect-metadata": "^0.2.2",
+    "rxjs": "^7.8.2"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.5",
+    "@types/node": "^20.12.12"
+  },
+  "publishConfig": {
+    "access": "restricted"
+  }
+}

@@ -164,3 +164,33 @@ model RefreshToken {
   @@map("refresh_tokens")
 }
 
+model EventStore {
+  id             String    @id @default(uuid())
+  eventName      String    @map("event_name")
+  eventType      String    @map("event_type")
+  tenantId       String?   @map("tenant_id")
+  organizationId String?   @map("organization_id")
+  userId         String?   @map("user_id")
+  correlationId  String?   @map("correlation_id")
+  causationId    String?   @map("causation_id")
+  timestamp      DateTime  @default(now())
+  version        Int       @default(1)
+  source         String
+  payload        Json
+  metadata       Json?
+  status         String    @default("PENDING")
+  attempts       Int       @default(0)
+  maxAttempts    Int       @default(3)
+  errorMessage   String?   @map("error_message")
+
+  @@index([tenantId])
+  @@index([organizationId])
+  @@index([userId])
+  @@index([eventType])
+  @@index([correlationId])
+  @@index([status])
+  @@index([timestamp])
+  @@map("event_store")
+}
+
+
