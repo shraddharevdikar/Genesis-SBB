@@ -46,6 +46,9 @@
       "@sbb/event-bus": [
         "./packages/event-bus/src/index.ts"
       ],
+      "@sbb/workflow": [
+        "./packages/workflow/src/index.ts"
+      ],
       "@sbb/types": [
         "./packages/types/src/index.ts"
       ],

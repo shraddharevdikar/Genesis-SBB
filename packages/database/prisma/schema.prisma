@@ -193,4 +193,131 @@ model EventStore {
   @@map("event_store")
 }
 
+model WorkflowDefinition {
+  id                   String             @id @default(uuid())
+  name                 String
+  version              Int                @default(1)
+  description          String?
+  category             String             @default("GENERAL")
+  status               String             @default("DRAFT")
+  trigger              Json
+  steps                Json
+  conditions           Json?
+  timeout              Int?
+  retryPolicy          Json?              @map("retry_policy")
+  compensationStrategy Json?              @map("compensation_strategy")
+  metadata             Json?
+  tenantId             String?            @map("tenant_id")
+  organizationId       String?            @map("organization_id")
+  createdById          String?            @map("created_by_id")
+  createdAt            DateTime           @default(now()) @map("created_at")
+  updatedAt            DateTime           @updatedAt @map("updated_at")
+  instances            WorkflowInstance[]
+
+  @@index([tenantId])
+  @@index([organizationId])
+  @@index([status])
+  @@map("workflow_definitions")
+}
+
+model WorkflowInstance {
+  id             String                  @id @default(uuid())
+  definitionId   String                  @map("definition_id")
+  name           String
+  version        Int                     @default(1)
+  status         String                  @default("PENDING")
+  currentStepId  String?                 @map("current_step_id")
+  tenantId       String?                 @map("tenant_id")
+  organizationId String?                 @map("organization_id")
+  userId         String?                 @map("user_id")
+  context        Json
+  input          Json?
+  output         Json?
+  errorMessage   String?                 @map("error_message")
+  startedAt      DateTime?               @map("started_at")
+  completedAt    DateTime?               @map("completed_at")
+  createdAt      DateTime                @default(now()) @map("created_at")
+  updatedAt      DateTime                @updatedAt @map("updated_at")
+  definition     WorkflowDefinition      @relation(fields: [definitionId], references: [id], onDelete: Cascade)
+  stepExecutions WorkflowStepExecution[]
+  approvals      WorkflowApproval[]
+  logs           WorkflowExecutionLog[]
+
+  @@index([tenantId])
+  @@index([organizationId])
+  @@index([userId])
+  @@index([definitionId])
+  @@index([status])
+  @@map("workflow_instances")
+}
+
+model WorkflowStepExecution {
+  id          String           @id @default(uuid())
+  instanceId  String           @map("instance_id")
+  stepId      String           @map("step_id")
+  stepName    String           @map("step_name")
+  stepType    String           @map("step_type")
+  status      String           @default("PENDING")
+  attempts    Int              @default(0)
+  maxAttempts Int              @default(3) @map("max_attempts")
+  input       Json?
+  output      Json?
+  error       String?
+  startedAt   DateTime?        @map("started_at")
+  completedAt DateTime?        @map("completed_at")
+  durationMs  Int?             @map("duration_ms")
+  metadata    Json?
+  createdAt   DateTime         @default(now()) @map("created_at")
+  updatedAt   DateTime         @updatedAt @map("updated_at")
+  instance    WorkflowInstance @relation(fields: [instanceId], references: [id], onDelete: Cascade)
+
+  @@index([instanceId])
+  @@index([stepId])
+  @@index([status])
+  @@map("workflow_step_executions")
+}
+
+model WorkflowApproval {
+  id                 String           @id @default(uuid())
+  instanceId         String           @map("instance_id")
+  stepId             String           @map("step_id")
+  stepExecutionId    String?          @map("step_execution_id")
+  tenantId           String?          @map("tenant_id")
+  organizationId     String?          @map("organization_id")
+  approverType       String           @map("approver_type")
+  requiredApprovers  Json             @map("required_approvers")
+  approvalStrategy   String           @default("SINGLE") @map("approval_strategy")
+  votes              Json?
+  status             String           @default("PENDING")
+  comment            String?
+  approvedAt         DateTime?        @map("approved_at")
+  expiresAt          DateTime?        @map("expires_at")
+  createdAt          DateTime         @default(now()) @map("created_at")
+  updatedAt          DateTime         @updatedAt @map("updated_at")
+  instance           WorkflowInstance @relation(fields: [instanceId], references: [id], onDelete: Cascade)
+
+  @@index([instanceId])
+  @@index([stepId])
+  @@index([tenantId])
+  @@index([organizationId])
+  @@index([status])
+  @@map("workflow_approvals")
+}
+
+model WorkflowExecutionLog {
+  id         String           @id @default(uuid())
+  instanceId String           @map("instance_id")
+  stepId     String?          @map("step_id")
+  level      String           @default("INFO")
+  event      String
+  message    String
+  details    Json?
+  timestamp  DateTime         @default(now())
+  instance   WorkflowInstance @relation(fields: [instanceId], references: [id], onDelete: Cascade)
+
+  @@index([instanceId])
+  @@index([timestamp])
+  @@map("workflow_execution_logs")
+}
+
 
