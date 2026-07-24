@@ -49,6 +49,9 @@
       "@sbb/workflow": [
         "./packages/workflow/src/index.ts"
       ],
+      "@sbb/notification": [
+        "./packages/notification/src/index.ts"
+      ],
       "@sbb/types": [
         "./packages/types/src/index.ts"
       ],

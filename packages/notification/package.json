@@ -1,0 +1,32 @@
+{
+  "name": "@sbb/notification",
+  "version": "1.0.0",
+  "description": "Enterprise Notification Service for Genesis-SBB supporting multi-channel delivery, template rendering, retry queue, user preferences, and audit logging.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "node --import tsx --test src/**/*.spec.ts",
+    "lint": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@nestjs/common": "^11.1.27",
+    "@sbb/audit": "^1.0.0",
+    "@sbb/auth": "^1.0.0",
+    "@sbb/database": "^1.0.0",
+    "@sbb/event-bus": "^1.0.0",
+    "@sbb/rbac": "^1.0.0",
+    "@sbb/shared": "^1.0.0",
+    "@sbb/workflow": "^1.0.0",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.1",
+    "handlebars": "^4.7.8",
+    "rxjs": "^7.8.2"
+  },
+  "devDependencies": {
+    "@types/handlebars": "^4.1.0",
+    "@types/node": "^22.14.0",
+    "tsx": "^4.21.0",
+    "typescript": "~5.8.2"
+  }
+}
