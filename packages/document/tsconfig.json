@@ -1,0 +1,28 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "outDir": "./dist",
+    "strict": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "baseUrl": ".",
+    "paths": {
+      "@sbb/database": ["../database/src/index.ts"],
+      "@sbb/audit": ["../audit/src/index.ts"],
+      "@sbb/event-bus": ["../event-bus/src/index.ts"],
+      "@sbb/shared": ["../shared/src/index.ts"],
+      "@sbb/auth": ["../auth/src/index.ts"],
+      "@sbb/rbac": ["../rbac/src/index.ts"],
+      "@sbb/workflow": ["../workflow/src/index.ts"],
+      "@sbb/notification": ["../notification/src/index.ts"]
+    }
+  },
+  "include": ["src/**/*"]
+}

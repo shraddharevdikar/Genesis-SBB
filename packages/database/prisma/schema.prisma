@@ -405,4 +405,87 @@ model TenantNotificationSettings {
   @@map("tenant_notification_settings")
 }
 
+model Folder {
+  id             String     @id @default(uuid())
+  name           String
+  parentId       String?    @map("parent_id")
+  tenantId       String     @map("tenant_id")
+  organizationId String     @map("organization_id")
+  ownerId        String     @map("owner_id")
+  createdBy      String     @map("created_by")
+  isFavorite     Boolean    @default(false) @map("is_favorite")
+  isDeleted      Boolean    @default(false) @map("is_deleted")
+  deletedAt      DateTime?  @map("deleted_at")
+  createdAt      DateTime   @default(now()) @map("created_at")
+  updatedAt      DateTime   @updatedAt @map("updated_at")
+
+  parent         Folder?    @relation("FolderToFolder", fields: [parentId], references: [id], onDelete: Cascade)
+  subfolders     Folder[]   @relation("FolderToFolder")
+  documents      Document[]
+
+  @@index([tenantId])
+  @@index([organizationId])
+  @@index([ownerId])
+  @@index([parentId])
+  @@map("folders")
+}
+
+model Document {
+  id                 String            @id @default(uuid())
+  name               String
+  originalName       String            @map("original_name")
+  contentType        String            @map("content_type")
+  extension          String
+  size               Int
+  checksum           String
+  folderId           String?           @map("folder_id")
+  tenantId           String            @map("tenant_id")
+  organizationId     String            @map("organization_id")
+  ownerId            String            @map("owner_id")
+  createdBy          String            @map("created_by")
+  modifiedBy         String            @map("modified_by")
+  tags               Json?
+  category           String?
+  retentionPolicy    String?           @map("retention_policy")
+  aiProcessingStatus String            @default("PENDING") @map("ai_processing_status")
+  storageProvider    String            @map("storage_provider")
+  storageKey         String            @map("storage_key")
+  isFavorite         Boolean           @default(false) @map("is_favorite")
+  isDeleted          Boolean           @default(false) @map("is_deleted")
+  deletedAt          DateTime?         @map("deleted_at")
+  deletedBy          String?           @map("deleted_by")
+  createdAt          DateTime          @default(now()) @map("created_at")
+  updatedAt          DateTime          @updatedAt @map("updated_at")
+
+  folder             Folder?           @relation(fields: [folderId], references: [id], onDelete: SetNull)
+  versions           DocumentVersion[]
+
+  @@index([tenantId])
+  @@index([organizationId])
+  @@index([ownerId])
+  @@index([folderId])
+  @@index([category])
+  @@index([isDeleted])
+  @@map("documents")
+}
+
+model DocumentVersion {
+  id              String   @id @default(uuid())
+  documentId      String   @map("document_id")
+  versionNumber   Int      @map("version_number")
+  size            Int
+  checksum        String
+  storageKey      String   @map("storage_key")
+  storageProvider String   @map("storage_provider")
+  comment         String?
+  createdBy       String   @map("created_by")
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  document        Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+
+  @@index([documentId])
+  @@index([versionNumber])
+  @@map("document_versions")
+}
+
 
